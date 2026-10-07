@@ -1,2 +1,2 @@
-# Playwright-Corporate-Lite
-Playwright automation script for Corporate lite code base
+# Playwright-WebDev-Template
+Template project for playwright automation for web dev

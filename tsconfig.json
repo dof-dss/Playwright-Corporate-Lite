@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@poms/*": [
+        "./page-objects/*"
+      ],
+      "@helpers/*": [
+        "./helpers/*"
+      ],
+       "@fixtures/*": [
+        "./fixtures/*"
+      ],
+      "@tdata/*": [
+        "./test-data/*"
+      ],
+    }
+  }
+}
