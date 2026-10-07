@@ -1,0 +1,19 @@
+# MCP Server build artifacts
+dist/
+node_modules/
+*.tsbuildinfo
+
+# Environment files
+usersecrets.env
+
+# IDE
+.DS_Store
+.vscode
+*.swp
+*.swo
+*~
+
+# Playwright
+playwright-report/
+test-results/
+.auth/

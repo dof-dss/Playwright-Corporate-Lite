@@ -1,0 +1,6 @@
+{
+    "name": "dof-dss/playwright-dept",
+    "description": "Playwright tests for Departmental sites",
+    "type": "drupal-library",
+    "require": {}
+}
