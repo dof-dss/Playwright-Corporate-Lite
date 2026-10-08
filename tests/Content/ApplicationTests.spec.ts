@@ -2,7 +2,7 @@ import { TestSteps } from '@poms/base-pages/TestSteps';
 import { test } from '@fixtures/MyFixtures';
 import { ModerationSideBar } from '@poms/base-pages/ModerationSideBar';
 
-test.describe('Application Author Tests', () =>
+test.describe('Application Author Tests', { tag: ['@regression', '@application', '@author'] }, () =>
 {
   // Pass the fixture for Application Authors into the beforeEach hook
   test.beforeEach(async ({ loginHelper, testSetUpData, testData }, testInfo) =>
@@ -23,7 +23,7 @@ test.describe('Application Author Tests', () =>
     await loginHelper.loginWithValidUser();
   });
 
-  test('APP-Auth-TC01 - Create - Create Application content as an "Author", perform mandatory field check and preview content', { tag: "@regression" },
+  test('APP-Auth-TC01 - Create - Create Application content as an "Author", perform mandatory field check and preview content', { tag: '@create' },
     async ({ loginHelper, applicationHelper, anonymousHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
     {
       await applicationHelper.createApplication({
@@ -51,7 +51,7 @@ test.describe('Application Author Tests', () =>
 
     });
 
-  test('APP-Auth-TC02 - Edit - Edit Application as an "Author" and ensure it is not published', { tag: "@regression" },
+  test('APP-Auth-TC02 - Edit - Edit Application as an "Author" and ensure it is not published', { tag: '@edit' },
     async ({ applicationHelper, anonymousHelper }) =>
     {
       await applicationHelper.createApplication({
@@ -69,7 +69,7 @@ test.describe('Application Author Tests', () =>
 
     });
 
-  test('APP-Auth-TC03 - Delete - Delete Application as an "Author"', { tag: "@regression" }, async ({ applicationHelper, navigateToCreatedContentHelper }) =>
+  test('APP-Auth-TC03 - Delete - Delete Application as an "Author"', { tag: '@delete' }, async ({ applicationHelper, navigateToCreatedContentHelper }) =>
   {
     await applicationHelper.createApplication({
       preview: false,
@@ -101,7 +101,7 @@ test.describe('Application Author Tests', () =>
 
   });
 
-  test('APP-Auth-TC04 - Delete - Cannot delete Application created by "Supervisor" as an "Author"', { tag: "@regression" }, async ({ page, testSetUpData, testData, applicationHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper }) =>
+  test('APP-Auth-TC04 - Delete - Cannot delete Application created by "Supervisor" as an "Author"', { tag: '@delete' }, async ({ page, testSetUpData, testData, applicationHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper }) =>
   {
     const permissionCheck = new ModerationSideBar(page, testSetUpData, testData);
 
@@ -150,7 +150,7 @@ test.describe('Application Author Tests', () =>
     await anonymousHelper.searchAsAnon({ edited: false });
   });
 
-  test('APP-Auth-TC05 - Compare Revision - Edit Application content and ensure user is able to compare Revisions ', { tag: "@regression" }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
+  test('APP-Auth-TC05 - Compare Revision - Edit Application content and ensure user is able to compare Revisions ', { tag: '@revision' }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await applicationHelper.createApplication({
@@ -170,7 +170,7 @@ test.describe('Application Author Tests', () =>
     await revisionHelper.compareRevisions();
   });
 
-  test('APP-Auth-TC06 - Delete Revision - Edit Application content and ensure user is able to Delete Revisions', { tag: "@regression" }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
+  test('APP-Auth-TC06 - Delete Revision - Edit Application content and ensure user is able to Delete Revisions', { tag: '@revision' }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await applicationHelper.createApplication({
@@ -199,7 +199,7 @@ test.describe('Application Author Tests', () =>
     });
   });
 
-  test('APP-Auth-TC07 - Revert Revision - Edit Application content and ensure user is able to Revert Revisions', { tag: "@regression" }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
+  test('APP-Auth-TC07 - Revert Revision - Edit Application content and ensure user is able to Revert Revisions', { tag: '@revision' }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await applicationHelper.createApplication({
@@ -228,7 +228,7 @@ test.describe('Application Author Tests', () =>
     });
   });
 
-  test('APP-Auth-TC09 - Workbench -  Create Application content as an "Author", and use Workbench to complete all moderation states available', { tag: "@regression" }, async ({ applicationHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
+  test('APP-Auth-TC09 - Workbench -  Create Application content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ applicationHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
   {
     // creating application as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -296,7 +296,7 @@ test.describe('Application Author Tests', () =>
 
 });
 
-test.describe('Application Supervisor Tests', () =>
+test.describe('Application Supervisor Tests', { tag: ['@regression', '@application', '@supervisor'] }, () =>
 {
   // Pass the fixture for Application Authors into the beforeEach hook
   test.beforeEach(async ({ loginHelper, testSetUpData, testData }, testInfo) =>
@@ -317,7 +317,7 @@ test.describe('Application Supervisor Tests', () =>
     await loginHelper.loginWithValidUser();
   });
 
-  test('APP-Super-TC01 - Create - Create Application content as an "Supervisor", perform mandatory field check and preview content', { tag: "@regression" }, async ({ applicationHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData }) =>
+  test('APP-Super-TC01 - Create - Create Application content as an "Supervisor", perform mandatory field check and preview content', { tag: '@create' }, async ({ applicationHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData }) =>
   {
     // creating application as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -383,7 +383,7 @@ test.describe('Application Supervisor Tests', () =>
 
   });
 
-  test('APP-Super-TC02 - Edit - Edit Published Application content and ensure edit is published as a "Supervisor" ', { tag: "@regression" }, async ({ applicationHelper, anonymousHelper, contentModerationHelper }) =>
+  test('APP-Super-TC02 - Edit - Edit Published Application content and ensure edit is published as a "Supervisor" ', { tag: '@edit' }, async ({ applicationHelper, anonymousHelper, contentModerationHelper }) =>
   {
     // creating content
     await applicationHelper.createApplication({
@@ -414,7 +414,7 @@ test.describe('Application Supervisor Tests', () =>
     await anonymousHelper.searchAsAnon({ edited: true });
   });
 
-  test('APP-Super-TC03 - Delete - Delete Published Application as "Supervisor" and confirm it isnt viewable as an anon user', { tag: "@regression" }, async ({ applicationHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
+  test('APP-Super-TC03 - Delete - Delete Published Application as "Supervisor" and confirm it isnt viewable as an anon user', { tag: '@delete' }, async ({ applicationHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
   {
     // creating content
     await applicationHelper.createApplication({
@@ -461,7 +461,7 @@ test.describe('Application Supervisor Tests', () =>
     await anonymousHelper.searchAsAnon({ edited: false });
   });
 
-  test('APP-Super-TC04 - Delete - Can delete Application created by "Author" as an "Supervisor"', { tag: "@regression" }, async ({ applicationHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper, testSetUpData }) =>
+  test('APP-Super-TC04 - Delete - Can delete Application created by "Author" as an "Supervisor"', { tag: '@delete' }, async ({ applicationHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper, testSetUpData }) =>
   {
     // Logging out as Before each will log in as an Author.  
     await basePage.logOut();
@@ -512,7 +512,7 @@ test.describe('Application Supervisor Tests', () =>
     });
   });
 
-  test('APP-Super-TC05 - Compare Revision - Edit Application content and ensure user is able to compare Revisions ', { tag: "@regression" }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
+  test('APP-Super-TC05 - Compare Revision - Edit Application content and ensure user is able to compare Revisions ', { tag: '@compare-revision' }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await applicationHelper.createApplication({
@@ -533,7 +533,7 @@ test.describe('Application Supervisor Tests', () =>
 
   });
 
-  test('APP-Super-TC06 - Delete Revision - Edit Application content and ensure user is able to Delete Revisions', { tag: "@regression" }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
+  test('APP-Super-TC06 - Delete Revision - Edit Application content and ensure user is able to Delete Revisions', { tag: '@delete-revision' }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await applicationHelper.createApplication({
@@ -562,7 +562,7 @@ test.describe('Application Supervisor Tests', () =>
     });
   });
 
-  test('APP-Super-TC07 - Revert Revision - Edit Application content and ensure user is able to Revert Revisions', { tag: "@regression" }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
+  test('APP-Super-TC07 - Revert Revision - Edit Application content and ensure user is able to Revert Revisions', { tag: '@revert-revision' }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await applicationHelper.createApplication({
@@ -591,7 +591,7 @@ test.describe('Application Supervisor Tests', () =>
     });
   });
 
-  test('APP-Super-TC09 - Workbench -  Create Application content as an "Supervisor", and use Workbench to complete all moderation states', { tag: "@regression" }, async ({ applicationHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
+  test('APP-Super-TC09 - Workbench -  Create Application content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ applicationHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
   {
     // creating application as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
