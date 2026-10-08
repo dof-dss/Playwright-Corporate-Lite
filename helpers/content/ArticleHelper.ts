@@ -18,11 +18,15 @@ export interface SaveOptions
     preview: boolean;
     mandatoryFieldCheck: boolean;
     existingAudioName?: string;
+    addSecondAreaOfExpertise?: boolean;
+    addSecondService?: boolean;
 };
 
 export interface EditSaveOptions
 {
     preview: boolean;
+    addSecondAreaOfExpertise?: boolean;
+    addSecondService?: boolean;
 };
 
 export interface DeleteOptions
@@ -96,7 +100,13 @@ export class ArticleHelper
             articleTitle: this.testData.Article.title,
             revisionLogMessage: this.testData.Article.revisionlog,
             articleSummary: this.testData.Article.summary,
+            areaOfExpertise: this.testData.Article.areaOfExpertise,
+            areaOfExpertise2: this.testData.Article.areaOfExpertise2,
+            service: this.testData.Article.service,
+            service2: this.testData.Article.service2,
             articleBodyField: this.testData.Article.body,
+            addSecondAreaOfExpertise: options.addSecondAreaOfExpertise,
+            addSecondService: options.addSecondService,
         });
 
         //Selecting the save as type
@@ -108,7 +118,10 @@ export class ArticleHelper
             await this.createPage.clickPreviewButton();
             await this.previewPage.performURLCheck();
             await this.articleNodePage.verifyArticle(
-                {}
+                {
+                    addSecondAreaOfExpertise: options.addSecondAreaOfExpertise,
+                    addSecondService: options.addSecondService,
+                }
             );
             await this.previewPage.clickBackToContentEdittingButton();
             await this.articleCreatePage.returnFromPreviewArticlePageURLCheck();
@@ -117,7 +130,10 @@ export class ArticleHelper
         // Save and verify
         await this.createPage.clickSaveButton();
         await this.articleNodePage.articleNodeURLCheck();
-        await this.articleNodePage.verifyArticle({});
+        await this.articleNodePage.verifyArticle({
+            addSecondAreaOfExpertise: options.addSecondAreaOfExpertise,
+            addSecondService: options.addSecondService,
+        });
     }
 
     // edit Article method
@@ -136,7 +152,13 @@ export class ArticleHelper
             articleTitle: this.testData.Article.titleEdited,
             revisionLogMessage: this.testData.Article.revisionlogEdited,
             articleSummary: this.testData.Article.summaryEdited,
+            areaOfExpertise: this.testData.Article.areaOfExpertiseEdited,
+            areaOfExpertise2: this.testData.Article.areaOfExpertise2Edited,
+            service: this.testData.Article.serviceEdited,
+            service2: this.testData.Article.service2Edited,
             articleBodyField: this.testData.Article.bodyEdited,
+            SecondAreaOfExpertise: options.addSecondAreaOfExpertise,
+            SecondService: options.addSecondService,
         });
 
         // setting test set up data to new title
@@ -195,8 +217,14 @@ export class ArticleHelper
             articleTitle: this.testData.Article.title,
             revisionLogMessage: this.testData.Article.revisionlog,
             articleSummary: this.testData.Article.summary,
+            areaOfExpertise: this.testData.Article.areaOfExpertise,
+            areaOfExpertise2: this.testData.Article.areaOfExpertise2,
+            service: this.testData.Article.service,
+            service2: this.testData.Article.service2,
             articleBodyField: this.testData.Article.body,
             existingAudioName: options.existingAudioName,
+            addSecondAreaOfExpertise: options.addSecondAreaOfExpertise,
+            addSecondService: options.addSecondService,
         });
 
         //Selecting the save as type
@@ -242,7 +270,13 @@ export class ArticleHelper
                     articleTitle: bookTitleMap[key],
                     revisionLogMessage: this.testData.Article.revisionlog,
                     articleSummary: this.testData.Article.summary,
+                    areaOfExpertise: this.testData.Article.areaOfExpertise,
+                    areaOfExpertise2: this.testData.Article.areaOfExpertise2,
+                    service: this.testData.Article.service,
+                    service2: this.testData.Article.service2,
                     articleBodyField: this.testData.Article.body,
+                    addSecondAreaOfExpertise: options.addSecondAreaOfExpertise,
+                    addSecondService: options.addSecondService,
                 }, bookOptions);
             }
         }

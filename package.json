@@ -15,11 +15,11 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@types/node": "^25.6.0",
-    "typescript": "^6.0.3"
+    "@types/node": "^26.6.4",
+    "dotenv": "^18.0.6",
+    "typescript": "^7.0.2"
   },
   "dependencies": {
-    "@playwright/test": "^1.59.1",
-    "dotenv": "^17.2.3"
+    "@playwright/test": "^1.59.1"
   }
 }

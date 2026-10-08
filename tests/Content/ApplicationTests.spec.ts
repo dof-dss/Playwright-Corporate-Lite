@@ -512,7 +512,7 @@ test.describe('Application Supervisor Tests', { tag: ['@regression', '@applicati
     });
   });
 
-  test('APP-Super-TC05 - Compare Revision - Edit Application content and ensure user is able to compare Revisions ', { tag: '@compare-revision' }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
+  test('APP-Super-TC05 - Compare Revision - Edit Application content and ensure user is able to compare Revisions ', { tag: '@revision' }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await applicationHelper.createApplication({
@@ -533,7 +533,7 @@ test.describe('Application Supervisor Tests', { tag: ['@regression', '@applicati
 
   });
 
-  test('APP-Super-TC06 - Delete Revision - Edit Application content and ensure user is able to Delete Revisions', { tag: '@delete-revision' }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
+  test('APP-Super-TC06 - Delete Revision - Edit Application content and ensure user is able to Delete Revisions', { tag: '@revision' }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await applicationHelper.createApplication({
@@ -562,7 +562,7 @@ test.describe('Application Supervisor Tests', { tag: ['@regression', '@applicati
     });
   });
 
-  test('APP-Super-TC07 - Revert Revision - Edit Application content and ensure user is able to Revert Revisions', { tag: '@revert-revision' }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
+  test('APP-Super-TC07 - Revert Revision - Edit Application content and ensure user is able to Revert Revisions', { tag: '@revision' }, async ({ applicationHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await applicationHelper.createApplication({
