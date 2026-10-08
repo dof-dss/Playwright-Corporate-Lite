@@ -13,8 +13,14 @@ export interface ArticleSaveData
   articleTitle: string;
   revisionLogMessage: string;
   articleSummary: string;
+  areaOfExpertise: string;
+  areaOfExpertise2: string;
+  service: string;
+  service2: string;
   articleBodyField: string;
   existingAudioName?: string;
+  addSecondAreaOfExpertise?: boolean;
+  addSecondService?: boolean;
 }
 
 export interface BooksHelper
@@ -110,6 +116,46 @@ export class ArticleCreatePage
     await this.articleSummaryField.fill(articleSummary);
   }
 
+  // select area of expertise
+  async selectAreaOfExpertise(areaOfExpertise1: string)
+  {
+    await this.testSteps.LogInfo(`Selecting "${areaOfExpertise1}" from the Area of expertise dropdown`);
+    await this.page.locator('#edit-field-site-topics-shs-0-0').selectOption({ label: areaOfExpertise1 });
+  }
+
+  async clickAddAnotherAreaOfExpertise()
+  {
+    await this.testSteps.LogInfo('Clicking Add another item for Area of expertise');
+    await this.page.locator('.js-form-item-field-site-topics')
+      .getByText('Add another item', { exact: true }).click();
+  }
+
+    async selectAreaOfExpertise2(areaOfExpertise2: string)
+  {
+    await this.testSteps.LogInfo(`Selecting "${areaOfExpertise2}" from the Area of expertise dropdown`);
+    await this.page.locator('#edit-field-site-topics-shs-1-0').selectOption({ label: areaOfExpertise2 });
+  }
+
+  // select service
+  async selectService(service: string)
+  {
+    await this.testSteps.LogInfo(`Selecting "${service}" from the Service dropdown`);
+    await this.page.locator('#edit-field-site-services-shs-0-0').selectOption({ label: service });
+  }
+
+  async clickAddAnotherService()
+  {
+    await this.testSteps.LogInfo('Clicking Add another item for Service');
+    await this.page.locator('.js-form-item-field-site-services')
+      .getByText('Add another item', { exact: true }).click();
+  }
+
+    async selectService2(service2: string)
+  {
+    await this.testSteps.LogInfo(`Selecting "${service2}" from the Service dropdown`);
+    await this.page.locator('#edit-field-site-services-shs-1-0').selectOption({ label: service2 });
+  }
+
   // ------------------------ actions related to create article  ------------------------
 
   // Mandatory Field Check article
@@ -132,7 +178,19 @@ export class ArticleCreatePage
     await this.createArticlePageURLCheck();
     await this.enterArticleTitle(data.articleTitle);
     await this.createPages.enterRevisionLogMessage(data.revisionLogMessage);
+    await this.selectAreaOfExpertise(data.areaOfExpertise);
+    if (data.addSecondAreaOfExpertise === true)
+    {
+      await this.clickAddAnotherAreaOfExpertise();
+      await this.selectAreaOfExpertise2(data.areaOfExpertise2);
+    }
     await this.enterArticleSummary(data.articleSummary);
+    await this.selectService(data.service);
+    if (data.addSecondService === true)
+    {
+      await this.clickAddAnotherService();
+      await this.selectService2(data.service2);
+    }
 
     switch (ckEditorStrategy)
     {

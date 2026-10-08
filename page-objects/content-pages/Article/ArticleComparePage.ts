@@ -30,7 +30,7 @@ export class ArticleComparePage
         await this.testSteps.LogInfo(`Verifying URL is "${this.testSetUpData.urlForTest.url}/articles/${this.testSetUpData.contentTitleforTest.contentTitle}"`);
 
         await expect(this.page).toHaveURL(
-            new RegExp(this.testSetUpData.urlForTest.url + `/articles/${escapeRegex(this.testSetUpData.contentTitleforTest.contentTitle)}$`)
+            new RegExp(this.testSetUpData.urlForTest.url + `/article/${escapeRegex(this.testSetUpData.contentTitleforTest.contentTitle)}$`)
         );
     }
 

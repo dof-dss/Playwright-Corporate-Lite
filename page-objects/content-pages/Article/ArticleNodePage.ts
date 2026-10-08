@@ -8,6 +8,8 @@ import { BooksHelper } from '@poms/content-pages/Article/ArticleCreatePage';
 export interface VerifyOptions
 {
     expectedTitle?: string;
+    addSecondAreaOfExpertise?: boolean;
+    addSecondService?: boolean;
 };
 
 
@@ -38,9 +40,9 @@ export class ArticleNodePage
         const escapeRegex = (value: string) => value.trim().replace(/\s*-\s*/g, '-').replace(/\s+/g, '-').toLowerCase();
         const titleToCheck = escapeRegex(expectedTitle ?? this.testSetUpData.contentTitleforTest.contentTitle);
 
-        await this.testSteps.LogInfo(`Verifying URL path is /articles/${titleToCheck} with optional -suffix and optional trailing path, or is /node/.+/latest`);
+        await this.testSteps.LogInfo(`Verifying URL path is /article/${titleToCheck} with optional -suffix and optional trailing path, or is /node/.+/latest`);
         await expect(this.page).toHaveURL(
-            new RegExp(`(?:${this.testSetUpData.urlForTest.url}/articles/${titleToCheck}(?:-[^/]+)?(?:/.*)?$)|(?:/node/.+/latest)`)
+            new RegExp(`(?:${this.testSetUpData.urlForTest.url}/article/${titleToCheck}(?:-[^/]+)?(?:/.*)?$)|(?:/node/.+/latest)`)
         );
 
     }
@@ -48,13 +50,31 @@ export class ArticleNodePage
     // -------------------- Verify Article methods --------------------
 
     //verify article method
-    async verifyArticle({ expectedTitle }: VerifyOptions)
+    async verifyArticle({ expectedTitle, addSecondAreaOfExpertise, addSecondService }: VerifyOptions)
     {
         const titleToVerify = expectedTitle ?? this.testSetUpData.contentTitleforTest.contentTitle;
 
         // verify title
         await this.testSteps.LogInfo(`Verifying title "${titleToVerify}" is visible`);
         await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(titleToVerify);
+
+        // verify expertise areas
+        await this.testSteps.LogInfo('Verifying Areas of Expertise and selected values are visible');
+        await expect(this.page.getByText('Areas of Expertise:', { exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Article.areaOfExpertise, exact: true })).toBeVisible();
+        if (addSecondAreaOfExpertise === true)
+        {
+            await expect(this.page.getByRole('link', { name: this.testData.Article.areaOfExpertise2, exact: true })).toBeVisible();
+        }
+
+        // verify services
+        await this.testSteps.LogInfo('Verifying Service and selected values are visible');
+        await expect(this.page.getByText('Service:', { exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Article.service, exact: true })).toBeVisible();
+        if (addSecondService === true)
+        {
+            await expect(this.page.getByRole('link', { name: this.testData.Article.service2, exact: true })).toBeVisible();
+        }
 
         // verify summary
         await this.testSteps.LogInfo(`Verifying Summary "${this.testData.Article.summary}" is visible`);
