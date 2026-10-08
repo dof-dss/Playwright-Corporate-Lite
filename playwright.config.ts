@@ -19,6 +19,7 @@ dotenv.config({
     path.resolve(__dirname, '../.ddev/.env'),
   ]
 });
+
 // debugger showing all pw api steps
 //process.env.DEBUG = 'pw:api';
 
