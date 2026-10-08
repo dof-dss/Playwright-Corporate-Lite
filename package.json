@@ -8,17 +8,13 @@
     "test:firefox": "npx playwright test --project firefox",
     "test:webkit": "npx playwright test --project webkit",
     "test:application": "npx playwright test --grep @application",
-    "test:regression": "npx playwright test --grep @regression",
-    "mcp:build": "cd mcp-server && npm install && npm run build",
-    "mcp:start": "node mcp-server/dist/server.js",
-    "mcp:dev": "cd mcp-server && npm run build && npm start"
+    "test:regression": "npx playwright test --grep @regression"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@modelcontextprotocol/sdk": "^1.29.0",
     "@types/node": "^25.6.0",
     "typescript": "^6.0.3"
   },
