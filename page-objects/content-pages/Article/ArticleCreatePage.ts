@@ -19,8 +19,6 @@ export interface ArticleSaveData
   service2: string;
   articleBodyField: string;
   existingAudioName?: string;
-  addSecondAreaOfExpertise?: boolean;
-  addSecondService?: boolean;
 }
 
 export interface BooksHelper
@@ -130,7 +128,7 @@ export class ArticleCreatePage
       .getByText('Add another item', { exact: true }).click();
   }
 
-    async selectAreaOfExpertise2(areaOfExpertise2: string)
+  async selectAreaOfExpertise2(areaOfExpertise2: string)
   {
     await this.testSteps.LogInfo(`Selecting "${areaOfExpertise2}" from the Area of expertise dropdown`);
     await this.page.locator('#edit-field-site-topics-shs-1-0').selectOption({ label: areaOfExpertise2 });
@@ -150,7 +148,7 @@ export class ArticleCreatePage
       .getByText('Add another item', { exact: true }).click();
   }
 
-    async selectService2(service2: string)
+  async selectService2(service2: string)
   {
     await this.testSteps.LogInfo(`Selecting "${service2}" from the Service dropdown`);
     await this.page.locator('#edit-field-site-services-shs-1-0').selectOption({ label: service2 });
@@ -179,18 +177,12 @@ export class ArticleCreatePage
     await this.enterArticleTitle(data.articleTitle);
     await this.createPages.enterRevisionLogMessage(data.revisionLogMessage);
     await this.selectAreaOfExpertise(data.areaOfExpertise);
-    if (data.addSecondAreaOfExpertise === true)
-    {
-      await this.clickAddAnotherAreaOfExpertise();
-      await this.selectAreaOfExpertise2(data.areaOfExpertise2);
-    }
+    await this.clickAddAnotherAreaOfExpertise();
+    await this.selectAreaOfExpertise2(data.areaOfExpertise2);
     await this.enterArticleSummary(data.articleSummary);
     await this.selectService(data.service);
-    if (data.addSecondService === true)
-    {
-      await this.clickAddAnotherService();
-      await this.selectService2(data.service2);
-    }
+    await this.clickAddAnotherService();
+    await this.selectService2(data.service2);
 
     switch (ckEditorStrategy)
     {

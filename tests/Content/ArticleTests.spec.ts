@@ -336,8 +336,6 @@ test.describe('Article Supervisor Tests', () =>
     await articleHelper.createArticle({
       preview: true,
       mandatoryFieldCheck: false,
-      addSecondAreaOfExpertise: true,
-      addSecondService: true,
     });
 
     // searching as anon to ensure content is not viewable as draft
@@ -391,9 +389,8 @@ test.describe('Article Supervisor Tests', () =>
       Archive: true
     });
 
-    // searching as anon to ensure content is viewable as it is published
+    // searching as anon to ensure content is viewable as it is Archived
     await anonymousHelper.searchAsAnon({ edited: false });
-
   });
 
   test('ART-Super-TC02 - Edit - Edit Published Article content and ensure edit is published as a "Supervisor" ', { tag: "@regression" }, async ({ articleHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData, testData }) =>
@@ -402,8 +399,6 @@ test.describe('Article Supervisor Tests', () =>
     await articleHelper.createArticle({
       preview: false,
       mandatoryFieldCheck: false,
-      addSecondAreaOfExpertise: true,
-      addSecondService: true,
     });
 
     // moderating to published

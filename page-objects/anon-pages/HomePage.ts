@@ -39,6 +39,28 @@ export class HomePage
         this.publicationNavBarLink = this.page.getByRole('link', { name: 'Publications', exact: true });
     }
 
+    async navigateToHome()
+    {
+        const activeHome = this.page.locator('span.active.nav-link').filter({ hasText: /^Home$/ });
+
+        if (!(await activeHome.isVisible()))
+        {
+            await this.page.getByRole('link', { name: 'Home', exact: true }).click();
+        }
+
+        await this.homePageURLCheck();
+    }
+
+    async navigateToService(service: string)
+    {
+        const activeService = this.page.locator('span.active.nav-link').and(this.page.getByText(service, { exact: true }));
+
+        if (!(await activeService.isVisible()))
+        {
+            await this.page.getByRole('link', { name: service, exact: true }).click();
+        }
+    }
+
     // url check using isolated test data for current site being tested
     async homePageURLCheck()
     {
