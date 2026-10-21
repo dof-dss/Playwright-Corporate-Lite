@@ -46,21 +46,21 @@ export class ConsultationNodePage
     //verify consultation method
     async verifyConsultation({ preview }: VerifyOptions)
     {
-        // verify consultation open 
-        await this.testSteps.LogInfo('Verifying "Open consultation" text is present');
-        await expect(this.page.locator('//span[contains(text(), "Open consultation")]')).toBeVisible();
-
         // verify title
         await this.testSteps.LogInfo(`Verifying title "${this.testData.Consultation.title}" is visible`);
-        await expect(this.page.locator(`//h1[text()[normalize-space(.)="${this.testData.Consultation.title}"]]`)).toBeVisible();
+        await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.Consultation.title);
 
-        // verify consultation closes box
-        await this.testSteps.LogInfo('Verifying "Consultation closes" text is present');
-        await expect(this.page.locator('//p/strong[contains(text(), "Consultation closes")]')).toBeVisible();
+        await this.testSteps.LogInfo('Verifying Topics and selected values are visible');
+        await expect(this.page.getByText('Topics:', { exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Consultation.consultationSiteTopic, exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Consultation.consultationSiteTopic2, exact: true })).toBeVisible();
 
+        // verify consultation Opens box
+        await this.testSteps.LogInfo('Verifying "Consultation Open" is visible');
+        await expect(this.page.getByText('Consultation Open', { exact: true })).toBeVisible();
         // verify consultation closes date time
-        await this.testSteps.LogInfo(`Verifying Consultaiton Closes date amd time "${this.testData.Consultation.verifyEndDateAndTime}" is visible`);
-        await expect(this.page.locator(`//p[text()[normalize-space(.)="${this.testData.Consultation.verifyEndDateAndTime}"]]`)).toBeVisible();
+        await this.testSteps.LogInfo(`Verifying consultation opened "${this.testData.Consultation.verifyStartDateAndTime}" and closes "${this.testData.Consultation.verifyEndDateAndTime}"`);
+        await expect(this.page.getByText(`Consultation opened ${this.testData.Consultation.verifyStartDateAndTime.replace('.', ':')} and closes ${this.testData.Consultation.verifyEndDateAndTime.replace('.', ':')}.`, { exact: true })).toBeVisible();
 
         // verify summary
         await this.testSteps.LogInfo(`Verifying Summary "${this.testData.Consultation.summary}" is visible`);
@@ -70,6 +70,21 @@ export class ConsultationNodePage
         await this.testSteps.LogInfo(`Verifying Body "${this.testData.Consultation.body}" is visible`);
         await expect(this.page.getByText(this.testData.Consultation.body)).toBeVisible();
 
+        // verify documents section is visible
+        await this.testSteps.LogInfo('Verifying Documents heading is visible');
+        await expect(this.page.getByRole('heading', { name: 'Documents', exact: true })).toBeVisible();
+        await this.testSteps.LogInfo(`Verifying attachment "${this.testData.Media.attachmentName}" is visible`);
+        await expect(this.page.locator('a.file-link.file--ico__pdf').filter({ hasText: this.testData.Media.attachmentName })).toBeVisible();
+        await this.testSteps.LogInfo('Verifying Help viewing documents link is visible');
+        await expect(this.page.getByRole('link', { name: 'Help viewing documents', exact: true })).toBeVisible();
+
+        // verify ways to respond section is visible
+        await this.testSteps.LogInfo('Verifying Ways to Respond heading is visible');
+        await expect(this.page.getByRole('heading', { name: 'Ways to Respond', exact: true })).toBeVisible();
+
+        await this.testSteps.LogInfo('Verifying Respond Online link is visible');
+        await expect(this.page.locator('.respond-online a.btn').filter({ hasText: 'Respond Online' })).toBeVisible();
+
         if (!preview)
         {
             // Only clicking on Link when content has been saved as unable to click to naviagte to it when in preview
@@ -78,7 +93,7 @@ export class ConsultationNodePage
 
             // click application link text
             await this.testSteps.LogInfo('Clicking Link text "Respond online"');
-            await this.page.getByRole('link', { name: 'Respond online' }).click();
+            await this.page.locator('.respond-online a.btn').filter({ hasText: 'Respond Online' }).click();
 
             // Wait for the new page object to be ready
             const newTab = await pagePromise;
@@ -94,10 +109,13 @@ export class ConsultationNodePage
 
         // verify email field
         await this.testSteps.LogInfo(`Verifying Email address "${this.testData.Consultation.emailAddress}" is visible`);
-        await expect(this.page.getByText(this.testData.Consultation.emailAddress)).toBeVisible();
+        await expect(this.page.getByText('Email Address:', { exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Consultation.emailAddress, exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Consultation.emailAddress, exact: true })).toHaveAttribute('href', `mailto:${this.testData.Consultation.emailAddress}`);
 
         // verify Post address
         await this.testSteps.LogInfo(`Verifying Postal address "${this.testData.Consultation.postalAddress}" is visible`);
+        await expect(this.page.getByText('Write to:', { exact: true })).toBeVisible();
         await expect(this.page.getByText(this.testData.Consultation.postalAddress)).toBeVisible();
 
     }
@@ -105,21 +123,21 @@ export class ConsultationNodePage
     //verify edited consultation method
     async verifyEditedConsultation(_: VerifyOptions)
     {
-        // verify consultation open 
-        await this.testSteps.LogInfo('Verifying "Closed consultation" text is present');
-        await expect(this.page.locator('//span[contains(text(), "Closed consultation")]')).toBeVisible();
-
         // verify title
         await this.testSteps.LogInfo(`Verifying title "${this.testData.Consultation.titleEdited}" is visible`);
-        await expect(this.page.locator(`//h1[text()[normalize-space(.)="${this.testData.Consultation.titleEdited}"]]`)).toBeVisible();
+        await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.Consultation.titleEdited);
 
-        // verify consultation opens box
-        await this.testSteps.LogInfo('Verifying "Consultation closed" text is present');
-        await expect(this.page.locator('//p/strong[contains(text(), "Consultation closed")]')).toBeVisible();
+        await this.testSteps.LogInfo('Verifying topics value are visible');
+        await expect(this.page.getByText('Topics:', { exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Consultation.consultationSiteTopicEdited, exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Consultation.consultationSiteTopic2Edited, exact: true })).toBeHidden();
 
+        // verify consultation Closed box
+        await this.testSteps.LogInfo('Verifying "Consultation Closed" is visible');
+        await expect(this.page.getByText('Consultation Closed', { exact: true })).toBeVisible();
         // verify consultation opens date time
-        await this.testSteps.LogInfo('Verifying "Consultation opened 31 December 2025, 10.00 am and closed 31 December 2025, 5.00 pm" text is present');
-        await expect(this.page.locator('//p[text()[normalize-space(.)="Consultation opened 31 December 2025, 10.00 am and closed 31 December 2025, 5.00 pm"]]')).toBeVisible();
+        await this.testSteps.LogInfo(`Verifying consultation opened "${this.testData.Consultation.verifyEditedStartDateAndTime}" and closed "${this.testData.Consultation.verifyEditedEndDateAndTime}"`);
+        await expect(this.page.getByText(`Consultation opened ${this.testData.Consultation.verifyEditedStartDateAndTime.replace('.', ':')} and closed ${this.testData.Consultation.verifyEditedEndDateAndTime.replace('.', ':')}.`, { exact: true })).toBeVisible();
 
         // verify summary
         await this.testSteps.LogInfo(`Verifying Summary "${this.testData.Consultation.summaryEdited}" is visible`);
@@ -129,34 +147,50 @@ export class ConsultationNodePage
         await this.testSteps.LogInfo(`Verifying Body "${this.testData.Consultation.bodyEdited}" is visible`);
         await expect(this.page.getByText(this.testData.Consultation.bodyEdited)).toBeVisible();
 
-        // verify consultation close message displayed
-        await this.testSteps.LogInfo('Verifying Consultation close message is is visible');
-        await expect(this.page.getByText('Important information Consultation closed — responses are no longer being')).toBeVisible();
+        // verify documents section
+        await this.testSteps.LogInfo('Verifying Documents heading is visible');
+        await expect(this.page.getByRole('heading', { name: 'Documents', exact: true })).toBeVisible();
 
-        // verify ways to respond is hidden 
-        await this.testSteps.LogInfo('Verifying respond online message is NOT displayed');
-        await expect(this.page.getByRole('link', { name: 'Respond online' })).toBeHidden();
+        await this.testSteps.LogInfo(`Verifying edited attachment "${this.testData.Media.attachmentNameEdited}" is visible`);
+        await expect(this.page.locator('a.file-link.file--ico__pdf').filter({ hasText: this.testData.Media.attachmentNameEdited })).toBeVisible();
 
-        // verify consultation ways to respond is not available and has information message instead (as consultation is closed in the edit tests)
-        await this.testSteps.LogInfo('Verifying "Consultation closed — responses are no longer being accepted." text is present');
-        await expect(this.page.locator('//p[text()[normalize-space(.)="Consultation closed — responses are no longer being accepted."]]')).toBeVisible();
+
+        await this.testSteps.LogInfo('Verifying Help viewing documents link is visible');
+        await expect(this.page.getByRole('link', { name: 'Help viewing documents', exact: true })).toBeVisible();
+
+        // verify ways to respond section is hidden as consultation is closed
+        await this.testSteps.LogInfo('Verifying Ways to Respond and Respond Online are hidden');
+        await expect(this.page.getByRole('heading', { name: 'Ways to Respond', exact: true })).toBeHidden();
+        await expect(this.page.locator('.respond-online a.btn').filter({ hasText: 'Respond Online' })).toBeHidden();
+
+        await this.testSteps.LogInfo(`Verifying edited email address "${this.testData.Consultation.emailAddressEdited}" is hidden`);
+        await expect(this.page.getByText('Email Address:', { exact: true })).toBeHidden();
+        await expect(this.page.getByRole('link', { name: this.testData.Consultation.emailAddressEdited, exact: true })).toBeHidden();
+
+        await this.testSteps.LogInfo(`Verifying edited postal address "${this.testData.Consultation.postalAddressEdited}" is hidden`);
+        await expect(this.page.getByText('Write to:', { exact: true })).toBeHidden();
+        await expect(this.page.getByText(this.testData.Consultation.postalAddressEdited, { exact: true })).toBeHidden();
     }
 
     //verify consultation method
-    async verifyFutureConsultation(_: VerifyOptions)
+    async verifyFutureConsultation({ preview }: VerifyOptions)
     {
-        // verify consultation open 
-        await this.testSteps.LogInfo('Verifying "Consultation opens" text is present');
-        await expect(this.page.locator('//strong[contains(text(),"Consultation opens")]')).toBeVisible();
-
         // verify title
-        //await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.Consultation.title);
         await this.testSteps.LogInfo(`Verifying title "${this.testData.Consultation.title}" is visible`);
-        await expect(this.page.locator(`//h1[text()[normalize-space(.)="${this.testData.Consultation.title}"]]`)).toBeVisible();
+        await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.Consultation.title);
 
-        // verify consultation closes date time
-        await this.testSteps.LogInfo(`Verifying future start date "${this.testData.Consultation.verifyFutureStartDate}" is visible`);
-        await expect(this.page.locator(`//p[text()[normalize-space(.)="${this.testData.Consultation.verifyFutureStartDate}"]]`)).toBeVisible();
+        await this.testSteps.LogInfo('Verifying Topics and selected values are visible');
+        await expect(this.page.getByText('Topics:', { exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Consultation.consultationSiteTopic, exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Consultation.consultationSiteTopic2, exact: true })).toBeVisible();
+
+        // verify consultation Opens box
+        await this.testSteps.LogInfo('Verifying "Consultation Open" is visible');
+        await expect(this.page.getByText('Consultation Open', { exact: true })).toBeVisible();
+
+        // verify consultation opens date time
+        await this.testSteps.LogInfo(`Verifying consultation opened "${this.testData.Consultation.verifyFutureStartDate}" and closes "${this.testData.Consultation.verifyEndDateAndTime}"`);
+        await expect(this.page.getByText(`Consultation opened ${this.testData.Consultation.verifyFutureStartDate.replace('.', ':')} and closes ${this.testData.Consultation.verifyEndDateAndTime.replace('.', ':')}.`, { exact: true })).toBeVisible();
 
         // verify summary
         await this.testSteps.LogInfo(`Verifying Summary "${this.testData.Consultation.summary}" is visible`);
@@ -166,15 +200,25 @@ export class ConsultationNodePage
         await this.testSteps.LogInfo(`Verifying Body "${this.testData.Consultation.body}" is visible`);
         await expect(this.page.getByText(this.testData.Consultation.body)).toBeVisible();
 
-        // verify email field
-        await this.testSteps.LogInfo(`Verifying Email address "${this.testData.Consultation.emailAddress}" is visible`);
-        await expect(this.page.getByText(this.testData.Consultation.emailAddress)).toBeHidden();
+        // verify documents section is visible
+        await this.testSteps.LogInfo('Verifying Documents heading is visible');
+        await expect(this.page.getByRole('heading', { name: 'Documents', exact: true })).toBeVisible();
+        await this.testSteps.LogInfo(`Verifying attachment "${this.testData.Media.attachmentName}" is visible`);
+        await expect(this.page.locator('a.file-link.file--ico__pdf').filter({ hasText: this.testData.Media.attachmentName })).toBeVisible();
+        await this.testSteps.LogInfo('Verifying Help viewing documents link is visible');
+        await expect(this.page.getByRole('link', { name: 'Help viewing documents', exact: true })).toBeVisible();
 
-        // verify address
-        await this.testSteps.LogInfo(`Verifying Postal address "${this.testData.Consultation.postalAddress}" is visible`);
-        await expect(this.page.getByText(this.testData.Consultation.postalAddress)).toBeHidden();
+        // verify ways to respond section is hidden as consultation is closed
+        await this.testSteps.LogInfo('Verifying Ways to Respond and Respond Online are hidden');
+        await expect(this.page.getByRole('heading', { name: 'Ways to Respond', exact: true })).toBeHidden();
+        await expect(this.page.locator('.respond-online a.btn').filter({ hasText: 'Respond Online' })).toBeHidden();
 
-        await this.testSteps.LogInfo('Verifying "Consultation pending — details on ways to respond will be provided when the consultation has opened." text is present');
-        await expect(this.page.locator('//p[text()[normalize-space(.)="Consultation pending — details on ways to respond will be provided when the consultation has opened."]]')).toBeVisible();
+        await this.testSteps.LogInfo(`Verifying edited email address "${this.testData.Consultation.emailAddressEdited}" is hidden`);
+        await expect(this.page.getByText('Email Address:', { exact: true })).toBeHidden();
+        await expect(this.page.getByRole('link', { name: this.testData.Consultation.emailAddressEdited, exact: true })).toBeHidden();
+
+        await this.testSteps.LogInfo(`Verifying edited postal address "${this.testData.Consultation.postalAddressEdited}" is hidden`);
+        await expect(this.page.getByText('Write to:', { exact: true })).toBeHidden();
+        await expect(this.page.getByText(this.testData.Consultation.postalAddressEdited, { exact: true })).toBeHidden();
     }
 }

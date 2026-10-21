@@ -22,6 +22,7 @@ export interface SaveOptions
 export interface EditSaveOptions
 {
     preview: boolean;
+    existingRemoteDocumentName?: string;
 };
 
 export interface DeleteOptions
@@ -91,6 +92,9 @@ export class ConsultationHelper
         // complete consultation form using isolated test data 
         await this.consultationCreatePage.fillConsultationForm({
             consultationTitle: this.testData.Consultation.title,
+            consultationSiteTopic: this.testData.Consultation.consultationSiteTopic,
+            consultationSiteTopic2: this.testData.Consultation.consultationSiteTopic2,
+            consultationPublishedDate: this.testData.Consultation.datePublished,
             revisionLogMessage: this.testData.Consultation.revisionlog,
             consultationSummary: this.testData.Consultation.summary,
             consultationStartDate: this.testData.Consultation.startDate,
@@ -123,7 +127,7 @@ export class ConsultationHelper
         await this.createPage.clickSaveButton();
         await this.consultationNodePage.consultationNodeURLCheck();
         await this.consultationNodePage.verifyConsultation({
-            preview: true,
+            preview: false,
         });
     }
 
@@ -141,7 +145,9 @@ export class ConsultationHelper
         // complete consultation form using edit isolated test data 
         await this.consultationEditPage.editConsultationForm({
             consultationTitle: this.testData.Consultation.titleEdited,
-            consPubDate: this.testData.Consultation.datePublished,
+            consultationSiteTopic: this.testData.Consultation.consultationSiteTopicEdited,
+            consultationSiteTopic2: this.testData.Consultation.consultationSiteTopic2Edited,
+            consultationPublishedDate: this.testData.Consultation.datePublishedEdited,
             revisionLogMessage: this.testData.Consultation.revisionlogEdited,
             consultationSummary: this.testData.Consultation.summaryEdited,
             consultationStartDate: this.testData.Consultation.startDateEdited,
@@ -151,7 +157,8 @@ export class ConsultationHelper
             consultationBody: this.testData.Consultation.bodyEdited,
             consultationRespondOnline: this.testData.Consultation.respondeOnlineEdited,
             consultationEmailAddress: this.testData.Consultation.emailAddressEdited,
-            consultationPostalAddress: this.testData.Consultation.postalAddressEdited
+            consultationPostalAddress: this.testData.Consultation.postalAddressEdited,
+            existingRemoteDocumentName: options.existingRemoteDocumentName,
         });
 
         // setting test set up data to new title
@@ -217,6 +224,9 @@ export class ConsultationHelper
         // complete consultation form using isolated test data 
         await this.consultationCreatePage.fillConsultationForm({
             consultationTitle: this.testData.Consultation.title,
+            consultationSiteTopic: this.testData.Consultation.consultationSiteTopic,
+            consultationSiteTopic2: this.testData.Consultation.consultationSiteTopic2,
+            consultationPublishedDate: this.testData.Consultation.datePublished,
             revisionLogMessage: this.testData.Consultation.revisionlog,
             consultationSummary: this.testData.Consultation.summary,
             consultationStartDate: this.testData.Consultation.futureStartDate,
@@ -227,6 +237,7 @@ export class ConsultationHelper
             consultationRespondOnline: this.testData.Consultation.respondeOnline,
             consultationEmailAddress: this.testData.Consultation.emailAddress,
             consultationPostalAddress: this.testData.Consultation.postalAddress,
+            existingRemoteDocumentName: options.existingRemoteDocumentName,
         });
 
         //Selecting the save as type
@@ -237,6 +248,9 @@ export class ConsultationHelper
         {
             await this.createPage.clickPreviewButton();
             await this.previewPage.performURLCheck();
+            await this.consultationNodePage.verifyFutureConsultation({
+                preview: true,
+            });
             await this.previewPage.clickBackToContentEdittingButton();
             await this.consultationCreatePage.returnFromPreviewConsultationPageURLCheck();
         }
