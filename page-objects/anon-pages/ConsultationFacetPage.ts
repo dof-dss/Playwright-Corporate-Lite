@@ -102,7 +102,7 @@ export class ConsultationFacetPage
         const year = Number(publishedDate.slice(0, 4));
         const monthIndex = Number(publishedDate.slice(5, 7)) - 1;
         const month = new Date(year, monthIndex, 1).toLocaleString('en-GB', { month: 'long' });
-        const yearOption = this.page.locator(`//span[contains(text(),"${year}")]`);
+        const yearOption = this.page.locator('span.facet-item__value').getByText(String(year), { exact: true });
 
         // Ensure the year is visible before interating with it as if content is not published yet 
         // there may be none of this year available.
@@ -138,7 +138,7 @@ export class ConsultationFacetPage
         const year = Number(publishedDate.slice(0, 4));
         const monthIndex = Number(publishedDate.slice(5, 7)) - 1;
         const month = new Date(year, monthIndex, 1).toLocaleString('en-GB', { month: 'long' });
-        const yearOption = this.page.locator(`//span[contains(text(),"${year}")]`);
+        const yearOption = this.page.locator('span.facet-item__value').getByText(String(year), { exact: true });
 
         // Ensure the year is visible before interating with it as if content is not published yet 
         // there may be none of this year available.  
