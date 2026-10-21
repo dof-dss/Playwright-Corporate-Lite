@@ -16,6 +16,7 @@ export interface ApplicationSaveData
   beforeyoustart: string;
   additionalinfo: string;
   topic: string;
+  topic2: string;
 }
 
 export class ApplicationCreatePage
@@ -107,6 +108,22 @@ export class ApplicationCreatePage
   {
     await this.testSteps.LogInfo(`Selecting "${topic}" from the HSE Site Topic dropdown`);
     await this.page.locator('#edit-field-site-topics-shs-0-0').selectOption({ label: topic });
+    await this.page.waitForTimeout(500);
+  }
+
+  // click add second hse site topic button
+  async clickAddSecondHSESiteTopicButton()
+  {
+    await this.testSteps.LogInfo('Clicking the "Add another item" button to add the second HSE Site Topic');
+    await this.page.getByText('Add another item').click();
+  }
+
+  // add second HSE Site Topic
+  async addSecondHSESiteTopic(topic2: string)
+  {
+    await this.testSteps.LogInfo(`Selecting "${topic2}" from the second HSE Site Topic dropdown`);
+    await this.page.locator('#edit-field-site-topics-shs-1-0').selectOption({ label: topic2 });
+    await this.page.waitForTimeout(500);
   }
 
 
@@ -134,5 +151,7 @@ export class ApplicationCreatePage
     await this.enterApplicationSummary(data.applicationSummary);
     await this.ckeditor.enterCKEditorAdditionalInfo(data.additionalinfo);
     await this.selectHSESiteTopic(data.topic);
+    await this.clickAddSecondHSESiteTopicButton();
+    await this.addSecondHSESiteTopic(data.topic2);
   }
 }

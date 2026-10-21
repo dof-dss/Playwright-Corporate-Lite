@@ -99,6 +99,7 @@ export class ApplicationEditPage
   {
     await this.testSteps.LogInfo(`Selecting "${topic}" from the HSE Site Topic dropdown`);
     await this.page.locator('#edit-field-site-topics-shs-0-0').selectOption({ label: topic });
+    await this.page.waitForTimeout(500);
   }
 
   // click add second hse site topic button
@@ -113,6 +114,7 @@ export class ApplicationEditPage
   {
     await this.testSteps.LogInfo(`Selecting "${topic2}" from the second HSE Site Topic dropdown`);
     await this.page.locator('#edit-field-site-topics-shs-1-0').selectOption({ label: topic2 });
+    await this.page.waitForTimeout(500);
   }
 
   // ------------------------ actions related to edit application  ------------------------
@@ -127,7 +129,6 @@ export class ApplicationEditPage
     await this.editApplicationSummary(data.applicationSummary);
     await this.ckeditor.enterCKEditorAdditionalInfo(data.additionalinfo);
     await this.editHSESiteTopic(data.topic);
-    await this.clickAddSecondHSESiteTopicButton();
     await this.addSecondHSESiteTopic(data.topic2);
   }
 }
