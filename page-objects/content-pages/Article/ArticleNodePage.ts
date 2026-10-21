@@ -62,19 +62,15 @@ export class ArticleNodePage
         await this.testSteps.LogInfo('Verifying Areas of Expertise and selected values are visible');
         await expect(this.page.getByText('Areas of Expertise:', { exact: true })).toBeVisible();
         await expect(this.page.getByRole('link', { name: this.testData.Article.areaOfExpertise, exact: true })).toBeVisible();
-        if (addSecondAreaOfExpertise === true)
-        {
-            await expect(this.page.getByRole('link', { name: this.testData.Article.areaOfExpertise2, exact: true })).toBeVisible();
-        }
+        await expect(this.page.getByRole('link', { name: this.testData.Article.areaOfExpertise2, exact: true })).toBeVisible();
+
 
         // verify services
         await this.testSteps.LogInfo('Verifying Service and selected values are visible');
         await expect(this.page.getByText('Service:', { exact: true })).toBeVisible();
         await expect(this.page.getByRole('link', { name: this.testData.Article.service, exact: true })).toBeVisible();
-        if (addSecondService === true)
-        {
-            await expect(this.page.getByRole('link', { name: this.testData.Article.service2, exact: true })).toBeVisible();
-        }
+        await expect(this.page.getByRole('link', { name: this.testData.Article.service2, exact: true })).toBeVisible();
+
 
         // verify summary
         await this.testSteps.LogInfo(`Verifying Summary "${this.testData.Article.summary}" is visible`);
