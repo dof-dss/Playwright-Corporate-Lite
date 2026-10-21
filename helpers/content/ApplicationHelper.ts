@@ -95,6 +95,7 @@ export class ApplicationHelper
             beforeyoustart: this.testData.Application.beforeyoustart,
             additionalinfo: this.testData.Application.additionalinfo,
             topic: this.testData.HSE_SiteTopics.topic,
+            topic2: this.testData.HSE_SiteTopics.topic2,
         });
 
         //Selecting the save as type
@@ -135,7 +136,7 @@ export class ApplicationHelper
             applicationSummary: this.testData.Application.summaryEdited,
             additionalinfo: this.testData.Application.additionalinfoEdited,
             topic: this.testData.HSE_SiteTopics.topicEdited,
-            topic2: this.testData.HSE_SiteTopics.topic2,
+            topic2: this.testData.HSE_SiteTopics.topic2Edited,
         });
 
         // setting test set up data to new title

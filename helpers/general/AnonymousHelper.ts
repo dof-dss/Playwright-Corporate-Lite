@@ -139,296 +139,16 @@ export class AnonymousHelper
             }
         }
 
-        // facet search
-        await this.searchFacetsAsAnon(edited);
-    }
 
-    async searchFacetsAsAnon(edited: boolean)
-    {
-        // switch statement for content types 
-        switch (this.testSetUpData.contentTypeforTest.contentType)
+        if (this.testSetUpData.contentTypeforTest.contentType === this.testSetUpData.validContentTypeList.article)
         {
-            case this.testSetUpData.validContentTypeList.consultation: {
-                // nav back to homepage
-                await this.page.getByRole('link', { name: 'Home', exact: true }).click();
-                await this.homePage.homePageURLCheck();
-                // clicking more news link on the homepage
-                await this.homePage.clickConsultationNavLink();
-                await this.consultationFacetPage.consultationPageURLCheck();
-
-                if (!edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
-                {
-
-                    await this.consultationFacetPage.enterContentTitleInSearch(this.testData.Consultation.title);
-                    await this.consultationFacetPage.clickConsultationFacetSearchButton();
-
-                    try
-                    {
-                        await this.testSteps.LogInfo('Published content has appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
-                        await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Consultation.title}")]`)).toBeVisible();
-                    }
-                    catch
-                    {
-                        await this.testSteps.LogInfo('Published content has NOT appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
-                        // wait 5 seconds and refresh page
-                        await this.testSteps.LogInfo('Wating 5 seconds');
-                        await this.page.waitForTimeout(5000);
-                        await this.testSteps.LogInfo('Reloading page');
-                        await this.page.reload();
-
-                        // remove last char from title
-                        const updatedTitle = this.testData.Consultation.title.slice(0, -1);
-                        // seatch again with new title
-                        await this.testSteps.LogInfo('Performing second search having removed final character from title to refresh solar cache - "' + updatedTitle + '"');
-                        await this.consultationFacetPage.enterContentTitleInSearch(updatedTitle);
-                        await this.consultationFacetPage.clickConsultationFacetSearchButton();
-                    }
-
-                    // verify
-                    await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Consultation.title}")]`)).toBeVisible();
-                    // add filters
-                    await this.consultationFacetPage.clickFacetFilterPubDateSpan();
-                    await this.consultationFacetPage.clickFacetFilterPubDateFilter();
-                    // verify            
-                    await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Consultation.title}")]`)).toBeVisible();
-                    // full verification of content edited param is passed along through methods steming from test itself
-                    await this.verifyContent(edited);
-                }
-
-                if (!edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
-                {
-                    await this.consultationFacetPage.enterContentTitleInSearch(this.testData.Consultation.title);
-                    await this.consultationFacetPage.clickConsultationFacetSearchButton();
-                    // verify            
-                    await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Consultation.title}")]`)).toBeHidden();
-                }
-
-                if (edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
-                {
-                    await this.consultationFacetPage.enterContentTitleInSearch(this.testData.Consultation.titleEdited);
-                    await this.consultationFacetPage.clickConsultationFacetSearchButton();
-                    // add filters
-                    await this.consultationFacetPage.clickFacetFilterPubDateSpan();
-                    await this.consultationFacetPage.clickFacetFilterPubDateEditedFilter();
-                    // verify            
-                    await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Consultation.titleEdited}")]`)).toBeVisible();
-                    // full verification of content edited param is passed along through methods steming from test itself
-                    await this.verifyContent(edited);
-                }
-
-                if (edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
-                {
-                    await this.consultationFacetPage.enterContentTitleInSearch(this.testData.Consultation.titleEdited);
-                    await this.consultationFacetPage.clickConsultationFacetSearchButton();
-                    // verify            
-                    await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Consultation.titleEdited}")]`)).toBeHidden();
-                }
-                break;
-            }
-            case this.testSetUpData.validContentTypeList.news: {
-                // nav back to homepage
-                await this.page.getByRole('link', { name: 'Home', exact: true }).click();
-                await this.homePage.homePageURLCheck();
-                // clicking more news link on the homepage
-                await this.homePage.clickMoreNewsLink();
-                await this.newsFacetPage.newsPageURLCheck();
-
-                if (!edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
-                {
-                    await this.newsFacetPage.enterContentTitleInSearch(this.testData.News.title);
-                    await this.newsFacetPage.clickNewsFacetSearchButton();
-
-                    try
-                    {
-                        await this.testSteps.LogInfo('Published content has appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
-                        await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.title}")]`)).toBeVisible();
-                    }
-                    catch
-                    {
-                        await this.testSteps.LogInfo('Published content has NOT appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
-                        // wait 5 seconds and refresh page
-                        await this.testSteps.LogInfo('Wating 5 seconds');
-                        await this.page.waitForTimeout(5000);
-                        await this.testSteps.LogInfo('Reloading page');
-                        await this.page.reload();
-
-                        // remove last char from title
-                        const updatedTitle = this.testData.News.title.slice(0, -1);
-                        // seatch again with new title
-                        await this.testSteps.LogInfo('Performing second search having removed final character from title to refresh solar cache - "' + updatedTitle + '"');
-                        await this.newsFacetPage.enterContentTitleInSearch(updatedTitle);
-                        await this.newsFacetPage.clickNewsFacetSearchButton();
-                    }
-
-                    // verify
-                    await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.title}")]`)).toBeVisible();
-                    // add filters
-                    await this.newsFacetPage.clickFacetFilterPubDateSpan();
-                    await this.newsFacetPage.clickFacetFilterPubDateFilter();
-                    // verify            
-                    await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.title}")]`)).toBeVisible();
-                    // full verification of content edited param is passed along through methods steming from test itself
-                    await this.verifyContent(edited);
-                }
-
-                if (!edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
-                {
-                    await this.newsFacetPage.enterContentTitleInSearch(this.testData.News.title);
-                    await this.newsFacetPage.clickNewsFacetSearchButton();
-                    // verify            
-                    await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.title}")]`)).toBeHidden();
-                }
-
-                if (edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
-                {
-                    await this.newsFacetPage.enterContentTitleInSearch(this.testData.News.titleEdited);
-                    await this.newsFacetPage.clickNewsFacetSearchButton();
-                    // add filters
-                    await this.newsFacetPage.clickFacetFilterPubDateSpan();
-                    await this.newsFacetPage.clickFacetFilterPubDateEditedFilter();
-                    // verify            
-                    await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.titleEdited}")]`)).toBeVisible();
-                    // full verification of content edited param is passed along through methods steming from test itself
-                    await this.verifyContent(edited);
-                }
-
-                if (edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
-                {
-                    await this.newsFacetPage.enterContentTitleInSearch(this.testData.News.titleEdited);
-                    await this.newsFacetPage.clickNewsFacetSearchButton();
-                    // verify
-                    await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.titleEdited}")]`)).toBeHidden();
-                    // add filters
-                    await this.newsFacetPage.clickFacetFilterPubDateSpan();
-                    await this.newsFacetPage.clickFacetFilterPubDateEditedFilter();
-                    // verify            
-                    await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.titleEdited}")]`)).toBeHidden();
-                }
-                break;
-            }
-            case this.testSetUpData.validContentTypeList.publication: {
-                // nav back to homepage
-                await this.page.getByRole('link', { name: 'Home', exact: true }).click();
-                await this.homePage.homePageURLCheck();
-                // clicking more news link on the homepage
-                await this.homePage.clickPublicationNavLink();
-                await this.publicationFacetPage.publicationPageURLCheck();
-
-                if (!edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
-                {
-                    await this.publicationFacetPage.enterContentTitleInSearch(this.testData.Publication.title);
-                    await this.publicationFacetPage.clickPublicationFacetSearchButton();
-
-                    try
-                    {
-                        await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.title}")]`)).toBeVisible();
-                    }
-                    catch
-                    {
-                        // wait 2 seconds and refresh page
-                        await this.page.waitForTimeout(2000);
-                        // remove last char from title
-                        const updatedTitle = this.testSetUpData.contentTitleforTest.contentTitle.slice(0, -1);
-                        // seatch again with new title
-                        await this.publicationFacetPage.enterContentTitleInSearch(updatedTitle);
-                        await this.publicationFacetPage.clickPublicationFacetSearchButton();
-                        await expect(this.page.locator('//a/h3[contains(text(), "' + this.testData.Publication.title + '")]')).toBeVisible();
-                    }
-
-                    // add filters
-                    await this.publicationFacetPage.clickFacetFilterTypeSpan();
-                    await this.publicationFacetPage.clickFacetFilterTypeFilter();
-                    // verify
-                    await expect(this.page.locator('//a/h3[contains(text(), "' + this.testData.Publication.title + '")]')).toBeVisible();
-                    // add filters
-                    await this.publicationFacetPage.clickFacetFilterPubDateSpan();
-                    await this.publicationFacetPage.clickFacetFilterPubDateFilter();
-                    // verify            
-                    await expect(this.page.locator('//a/h3[contains(text(), "' + this.testData.Publication.title + '")]')).toBeVisible();
-                    // full verification of content edited param is passed along through methods steming from test itself
-                    await this.verifyContent(edited);
-                }
-
-                if (!edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
-                {
-                    await this.publicationFacetPage.enterContentTitleInSearch(this.testData.Publication.title);
-                    await this.publicationFacetPage.clickPublicationFacetSearchButton();
-                    try
-                    {
-                        // verify
-                        await expect(this.page.locator('//a/h3[contains(text(), "' + this.testData.Publication.title + '")]')).toBeHidden();
-                    }
-                    catch
-                    {
-                        // wait 5 seconds and refresh page
-                        await this.page.waitForTimeout(2000);
-                        // remove last char from title
-                        const updatedTitle = this.testSetUpData.contentTitleforTest.contentTitle.slice(0, -1);
-                        // seatch again with new title
-                        await this.publicationFacetPage.enterContentTitleInSearch(updatedTitle);
-                        await this.publicationFacetPage.clickPublicationFacetSearchButton();
-                        await expect(this.page.locator('//a/h3[contains(text(), "' + this.testData.Publication.title + '")]')).toBeHidden();
-                    }
-                }
-
-                if (edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
-                {
-                    await this.publicationFacetPage.enterContentTitleInSearch(this.testData.Publication.titleEdited);
-                    await this.publicationFacetPage.clickPublicationFacetSearchButton();
-
-                    try
-                    {
-                        await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.title}")]`)).toBeVisible();
-                    }
-                    catch
-                    {
-                        // wait 5 seconds and refresh page
-                        await this.page.waitForTimeout(2000);
-                        // remove last char from title
-                        const updatedTitle = this.testSetUpData.contentTitleforTest.contentTitle.slice(0, -1);
-                        // seatch again with new title
-                        await this.publicationFacetPage.enterContentTitleInSearch(updatedTitle);
-                        await this.publicationFacetPage.clickPublicationFacetSearchButton();
-                        await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.titleEdited}")]`)).toBeVisible();
-                    }
-
-                    // add filters
-                    await this.publicationFacetPage.clickFacetFilterTypeSpan();
-                    await this.publicationFacetPage.clickFacetFilterTypeEditedFilter();
-                    // add filters
-                    await this.publicationFacetPage.clickFacetFilterPubDateSpan();
-                    await this.publicationFacetPage.clickFacetFilterPubDateEditedFilter();
-                    // verify            
-                    await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.titleEdited}")]`)).toBeVisible();
-                    // full verification of content edited param is passed along through methods steming from test itself
-                    await this.verifyContent(edited);
-                }
-
-                if (edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
-                {
-                    await this.publicationFacetPage.enterContentTitleInSearch(this.testData.Publication.titleEdited);
-                    await this.publicationFacetPage.clickPublicationFacetSearchButton();
-                    try
-                    {
-                        // verify
-                        await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.titleEdited}")]`)).toBeHidden();
-                    }
-                    catch
-                    {
-                        // wait 5 seconds and refresh page
-                        await this.page.waitForTimeout(2000);
-                        // remove last char from title
-                        const updatedTitle = this.testSetUpData.contentTitleforTest.contentTitle.slice(0, -1);
-                        // seatch again with new title
-                        await this.publicationFacetPage.enterContentTitleInSearch(updatedTitle);
-                        await this.publicationFacetPage.clickPublicationFacetSearchButton();
-                        await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.titleEdited}")]`)).toBeHidden();
-                    }
-                }
-                break;
-            }
+            await this.VerifyArticleAsAnon({ edited });
         }
 
+        if (this.testSetUpData.contentTypeforTest.contentType === this.testSetUpData.validContentTypeList.consultation)
+        {
+            await this.searchConsultationFacetsAsAnon(edited);
+        }
     }
 
     // this method is used for the searchFacetsAsAnon method above as it is reused multiple times is accepts the edited param to determine what content to seek
@@ -500,5 +220,968 @@ export class AnonymousHelper
         // await this.verificationHelper.verifyChosenContent({ edited });
     }
 
+    async VerifyArticleAsAnon({ edited }: ContentEdited)
+    {
+        await this.testSteps.LogInfo('----- Verifying Article Dropdowns -----');
 
+        await this.testSteps.LogInfo('Opening Home to verify Areas of Expertise');
+        await this.homePage.navigateToHome();
+        await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
+
+        if (!edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
+        {
+            const article = this.testData.Article;
+            const articleAreas = [
+                article.areaOfExpertise,
+                article.areaOfExpertise2,
+            ];
+            const articleServices = [
+                article.service,
+                article.service2,
+            ];
+
+            await this.testSteps.LogInfo('----- Verifying via Areas of Expertise  ----- ');
+
+            for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
+            {
+                if (areaIndex > 0)
+                {
+                    await this.testSteps.LogInfo('Returning Home to verify the next Area of Expertise');
+                    await this.homePage.navigateToHome();
+                    await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
+                }
+
+                if (areaOfExpertise === '- None -')
+                {
+                    await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is not visible`);
+                    await expect(this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })).toBeHidden();
+                    continue;
+                }
+
+                await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}"`);
+                await this.page.locator('a.card').filter({
+                    has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
+                }).click();
+
+                for (const [serviceIndex, service] of articleServices.entries())
+                {
+                    if (serviceIndex > 0)
+                    {
+                        await this.testSteps.LogInfo(`Returning to Area of Expertise "${areaOfExpertise}" for the next Service`);
+                        await this.homePage.navigateToHome();
+                        await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
+                        await this.page.locator('a.card').filter({
+                            has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
+                        }).click();
+                    }
+
+                    if (service === '- None -')
+                    {
+                        await this.testSteps.LogInfo(`Verifying Service "${service}" is not visible under Area of Expertise "${areaOfExpertise}"`);
+                        await expect(this.page.getByRole('link', { name: service, exact: true })).toBeHidden();
+                        continue;
+                    }
+
+                    await this.testSteps.LogInfo(`Opening Service "${service}" under Area of Expertise "${areaOfExpertise}"`);
+                    await this.page.getByRole('link', { name: service, exact: true }).click();
+
+                    await this.testSteps.LogInfo(`Verifying Article "${article.title}" is visible under Service "${service}"`);
+                    await expect(this.page.getByRole('link', { name: article.title, exact: true })).toBeVisible();
+
+                    await this.testSteps.LogInfo(`Verifying Article "${article.title}" can be opened under Area of Expertise "${areaOfExpertise}" and Service "${service}"`);
+                    await (this.page.getByRole('link', { name: article.title, exact: true })).click();
+
+                    await this.verificationHelper.verifyChosenContent({ edited });
+                }
+            }
+
+            await this.testSteps.LogInfo('----- Verifying via Services  ----- ');
+
+            await this.testSteps.LogInfo('Opening Services to verify Areas of Expertise');
+            await this.page.getByRole('link', { name: 'Services', exact: true }).click();
+            await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
+
+            for (const service of articleServices)
+            {
+                const serviceCard = this.page.locator('a.card').filter({
+                    has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
+                });
+
+                if (service === '- None -')
+                {
+                    await this.testSteps.LogInfo(`Verifying Service "${service}" is not visible`);
+                    await expect(serviceCard).toBeHidden();
+                    continue;
+                }
+
+                await this.testSteps.LogInfo(`Opening Service "${service}" to verify its Areas of Expertise`);
+                await serviceCard.click();
+
+                for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
+                {
+                    if (areaIndex > 0)
+                    {
+                        await this.testSteps.LogInfo(`Returning to Services to check Area of Expertise "${areaOfExpertise}" under "${service}"`);
+                        await this.page.getByRole('link', { name: 'Services', exact: true }).click();
+                        await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
+                        await this.page.locator('a.card').filter({
+                            has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
+                        }).click();
+                    }
+
+                    await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is listed under Service "${service}"`);
+                    const expertiseCard = this.page.locator('div.card').filter({
+                        has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
+                    });
+                    if (areaOfExpertise === '- None -')
+                    {
+                        await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is not visible under Service "${service}"`);
+                        await expect(expertiseCard).toBeHidden();
+                        continue;
+                    }
+
+                    await expect(expertiseCard).toBeVisible();
+
+                    await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}" under Service "${service}"`);
+                    await expertiseCard.getByRole('link', { name: areaOfExpertise, exact: true }).click();
+
+                    await this.testSteps.LogInfo(`Verifying Article "${article.title}" is visible under Area of Expertise "${areaOfExpertise}" and Service "${service}"`);
+                    await expect(this.page.getByRole('link', { name: article.title, exact: true })).toBeVisible();
+
+                    await this.testSteps.LogInfo(`Verifying Article "${article.title}" can be opened under Area of Expertise "${areaOfExpertise}" and Service "${service}"`);
+                    await (this.page.getByRole('link', { name: article.title, exact: true })).click();
+
+                    await this.verificationHelper.verifyChosenContent({ edited });
+                }
+                await this.page.getByRole('link', { name: 'Services', exact: true }).click();
+                await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
+            }
+        }
+
+        if (edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
+        {
+            const article = this.testData.Article;
+            const articleAreas = [
+                article.areaOfExpertiseEdited,
+                article.areaOfExpertise2Edited,
+            ];
+            const articleServices = [
+                article.serviceEdited,
+                article.service2Edited,
+            ];
+
+            await this.testSteps.LogInfo('----- Verifying via Areas of Expertise  ----- ');
+
+            for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
+            {
+                if (areaIndex > 0)
+                {
+                    await this.testSteps.LogInfo('Returning Home to verify the next Area of Expertise');
+                    await this.homePage.navigateToHome();
+                    await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
+                }
+
+                if (areaOfExpertise === '- None -')
+                {
+                    await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is not visible`);
+                    await expect(this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })).toBeHidden();
+                    continue;
+                }
+
+                await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}"`);
+                await this.page.locator('a.card').filter({
+                    has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
+                }).click();
+
+                for (const [serviceIndex, service] of articleServices.entries())
+                {
+                    if (serviceIndex > 0)
+                    {
+                        await this.testSteps.LogInfo(`Returning to Area of Expertise "${areaOfExpertise}" for the next Service`);
+                        await this.homePage.navigateToHome();
+                        await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
+                        await this.page.locator('a.card').filter({
+                            has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
+                        }).click();
+                    }
+
+                    if (service === '- None -')
+                    {
+                        await this.testSteps.LogInfo(`Verifying Service "${service}" is not visible under Area of Expertise "${areaOfExpertise}"`);
+                        await expect(this.page.getByRole('link', { name: service, exact: true })).toBeHidden();
+                        continue;
+                    }
+
+                    await this.testSteps.LogInfo(`Opening Service "${service}" under Area of Expertise "${areaOfExpertise}"`);
+                    await this.page.getByRole('link', { name: service, exact: true }).click();
+
+                    await this.testSteps.LogInfo(`Verifying Article "${article.titleEdited}" is visible under Service "${service}" `);
+                    await expect(this.page.getByRole('link', { name: article.titleEdited, exact: true })).toBeVisible();
+
+                    await this.testSteps.LogInfo(`Verifying Article "${article.titleEdited}" can be opened under Area of Expertise "${areaOfExpertise}" and Service "${service}"`);
+                    await (this.page.getByRole('link', { name: article.titleEdited, exact: true })).click();
+
+                    await this.verificationHelper.verifyChosenContent({ edited });
+                }
+            }
+
+            await this.testSteps.LogInfo('----- Verifying via Services  ----- ');
+
+            await this.testSteps.LogInfo('Opening Services to verify Areas of Expertise');
+            await this.page.getByRole('link', { name: 'Services', exact: true }).click();
+            await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
+
+            for (const service of articleServices)
+            {
+                const serviceCard = this.page.locator('a.card').filter({
+                    has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
+                });
+
+                if (service === '- None -')
+                {
+                    await this.testSteps.LogInfo(`Verifying Service "${service}" is not visible`);
+                    await expect(serviceCard).toBeHidden();
+                    continue;
+                }
+
+                await this.testSteps.LogInfo(`Opening Service "${service}" to verify its Areas of Expertise`);
+                await serviceCard.click();
+
+                for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
+                {
+                    if (areaIndex > 0)
+                    {
+                        await this.testSteps.LogInfo(`Returning to Services to check Area of Expertise "${areaOfExpertise}" under "${service}"`);
+                        await this.page.getByRole('link', { name: 'Services', exact: true }).click();
+                        await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
+                        await this.page.locator('a.card').filter({
+                            has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
+                        }).click();
+                    }
+
+                    await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is listed under Service "${service}"`);
+                    const expertiseCard = this.page.locator('div.card').filter({
+                        has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
+                    });
+                    if (areaOfExpertise === '- None -')
+                    {
+                        await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is not visible under Service "${service}"`);
+                        await expect(expertiseCard).toBeHidden();
+                        continue;
+                    }
+
+                    await expect(expertiseCard).toBeVisible();
+
+                    await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}" under Service "${service}"`);
+                    await expertiseCard.getByRole('link', { name: areaOfExpertise, exact: true }).click();
+
+                    await this.testSteps.LogInfo(`Verifying Article "${article.titleEdited}" is visible under Area of Expertise "${areaOfExpertise}" and Service "${service}"`);
+                    await expect(this.page.getByRole('link', { name: article.titleEdited, exact: true })).toBeVisible();
+
+                    await this.testSteps.LogInfo(`Verifying Article "${article.titleEdited}" can be opened under Area of Expertise "${areaOfExpertise}" and Service "${service}"`);
+                    await (this.page.getByRole('link', { name: article.titleEdited, exact: true })).click();
+
+                    await this.verificationHelper.verifyChosenContent({ edited });
+                }
+                await this.page.getByRole('link', { name: 'Services', exact: true }).click();
+                await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
+            }
+        }
+
+        if (!edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
+        {
+            const article = this.testData.Article;
+            const articleAreas = [
+                article.areaOfExpertise,
+                article.areaOfExpertise2,
+            ];
+            const articleServices = [
+                article.service,
+                article.service2,
+            ];
+
+
+            for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
+            {
+                if (areaIndex > 0)
+                {
+                    await this.testSteps.LogInfo('Returning Home to verify the next Area of Expertise');
+                    await this.homePage.navigateToHome();
+                    await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
+                }
+
+                if (areaOfExpertise === '- None -')
+                {
+                    await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is not visible`);
+                    await expect(this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })).toBeHidden();
+                    continue;
+                }
+
+                await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}"`);
+                await this.page.locator('a.card').filter({
+                    has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
+                }).click();
+
+                for (const [serviceIndex, service] of articleServices.entries())
+                {
+                    if (serviceIndex > 0)
+                    {
+                        await this.testSteps.LogInfo(`Returning to Area of Expertise "${areaOfExpertise}" for the next Service`);
+                        await this.homePage.navigateToHome();
+                        await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
+                        await this.page.locator('a.card').filter({
+                            has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
+                        }).click();
+                    }
+
+                    if (service === '- None -')
+                    {
+                        await this.testSteps.LogInfo(`Verifying Service "${service}" is not visible under Area of Expertise "${areaOfExpertise}"`);
+                        await expect(this.page.getByRole('link', { name: service, exact: true })).toBeHidden();
+                        continue;
+                    }
+
+                    await this.testSteps.LogInfo(`Opening Service "${service}" under Area of Expertise "${areaOfExpertise}"`);
+                    await this.page.getByRole('link', { name: service, exact: true }).click();
+
+                    await this.testSteps.LogInfo(`Verifying Article "${article.title}" is NOT visible under Service "${service}" as it is NOT published`);
+                    await expect(this.page.getByRole('link', { name: article.title, exact: true })).toBeHidden();
+                }
+            }
+
+            // Verifying can go via service links to the Areas of Expertise and verify content
+            await this.testSteps.LogInfo('Opening Services to verify Areas of Expertise');
+            await this.page.getByRole('link', { name: 'Services', exact: true }).click();
+            await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
+
+            for (const service of articleServices)
+            {
+                const serviceCard = this.page.locator('a.card').filter({
+                    has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
+                });
+
+                if (service === '- None -')
+                {
+                    await this.testSteps.LogInfo(`Verifying Service "${service}" is not visible`);
+                    await expect(serviceCard).toBeHidden();
+                    continue;
+                }
+
+                await this.testSteps.LogInfo(`Opening Service "${service}" to verify its Areas of Expertise`);
+                await serviceCard.click();
+
+                for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
+                {
+                    if (areaIndex > 0)
+                    {
+                        await this.testSteps.LogInfo(`Returning to Services to check Area of Expertise "${areaOfExpertise}" under "${service}"`);
+                        await this.page.getByRole('link', { name: 'Services', exact: true }).click();
+                        await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
+                        await this.page.locator('a.card').filter({
+                            has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
+                        }).click();
+                    }
+
+                    await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is listed under Service "${service}"`);
+                    const expertiseCard = this.page.locator('div.card').filter({
+                        has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
+                    });
+                    if (areaOfExpertise === '- None -')
+                    {
+                        await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is not visible under Service "${service}"`);
+                        await expect(expertiseCard).toBeHidden();
+                        continue;
+                    }
+
+                    await expect(expertiseCard).toBeVisible();
+
+                    await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}" under Service "${service}"`);
+                    await expertiseCard.getByRole('link', { name: areaOfExpertise, exact: true }).click();
+
+                    await this.testSteps.LogInfo(`Verifying Article "${article.title}" is NOT visible under Area of Expertise "${areaOfExpertise}" and Service "${service}" as it is NOT published`);
+                    await expect(this.page.getByRole('link', { name: article.title, exact: true })).toBeHidden();
+                }
+
+                await this.page.getByRole('link', { name: 'Services', exact: true }).click();
+                await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
+            }
+        }
+
+        if (edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
+        {
+            const article = this.testData.Article;
+            const articleAreas = [
+                article.areaOfExpertiseEdited,
+                article.areaOfExpertise2Edited,
+            ];
+            const articleServices = [
+                article.serviceEdited,
+                article.service2Edited,
+            ];
+
+
+            for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
+            {
+                if (areaIndex > 0)
+                {
+                    await this.testSteps.LogInfo('Returning Home to verify the next Area of Expertise');
+                    await this.homePage.navigateToHome();
+                    await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
+                }
+
+                if (areaOfExpertise === '- None -')
+                {
+                    await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is not visible`);
+                    await expect(this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })).toBeHidden();
+                    continue;
+                }
+
+                await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}"`);
+                await this.page.locator('a.card').filter({
+                    has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
+                }).click();
+
+                for (const [serviceIndex, service] of articleServices.entries())
+                {
+                    if (serviceIndex > 0)
+                    {
+                        await this.testSteps.LogInfo(`Returning to Area of Expertise "${areaOfExpertise}" for the next Service`);
+                        await this.homePage.navigateToHome();
+                        await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
+                        await this.page.locator('a.card').filter({
+                            has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
+                        }).click();
+                    }
+
+                    if (service === '- None -')
+                    {
+                        await this.testSteps.LogInfo(`Verifying Service "${service}" is not visible under Area of Expertise "${areaOfExpertise}"`);
+                        await expect(this.page.getByRole('link', { name: service, exact: true })).toBeHidden();
+                        continue;
+                    }
+
+                    await this.testSteps.LogInfo(`Opening Service "${service}" under Area of Expertise "${areaOfExpertise}"`);
+                    await this.page.getByRole('link', { name: service, exact: true }).click();
+
+                    await this.testSteps.LogInfo(`Verifying Article "${article.titleEdited}" is NOT visible under Service "${service}" as is it NOT published`);
+                    await expect(this.page.getByRole('link', { name: article.titleEdited, exact: true })).toBeHidden();
+                }
+            }
+
+            // Verifying can go via service links to the Areas of Expertise and verify content
+            await this.testSteps.LogInfo('Opening Services to verify Areas of Expertise');
+            await this.page.getByRole('link', { name: 'Services', exact: true }).click();
+            await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
+
+            for (const service of articleServices)
+            {
+                const serviceCard = this.page.locator('a.card').filter({
+                    has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
+                });
+
+                if (service === '- None -')
+                {
+                    await this.testSteps.LogInfo(`Verifying Service "${service}" is not visible`);
+                    await expect(serviceCard).toBeHidden();
+                    continue;
+                }
+
+                await this.testSteps.LogInfo(`Opening Service "${service}" to verify its Areas of Expertise`);
+                await serviceCard.click();
+
+                for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
+                {
+                    if (areaIndex > 0)
+                    {
+                        await this.testSteps.LogInfo(`Returning to Services to check Area of Expertise "${areaOfExpertise}" under "${service}"`);
+                        await this.page.getByRole('link', { name: 'Services', exact: true }).click();
+                        await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
+                        await this.page.locator('a.card').filter({
+                            has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
+                        }).click();
+                    }
+
+                    await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is listed under Service "${service}"`);
+                    const expertiseCard = this.page.locator('div.card').filter({
+                        has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
+                    });
+                    if (areaOfExpertise === '- None -')
+                    {
+                        await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is not visible under Service "${service}"`);
+                        await expect(expertiseCard).toBeHidden();
+                        continue;
+                    }
+
+                    await expect(expertiseCard).toBeVisible();
+
+                    await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}" under Service "${service}"`);
+                    await expertiseCard.getByRole('link', { name: areaOfExpertise, exact: true }).click();
+
+                    await this.testSteps.LogInfo(`Verifying Article "${article.titleEdited}" is NOT visible under Area of Expertise "${areaOfExpertise}" and Service "${service}" as it is NOT published`);
+                    await expect(this.page.getByRole('link', { name: article.titleEdited, exact: true })).toBeHidden();
+                }
+
+                await this.page.getByRole('link', { name: 'Services', exact: true }).click();
+                await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
+            }
+        }
+    }
+
+    async VerifyArticleCorrectDisplays()
+    {
+        const areaOfExpertiseLinks = [
+            'Animal Health and Welfare',
+            'Sustainable Livestock',
+            'Grassland and Plant Science',
+            'Environmental Protection',
+            'Food Quality and Safety',
+            'Fisheries and Aquatic Ecosystems',
+            'Economics',
+        ];
+        const serviceHeadings = [
+            'Specialist Advice',
+            'Diagnostic & Analytical',
+            'Research & Development',
+            'Specialist Facilities',
+        ];
+
+        await this.testSteps.LogInfo('Opening Home to verify Areas of Expertise are displayed');
+        await this.homePage.navigateToHome();
+        await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
+
+        for (const linkText of areaOfExpertiseLinks)
+        {
+            await this.testSteps.LogInfo(`Verifying Area of Expertise card "${linkText}" is visible`);
+            const expertiseCard = this.page.locator('a.card').filter({
+                has: this.page.getByRole('heading', { level: 3, name: linkText, exact: true })
+            });
+            await expect(expertiseCard).toBeVisible();
+            await this.testSteps.LogInfo(`Opening Area of Expertise "${linkText}" to verify Service headings`);
+            await expertiseCard.click();
+
+            for (const headingText of serviceHeadings)
+            {
+                await this.testSteps.LogInfo(`Verifying Service heading "${headingText}" is visible under Area of Expertise "${linkText}"`);
+                await expect(this.page.getByRole('link', { name: headingText, exact: true })).toBeVisible();
+            }
+
+            await this.homePage.navigateToHome();
+            await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
+        }
+
+        await this.testSteps.LogInfo('Opening Services to verify Service cards are displayed');
+        await this.page.getByRole('link', { name: 'Services', exact: true }).click();
+        await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
+
+        for (const headingText of serviceHeadings)
+        {
+            await this.testSteps.LogInfo(`Verifying Service card "${headingText}" is visible`);
+            const serviceCard = this.page.locator('a.card').filter({
+                has: this.page.getByRole('heading', { level: 3, name: headingText, exact: true })
+            });
+            await expect(serviceCard).toBeVisible();
+            await this.testSteps.LogInfo(`Opening Service "${headingText}" to verify Areas of Expertise`);
+            await serviceCard.click();
+
+            for (const linkText of areaOfExpertiseLinks)
+            {
+                await this.testSteps.LogInfo(`Verifying Area of Expertise card "${linkText}" is visible under Service "${headingText}"`);
+                const expertiseCard = this.page.locator('div.card').filter({
+                    has: this.page.getByRole('heading', { level: 3, name: linkText, exact: true })
+                });
+                await expect(expertiseCard).toBeVisible();
+                await expect(expertiseCard.getByRole('link', { name: linkText, exact: true })).toBeVisible();
+            }
+
+            await this.page.getByRole('link', { name: 'Services', exact: true }).click();
+            await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
+        }
+    }
+
+    async searchConsultationFacetsAsAnon(edited: boolean)
+    {
+        // nav back to homepage
+        await this.page.getByRole('link', { name: 'Home', exact: true }).click();
+        await this.homePage.homePageURLCheck();
+        // clicking more news link on the homepage
+        await this.homePage.clickConsultationNavLink();
+        await this.consultationFacetPage.consultationPageURLCheck();
+
+        if (!edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
+        {
+            await this.consultationFacetPage.enterContentTitleInSearch(this.testData.Consultation.title);
+            await this.consultationFacetPage.clickConsultationFacetSearchButton();
+
+            try
+            {
+                await this.testSteps.LogInfo('Published content has appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
+                await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.title}")]`)).toBeVisible();
+            }
+            catch
+            {
+                await this.testSteps.LogInfo('Published content has NOT appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
+                // wait 5 seconds and refresh page
+                await this.testSteps.LogInfo('Wating 5 seconds');
+                await this.page.waitForTimeout(5000);
+                await this.testSteps.LogInfo('Reloading page');
+                await this.page.reload();
+
+                // remove last char from title
+                const updatedTitle = this.testData.Consultation.title.slice(0, -1);
+                // seatch again with new title
+                await this.testSteps.LogInfo('Performing second search having removed final character from title to refresh solar cache - "' + updatedTitle + '"');
+                await this.consultationFacetPage.enterContentTitleInSearch(updatedTitle);
+                await this.consultationFacetPage.clickConsultationFacetSearchButton();
+            }
+
+            // verify
+            await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.title}")]`)).toBeVisible();
+
+            // add filters
+            await this.consultationFacetPage.selectFacetFilterConsultationTopic();
+            await this.consultationFacetPage.clickFacetFilterConsultationPublishedDateSpan();
+            await this.consultationFacetPage.clickFacetFilterPubDateFilter();
+
+            // full verification of content edited param is passed along through methods steming from test itself
+            await this.verifyContent(edited);
+        }
+
+        if (!edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
+        {
+            await this.consultationFacetPage.enterContentTitleInSearch(this.testData.Consultation.title);
+            await this.consultationFacetPage.clickConsultationFacetSearchButton();
+            // add filters
+            await this.consultationFacetPage.selectFacetFilterConsultationTopic();
+            await this.consultationFacetPage.clickFacetFilterConsultationPublishedDateSpan();
+            await this.consultationFacetPage.clickFacetFilterPubDateFilter();
+
+            // verify            
+            await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.title}")]`)).toBeHidden();
+        }
+
+        if (edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
+        {
+            await this.consultationFacetPage.enterContentTitleInSearch(this.testData.Consultation.titleEdited);
+            await this.consultationFacetPage.clickConsultationFacetSearchButton();
+            // add filters
+            await this.consultationFacetPage.selectFacetFilterConsultationTopic(true);
+            await this.consultationFacetPage.clickFacetFilterConsultationPublishedDateSpan();
+            await this.consultationFacetPage.clickFacetFilterPubDateEditedFilter();
+            // verify            
+            await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.titleEdited}")]`)).toBeVisible();
+            // full verification of content edited param is passed along through methods steming from test itself
+            await this.verifyContent(edited);
+        }
+
+        if (edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
+        {
+            await this.consultationFacetPage.enterContentTitleInSearch(this.testData.Consultation.titleEdited);
+            await this.consultationFacetPage.clickConsultationFacetSearchButton();
+            // add filters
+            await this.consultationFacetPage.selectFacetFilterConsultationTopic(true);
+            await this.consultationFacetPage.clickFacetFilterConsultationPublishedDateSpan();
+            await this.consultationFacetPage.clickFacetFilterPubDateEditedFilter();
+            // verify            
+            await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.titleEdited}")]`)).toBeHidden();
+        }
+
+    }
+
+
+
+
+
+
+    // async searchFacetsAsAnon(edited: boolean)
+    // {
+    //     // switch statement for content types 
+    //     switch (this.testSetUpData.contentTypeforTest.contentType)
+    //     {
+    //         case this.testSetUpData.validContentTypeList.consultation: {
+    //             // nav back to homepage
+    //             await this.page.getByRole('link', { name: 'Home', exact: true }).click();
+    //             await this.homePage.homePageURLCheck();
+    //             // clicking more news link on the homepage
+    //             await this.homePage.clickConsultationNavLink();
+    //             await this.consultationFacetPage.consultationPageURLCheck();
+
+    //             if (!edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
+    //             {
+
+    //                 await this.consultationFacetPage.enterContentTitleInSearch(this.testData.Consultation.title);
+    //                 await this.consultationFacetPage.clickConsultationFacetSearchButton();
+
+    //                 try
+    //                 {
+    //                     await this.testSteps.LogInfo('Published content has appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
+    //                     await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.title}")]`)).toBeVisible();
+    //                 }
+    //                 catch
+    //                 {
+    //                     await this.testSteps.LogInfo('Published content has NOT appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
+    //                     // wait 5 seconds and refresh page
+    //                     await this.testSteps.LogInfo('Wating 5 seconds');
+    //                     await this.page.waitForTimeout(5000);
+    //                     await this.testSteps.LogInfo('Reloading page');
+    //                     await this.page.reload();
+
+    //                     // remove last char from title
+    //                     const updatedTitle = this.testData.Consultation.title.slice(0, -1);
+    //                     // seatch again with new title
+    //                     await this.testSteps.LogInfo('Performing second search having removed final character from title to refresh solar cache - "' + updatedTitle + '"');
+    //                     await this.consultationFacetPage.enterContentTitleInSearch(updatedTitle);
+    //                     await this.consultationFacetPage.clickConsultationFacetSearchButton();
+    //                 }
+
+    //                 // verify
+    //                 await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.title}")]`)).toBeVisible();
+
+    //                 // add filters
+    //                 await this.consultationFacetPage.selectFacetFilterConsultationTopic();
+    //                 await this.consultationFacetPage.clickFacetFilterConsultationPublishedDateSpan();
+    //                 await this.consultationFacetPage.clickFacetFilterPubDateFilter();
+
+    //                 // full verification of content edited param is passed along through methods steming from test itself
+    //                 await this.verifyContent(edited);
+    //             }
+
+    //             if (!edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
+    //             {
+    //                 await this.consultationFacetPage.enterContentTitleInSearch(this.testData.Consultation.title);
+    //                 await this.consultationFacetPage.clickConsultationFacetSearchButton();
+    //                 await this.consultationFacetPage.selectFacetFilterConsultationTopic();
+    //                 // verify            
+    //                 await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.title}")]`)).toBeHidden();
+    //             }
+
+    //             if (edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
+    //             {
+    //                 await this.consultationFacetPage.enterContentTitleInSearch(this.testData.Consultation.titleEdited);
+    //                 await this.consultationFacetPage.clickConsultationFacetSearchButton();
+    //                 // add filters
+    //                 await this.consultationFacetPage.clickFacetFilterConsultationPublishedDateSpan();
+    //                 await this.consultationFacetPage.clickFacetFilterPubDateEditedFilter();
+    //                 await this.consultationFacetPage.selectFacetFilterConsultationTopic(true);
+    //                 // verify            
+    //                 await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.titleEdited}")]`)).toBeVisible();
+    //                 // full verification of content edited param is passed along through methods steming from test itself
+    //                 await this.verifyContent(edited);
+    //             }
+
+    //             if (edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
+    //             {
+    //                 await this.consultationFacetPage.enterContentTitleInSearch(this.testData.Consultation.titleEdited);
+    //                 await this.consultationFacetPage.clickConsultationFacetSearchButton();
+    //                 await this.consultationFacetPage.selectFacetFilterConsultationTopic(true);
+    //                 // verify            
+    //                 await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.titleEdited}")]`)).toBeHidden();
+    //             }
+    //             break;
+    //         }
+    //         case this.testSetUpData.validContentTypeList.news: {
+    //             // nav back to homepage
+    //             await this.page.getByRole('link', { name: 'Home', exact: true }).click();
+    //             await this.homePage.homePageURLCheck();
+    //             // clicking more news link on the homepage
+    //             await this.homePage.clickMoreNewsLink();
+    //             await this.newsFacetPage.newsPageURLCheck();
+
+    //             if (!edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
+    //             {
+    //                 await this.newsFacetPage.enterContentTitleInSearch(this.testData.News.title);
+    //                 await this.newsFacetPage.clickNewsFacetSearchButton();
+
+    //                 try
+    //                 {
+    //                     await this.testSteps.LogInfo('Published content has appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
+    //                     await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.title}")]`)).toBeVisible();
+    //                 }
+    //                 catch
+    //                 {
+    //                     await this.testSteps.LogInfo('Published content has NOT appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
+    //                     // wait 5 seconds and refresh page
+    //                     await this.testSteps.LogInfo('Wating 5 seconds');
+    //                     await this.page.waitForTimeout(5000);
+    //                     await this.testSteps.LogInfo('Reloading page');
+    //                     await this.page.reload();
+
+    //                     // remove last char from title
+    //                     const updatedTitle = this.testData.News.title.slice(0, -1);
+    //                     // seatch again with new title
+    //                     await this.testSteps.LogInfo('Performing second search having removed final character from title to refresh solar cache - "' + updatedTitle + '"');
+    //                     await this.newsFacetPage.enterContentTitleInSearch(updatedTitle);
+    //                     await this.newsFacetPage.clickNewsFacetSearchButton();
+    //                 }
+
+    //                 // verify
+    //                 await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.title}")]`)).toBeVisible();
+    //                 // add filters
+    //                 await this.newsFacetPage.clickFacetFilterPubDateSpan();
+    //                 await this.newsFacetPage.clickFacetFilterPubDateFilter();
+    //                 // verify            
+    //                 await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.title}")]`)).toBeVisible();
+    //                 // full verification of content edited param is passed along through methods steming from test itself
+    //                 await this.verifyContent(edited);
+    //             }
+
+    //             if (!edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
+    //             {
+    //                 await this.newsFacetPage.enterContentTitleInSearch(this.testData.News.title);
+    //                 await this.newsFacetPage.clickNewsFacetSearchButton();
+    //                 // verify            
+    //                 await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.title}")]`)).toBeHidden();
+    //             }
+
+    //             if (edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
+    //             {
+    //                 await this.newsFacetPage.enterContentTitleInSearch(this.testData.News.titleEdited);
+    //                 await this.newsFacetPage.clickNewsFacetSearchButton();
+    //                 // add filters
+    //                 await this.newsFacetPage.clickFacetFilterPubDateSpan();
+    //                 await this.newsFacetPage.clickFacetFilterPubDateEditedFilter();
+    //                 // verify            
+    //                 await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.titleEdited}")]`)).toBeVisible();
+    //                 // full verification of content edited param is passed along through methods steming from test itself
+    //                 await this.verifyContent(edited);
+    //             }
+
+    //             if (edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
+    //             {
+    //                 await this.newsFacetPage.enterContentTitleInSearch(this.testData.News.titleEdited);
+    //                 await this.newsFacetPage.clickNewsFacetSearchButton();
+    //                 // verify
+    //                 await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.titleEdited}")]`)).toBeHidden();
+    //                 // add filters
+    //                 await this.newsFacetPage.clickFacetFilterPubDateSpan();
+    //                 await this.newsFacetPage.clickFacetFilterPubDateEditedFilter();
+    //                 // verify            
+    //                 await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.titleEdited}")]`)).toBeHidden();
+    //             }
+    //             break;
+    //         }
+    //         case this.testSetUpData.validContentTypeList.publication: {
+    //             // nav back to homepage
+    //             await this.page.getByRole('link', { name: 'Home', exact: true }).click();
+    //             await this.homePage.homePageURLCheck();
+    //             // clicking more news link on the homepage
+    //             await this.homePage.clickPublicationNavLink();
+    //             await this.publicationFacetPage.publicationPageURLCheck();
+
+    //             if (!edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
+    //             {
+    //                 await this.publicationFacetPage.enterContentTitleInSearch(this.testData.Publication.title);
+    //                 await this.publicationFacetPage.clickPublicationFacetSearchButton();
+
+    //                 try
+    //                 {
+    //                     await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.title}")]`)).toBeVisible();
+    //                 }
+    //                 catch
+    //                 {
+    //                     // wait 2 seconds and refresh page
+    //                     await this.page.waitForTimeout(2000);
+    //                     // remove last char from title
+    //                     const updatedTitle = this.testSetUpData.contentTitleforTest.contentTitle.slice(0, -1);
+    //                     // seatch again with new title
+    //                     await this.publicationFacetPage.enterContentTitleInSearch(updatedTitle);
+    //                     await this.publicationFacetPage.clickPublicationFacetSearchButton();
+    //                     await expect(this.page.locator('//a/h3[contains(text(), "' + this.testData.Publication.title + '")]')).toBeVisible();
+    //                 }
+
+    //                 // add filters
+    //                 await this.publicationFacetPage.clickFacetFilterTypeSpan();
+    //                 await this.publicationFacetPage.clickFacetFilterTypeFilter();
+    //                 // verify
+    //                 await expect(this.page.locator('//a/h3[contains(text(), "' + this.testData.Publication.title + '")]')).toBeVisible();
+    //                 // add filters
+    //                 await this.publicationFacetPage.clickFacetFilterPubDateSpan();
+    //                 await this.publicationFacetPage.clickFacetFilterPubDateFilter();
+    //                 // verify            
+    //                 await expect(this.page.locator('//a/h3[contains(text(), "' + this.testData.Publication.title + '")]')).toBeVisible();
+    //                 // full verification of content edited param is passed along through methods steming from test itself
+    //                 await this.verifyContent(edited);
+    //             }
+
+    //             if (!edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
+    //             {
+    //                 await this.publicationFacetPage.enterContentTitleInSearch(this.testData.Publication.title);
+    //                 await this.publicationFacetPage.clickPublicationFacetSearchButton();
+    //                 try
+    //                 {
+    //                     // verify
+    //                     await expect(this.page.locator('//a/h3[contains(text(), "' + this.testData.Publication.title + '")]')).toBeHidden();
+    //                 }
+    //                 catch
+    //                 {
+    //                     // wait 5 seconds and refresh page
+    //                     await this.page.waitForTimeout(2000);
+    //                     // remove last char from title
+    //                     const updatedTitle = this.testSetUpData.contentTitleforTest.contentTitle.slice(0, -1);
+    //                     // seatch again with new title
+    //                     await this.publicationFacetPage.enterContentTitleInSearch(updatedTitle);
+    //                     await this.publicationFacetPage.clickPublicationFacetSearchButton();
+    //                     await expect(this.page.locator('//a/h3[contains(text(), "' + this.testData.Publication.title + '")]')).toBeHidden();
+    //                 }
+    //             }
+
+    //             if (edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
+    //             {
+    //                 await this.publicationFacetPage.enterContentTitleInSearch(this.testData.Publication.titleEdited);
+    //                 await this.publicationFacetPage.clickPublicationFacetSearchButton();
+
+    //                 try
+    //                 {
+    //                     await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.title}")]`)).toBeVisible();
+    //                 }
+    //                 catch
+    //                 {
+    //                     // wait 5 seconds and refresh page
+    //                     await this.page.waitForTimeout(2000);
+    //                     // remove last char from title
+    //                     const updatedTitle = this.testSetUpData.contentTitleforTest.contentTitle.slice(0, -1);
+    //                     // seatch again with new title
+    //                     await this.publicationFacetPage.enterContentTitleInSearch(updatedTitle);
+    //                     await this.publicationFacetPage.clickPublicationFacetSearchButton();
+    //                     await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.titleEdited}")]`)).toBeVisible();
+    //                 }
+
+    //                 // add filters
+    //                 await this.publicationFacetPage.clickFacetFilterTypeSpan();
+    //                 await this.publicationFacetPage.clickFacetFilterTypeEditedFilter();
+    //                 // add filters
+    //                 await this.publicationFacetPage.clickFacetFilterPubDateSpan();
+    //                 await this.publicationFacetPage.clickFacetFilterPubDateEditedFilter();
+    //                 // verify            
+    //                 await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.titleEdited}")]`)).toBeVisible();
+    //                 // full verification of content edited param is passed along through methods steming from test itself
+    //                 await this.verifyContent(edited);
+    //             }
+
+    //             if (edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
+    //             {
+    //                 await this.publicationFacetPage.enterContentTitleInSearch(this.testData.Publication.titleEdited);
+    //                 await this.publicationFacetPage.clickPublicationFacetSearchButton();
+    //                 try
+    //                 {
+    //                     // verify
+    //                     await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.titleEdited}")]`)).toBeHidden();
+    //                 }
+    //                 catch
+    //                 {
+    //                     // wait 5 seconds and refresh page
+    //                     await this.page.waitForTimeout(2000);
+    //                     // remove last char from title
+    //                     const updatedTitle = this.testSetUpData.contentTitleforTest.contentTitle.slice(0, -1);
+    //                     // seatch again with new title
+    //                     await this.publicationFacetPage.enterContentTitleInSearch(updatedTitle);
+    //                     await this.publicationFacetPage.clickPublicationFacetSearchButton();
+    //                     await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.titleEdited}")]`)).toBeHidden();
+    //                 }
+    //             }
+    //             break;
+    //         }
+    //     }
+
+    // }
 }
+

@@ -62,19 +62,15 @@ export class ArticleNodePage
         await this.testSteps.LogInfo('Verifying Areas of Expertise and selected values are visible');
         await expect(this.page.getByText('Areas of Expertise:', { exact: true })).toBeVisible();
         await expect(this.page.getByRole('link', { name: this.testData.Article.areaOfExpertise, exact: true })).toBeVisible();
-        if (addSecondAreaOfExpertise === true)
-        {
-            await expect(this.page.getByRole('link', { name: this.testData.Article.areaOfExpertise2, exact: true })).toBeVisible();
-        }
+        await expect(this.page.getByRole('link', { name: this.testData.Article.areaOfExpertise2, exact: true })).toBeVisible();
+
 
         // verify services
         await this.testSteps.LogInfo('Verifying Service and selected values are visible');
         await expect(this.page.getByText('Service:', { exact: true })).toBeVisible();
         await expect(this.page.getByRole('link', { name: this.testData.Article.service, exact: true })).toBeVisible();
-        if (addSecondService === true)
-        {
-            await expect(this.page.getByRole('link', { name: this.testData.Article.service2, exact: true })).toBeVisible();
-        }
+        await expect(this.page.getByRole('link', { name: this.testData.Article.service2, exact: true })).toBeVisible();
+
 
         // verify summary
         await this.testSteps.LogInfo(`Verifying Summary "${this.testData.Article.summary}" is visible`);
@@ -91,6 +87,20 @@ export class ArticleNodePage
         // verify title
         await this.testSteps.LogInfo(`Verifying title "${this.testData.Article.titleEdited}" is visible`);
         await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.Article.titleEdited);
+
+        // verify expertise area
+        await this.testSteps.LogInfo('Verifying Areas of Expertise and selected value are visible');
+        await expect(this.page.getByText('Areas of Expertise:', { exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Article.areaOfExpertise2Edited, exact: true })).toBeVisible();
+        // This values are stored as - None -  therefore ensuring - None - does not dipslay as a Area of Expertise option
+        await expect(this.page.getByText(this.testData.Article.areaOfExpertiseEdited, { exact: true })).toBeHidden();
+
+        // verify service
+        await this.testSteps.LogInfo('Verifying Service and selected value are visible');
+        await expect(this.page.getByText('Service:', { exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Article.serviceEdited, exact: true })).toBeVisible();
+        // This values are stored as - None -  therefore ensuring - None - does not display as a Service option
+        await expect(this.page.getByText(this.testData.Article.service2Edited, { exact: true })).toBeHidden();
 
         // verify summary
         await this.testSteps.LogInfo(`Verifying Summary "${this.testData.Article.summaryEdited}" is visible`);

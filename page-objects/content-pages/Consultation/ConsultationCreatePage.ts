@@ -11,6 +11,9 @@ import { UploadMediaHelper } from '@helpers/general/UploadMediaHelper';
 export interface ConsultationSaveData
 {
   consultationTitle: string;
+  consultationSiteTopic: string;
+  consultationSiteTopic2: string;
+  consultationPublishedDate: string;
   revisionLogMessage: string;
   consultationSummary: string;
   consultationStartDate: string;
@@ -38,6 +41,7 @@ export class ConsultationCreatePage
 
   // locators
   private readonly consultationTitleField: Locator;
+  private readonly consultationPublishedDate: Locator;
   private readonly consultationSummaryField: Locator;
   private readonly consultationStartDate: Locator;
   private readonly consultationStartTime: Locator;
@@ -73,6 +77,7 @@ export class ConsultationCreatePage
 
     // locators
     this.consultationTitleField = page.locator('#edit-title-0-value');
+    this.consultationPublishedDate = page.getByRole('textbox', { name: 'Date *', description: /published date/ });
     this.consultationSummaryField = page.locator('#edit-field-summary-0-value');
     this.consultationStartDate = page.locator('#edit-field-consultation-dates-0-value-date');
     this.consultationStartTime = page.locator('#edit-field-consultation-dates-0-value-time');
@@ -115,6 +120,31 @@ export class ConsultationCreatePage
   {
     await this.testSteps.LogInfo(`Entering "${consultationTitle}" into the Title field`);
     await this.consultationTitleField.fill(consultationTitle);
+  }
+
+  async selectConsultationSiteTopic(siteTopic: string)
+  {
+    await this.testSteps.LogInfo(`Selecting "${siteTopic}" from the Site topics dropdown`);
+    await this.page.locator('#edit-field-site-topics-shs-0-0').selectOption({ label: siteTopic });
+  }
+
+  async clickAddAnotherConsultationSiteTopic()
+  {
+    await this.testSteps.LogInfo('Clicking Add another item for Site topics');
+    await this.page.locator('.js-form-item-field-site-topics')
+      .getByText('Add another item', { exact: true }).click();
+  }
+
+  async selectConsultationSiteTopic2(siteTopic2: string)
+  {
+    await this.testSteps.LogInfo(`Selecting "${siteTopic2}" from the second Site topics dropdown`);
+    await this.page.locator('#edit-field-site-topics-shs-1-0').selectOption({ label: siteTopic2 });
+  }
+
+  async enterConsultationPublishedDate(publishedDate: string)
+  {
+    await this.testSteps.LogInfo(`Entering "${publishedDate}" into the published date field`);
+    await this.consultationPublishedDate.fill(publishedDate);
   }
 
   // enter consultation summary 
@@ -198,15 +228,22 @@ export class ConsultationCreatePage
     await this.createConsultationPageURLCheck();
     await this.enterConsultationTitle(data.consultationTitle);
     await this.createPages.enterRevisionLogMessage(data.revisionLogMessage);
-    await this.enterConsultationSummary(data.consultationSummary);
+
+    await this.selectConsultationSiteTopic(data.consultationSiteTopic);
+    await this.clickAddAnotherConsultationSiteTopic();
+    await this.selectConsultationSiteTopic2(data.consultationSiteTopic2);
+
+    await this.enterConsultationPublishedDate(data.consultationPublishedDate);
+
     await this.enterConsultationStartDate(data.consultationStartDate);
     await this.enterConsultationStartTime(data.consultationStartTime);
     await this.enterConsultationEndDate(data.consultationEndDate);
     await this.enterConsultationEndTime(data.consultationEndTime);
+
+    await this.enterConsultationSummary(data.consultationSummary);
+
     await this.ckeditor.enterCKEditorBody(data.consultationBody);
-    await this.enterConsultationRespondOnline(data.consultationRespondOnline);
-    await this.enterConsultationEmailAddress(data.consultationEmailAddress);
-    await this.enterConsultationPostalAddress(data.consultationPostalAddress);
+
 
     if (data.existingRemoteDocumentName)
     {
@@ -219,5 +256,10 @@ export class ConsultationCreatePage
         edited: false
       });
     }
+
+
+    await this.enterConsultationRespondOnline(data.consultationRespondOnline);
+    await this.enterConsultationEmailAddress(data.consultationEmailAddress);
+    await this.enterConsultationPostalAddress(data.consultationPostalAddress);
   }
 }

@@ -104,9 +104,7 @@ export class ArticleHelper
             areaOfExpertise2: this.testData.Article.areaOfExpertise2,
             service: this.testData.Article.service,
             service2: this.testData.Article.service2,
-            articleBodyField: this.testData.Article.body,
-            addSecondAreaOfExpertise: options.addSecondAreaOfExpertise,
-            addSecondService: options.addSecondService,
+            articleBodyField: this.testData.Article.body
         });
 
         //Selecting the save as type
@@ -223,8 +221,6 @@ export class ArticleHelper
             service2: this.testData.Article.service2,
             articleBodyField: this.testData.Article.body,
             existingAudioName: options.existingAudioName,
-            addSecondAreaOfExpertise: options.addSecondAreaOfExpertise,
-            addSecondService: options.addSecondService,
         });
 
         //Selecting the save as type
@@ -275,8 +271,6 @@ export class ArticleHelper
                     service: this.testData.Article.service,
                     service2: this.testData.Article.service2,
                     articleBodyField: this.testData.Article.body,
-                    addSecondAreaOfExpertise: options.addSecondAreaOfExpertise,
-                    addSecondService: options.addSecondService,
                 }, bookOptions);
             }
         }

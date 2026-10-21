@@ -2,7 +2,7 @@ import { TestSteps } from '@poms/base-pages/TestSteps';
 import { test } from '@fixtures/MyFixtures';
 import { ModerationSideBar } from '@poms/base-pages/ModerationSideBar';
 
-test.describe('Article Author Tests', () =>
+test.describe('Article Author Tests', { tag: ['@regression', '@article', '@author'] }, () =>
 {
   // Pass the fixture for Article Authors into the beforeEach hook
   test.beforeEach(async ({ loginHelper, testSetUpData, testData }, testInfo) =>
@@ -22,7 +22,7 @@ test.describe('Article Author Tests', () =>
     await loginHelper.loginWithValidUser();
   });
 
-  test('ART-Auth-TC01 - Create - Create Article content as an "Author", perform mandatory field check and preview content', { tag: "@regression" },
+  test('ART-Auth-TC01 - Create - Create Article content as an "Author", perform mandatory field check and preview content', { tag: '@create' },
     async ({ loginHelper, articleHelper, anonymousHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
     {
       await articleHelper.createArticle({
@@ -52,7 +52,7 @@ test.describe('Article Author Tests', () =>
 
     });
 
-  test('ART-Auth-TC02 - Edit - Edit Article as an "Author" and ensure it is not published', { tag: "@regression" },
+  test('ART-Auth-TC02 - Edit - Edit Article as an "Author" and ensure it is not published', { tag: '@edit' },
     async ({ articleHelper, anonymousHelper }) =>
     {
       await articleHelper.createArticle({
@@ -74,7 +74,7 @@ test.describe('Article Author Tests', () =>
 
     });
 
-  test('ART-Auth-TC03 - Delete - Delete Article as an "Author"', { tag: "@regression" },
+  test('ART-Auth-TC03 - Delete - Delete Article as an "Author"', { tag: '@delete' },
     async ({ articleHelper, navigateToCreatedContentHelper, anonymousHelper, loginHelper }) =>
     {
       await articleHelper.createArticle({
@@ -107,7 +107,7 @@ test.describe('Article Author Tests', () =>
 
     });
 
-  test('ART-Auth-TC04 - Delete - Cannot delete Article created by "Supervisor" as an "Author"', { tag: "@regression" },
+  test('ART-Auth-TC04 - Delete - Cannot delete Article created by "Supervisor" as an "Author"', { tag: '@delete' },
     async ({ articleHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper, page, testSetUpData, testData }) =>
     {
       const permissionCheck = new ModerationSideBar(page, testSetUpData, testData);
@@ -157,7 +157,7 @@ test.describe('Article Author Tests', () =>
       await anonymousHelper.searchAsAnon({ edited: false });
     });
 
-  test('ART-Auth-TC05 - Compare Revision - Edit Article content and ensure user is able to compare Revisions ', { tag: "@regression" },
+  test('ART-Auth-TC05 - Compare Revision - Edit Article content and ensure user is able to compare Revisions ', { tag: '@revision' },
     async ({ articleHelper, revisionHelper, testSetUpData }) =>
     {
       // creating content
@@ -178,7 +178,7 @@ test.describe('Article Author Tests', () =>
       await revisionHelper.compareRevisions();
     });
 
-  test('ART-Auth-TC06 - Delete Revision - Edit Article content and ensure user is able to Delete Revisions', { tag: "@regression" },
+  test('ART-Auth-TC06 - Delete Revision - Edit Article content and ensure user is able to Delete Revisions', { tag: '@revision' },
     async ({ articleHelper, revisionHelper, testSetUpData }) =>
     {
       // creating content
@@ -208,7 +208,7 @@ test.describe('Article Author Tests', () =>
       });
     });
 
-  test('ART-Auth-TC07 - Revert Revision - Edit Article content and ensure user is able to Revert Revisions', { tag: "@regression" },
+  test('ART-Auth-TC07 - Revert Revision - Edit Article content and ensure user is able to Revert Revisions', { tag: '@revision' },
     async ({ articleHelper, revisionHelper, testSetUpData }) =>
     {
       // creating content
@@ -238,7 +238,7 @@ test.describe('Article Author Tests', () =>
       });
     });
 
-  test('ART-Auth-TC09 - Workbench -  Create Article content as an "Author", and use Workbench to complete all moderation states available', { tag: "@regression" },
+  test('ART-Auth-TC09 - Workbench -  Create Article content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' },
     async ({ articleHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
     {
       // creating article as a draft and performing mandatory field check
@@ -307,7 +307,7 @@ test.describe('Article Author Tests', () =>
 
 });
 
-test.describe('Article Supervisor Tests', () =>
+test.describe('Article Supervisor Tests', { tag: ['@regression', '@article', '@supervisor'] }, () =>
 {
   // Pass the fixture for Article Authors into the beforeEach hook
   test.beforeEach(async ({ loginHelper, testSetUpData, testData }, testInfo) =>
@@ -328,7 +328,7 @@ test.describe('Article Supervisor Tests', () =>
     await loginHelper.loginWithValidUser();
   });
 
-  test('ART-Super-TC01 - Create - Create Article content as an "Supervisor", perform mandatory field check and preview content', { tag: "@regression" }, async ({ articleHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData, testData }) =>
+  test('ART-Super-TC01 - Create - Create Article content as an "Supervisor", perform mandatory field check and preview content', { tag: '@create' }, async ({ articleHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData, testData }) =>
   {
     // creating article as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -336,8 +336,6 @@ test.describe('Article Supervisor Tests', () =>
     await articleHelper.createArticle({
       preview: true,
       mandatoryFieldCheck: false,
-      addSecondAreaOfExpertise: true,
-      addSecondService: true,
     });
 
     // searching as anon to ensure content is not viewable as draft
@@ -391,19 +389,16 @@ test.describe('Article Supervisor Tests', () =>
       Archive: true
     });
 
-    // searching as anon to ensure content is viewable as it is published
+    // searching as anon to ensure content is viewable as it is Archived
     await anonymousHelper.searchAsAnon({ edited: false });
-
   });
 
-  test('ART-Super-TC02 - Edit - Edit Published Article content and ensure edit is published as a "Supervisor" ', { tag: "@regression" }, async ({ articleHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData, testData }) =>
+  test('ART-Super-TC02 - Edit - Edit Published Article content and ensure edit is published as a "Supervisor" ', { tag: '@edit' }, async ({ articleHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData, testData }) =>
   {
     // creating content
     await articleHelper.createArticle({
       preview: false,
       mandatoryFieldCheck: false,
-      addSecondAreaOfExpertise: true,
-      addSecondService: true,
     });
 
     // moderating to published
@@ -431,7 +426,7 @@ test.describe('Article Supervisor Tests', () =>
     await anonymousHelper.searchAsAnon({ edited: true });
   });
 
-  test('ART-Super-TC03 - Delete - Delete Published Article as "Supervisor" and confirm it isnt viewable as an anon user', { tag: "@regression" }, async ({ articleHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData, testData }) =>
+  test('ART-Super-TC03 - Delete - Delete Published Article as "Supervisor" and confirm it isnt viewable as an anon user', { tag: '@delete' }, async ({ articleHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData, testData }) =>
   {
     // creating content
     await articleHelper.createArticle({
@@ -478,7 +473,7 @@ test.describe('Article Supervisor Tests', () =>
     await anonymousHelper.searchAsAnon({ edited: false });
   });
 
-  test('ART-Super-TC04 - Delete - Can delete Article created by "Author" as an "Supervisor"', { tag: "@regression" }, async ({ articleHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper, testSetUpData, testData }) =>
+  test('ART-Super-TC04 - Delete - Can delete Article created by "Author" as an "Supervisor"', { tag: '@delete' }, async ({ articleHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper, testSetUpData, testData }) =>
   {
     // Logging out as Before each will log in as an Author.
     await basePage.logOut();
@@ -529,7 +524,7 @@ test.describe('Article Supervisor Tests', () =>
     });
   });
 
-  test('ART-Super-TC05 - Compare Revision - Edit Article content and ensure user is able to compare Revisions ', { tag: "@regression" }, async ({ articleHelper, revisionHelper, testSetUpData }) =>
+  test('ART-Super-TC05 - Compare Revision - Edit Article content and ensure user is able to compare Revisions ', { tag: '@revision' }, async ({ articleHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await articleHelper.createArticle({
@@ -550,7 +545,7 @@ test.describe('Article Supervisor Tests', () =>
 
   });
 
-  test('ART-Super-TC06 - Delete Revision - Edit Article content and ensure user is able to Delete Revisions', { tag: "@regression" }, async ({ articleHelper, revisionHelper, testSetUpData }) =>
+  test('ART-Super-TC06 - Delete Revision - Edit Article content and ensure user is able to Delete Revisions', { tag: '@revision' }, async ({ articleHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await articleHelper.createArticle({
@@ -579,7 +574,7 @@ test.describe('Article Supervisor Tests', () =>
     });
   });
 
-  test('ART-Super-TC07 - Revert Revision - Edit Article content and ensure user is able to Revert Revisions', { tag: "@regression" }, async ({ articleHelper, revisionHelper, testSetUpData }) =>
+  test('ART-Super-TC07 - Revert Revision - Edit Article content and ensure user is able to Revert Revisions', { tag: '@revision' }, async ({ articleHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await articleHelper.createArticle({
@@ -608,7 +603,7 @@ test.describe('Article Supervisor Tests', () =>
     });
   });
 
-  test('ART-Super-TC09 - Workbench -  Create Article content as an "Supervisor", and use Workbench to complete all moderation states', { tag: "@regression" }, async ({ articleHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
+  test('ART-Super-TC09 - Workbench -  Create Article content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ articleHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
   {
     // creating article as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');

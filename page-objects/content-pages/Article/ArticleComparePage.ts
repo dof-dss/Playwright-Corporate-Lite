@@ -40,43 +40,54 @@ export class ArticleComparePage
     async verifyCompareArticle()
     {
         //-------------------- TITLE --------------------
-        await this.testSteps.LogInfo('Verifying "New" text has been removed from Title');
-        await expect(this.page.locator('//a[contains(text(),"Automated Test - ")]/del[text()="New"]')).toBeVisible();
+        const articleTitle = this.page.locator('//h2//a//span');
+        await this.testSteps.LogInfo('Verifying "New" text has been removed from the title');
+        await expect(articleTitle.locator('del')).toHaveText('New');
 
-        await this.testSteps.LogInfo('Verifying "Edited" text has been added to Title');
-        await expect(this.page.locator('//a[contains(text(),"Automated Test - ")]/ins[text()="Edited"]')).toBeVisible();
-
-        //-------------------- TOPICS --------------------
-        ///
-        //
-        // ------------------ ADD TOPICS WHEN FIXED - CURRENTLY A BUG  ------------------
-        //
-        ///
+        await this.testSteps.LogInfo('Verifying "Edited" text has been added to the title');
+        await expect(articleTitle.locator('ins')).toHaveText('Edited');
 
         //-------------------- SUMMARY --------------------
+        const articleSummary = this.page.locator('p.field-summary');
         await this.testSteps.LogInfo('Verifying "new" text has been removed from Summary');
-        await expect(this.page.locator('//div[@class="page-summary"]/del[text()="new"]')).toBeVisible();
+        await expect(articleSummary.locator('del')).toHaveText('new');
 
         await this.testSteps.LogInfo('Verifying "edited" text has been added to Summary');
-        await expect(this.page.locator('//div[@class="page-summary"]/ins[text()="edited"]')).toBeVisible();
+        await expect(articleSummary.locator('ins')).toHaveText('edited');
 
         //-------------------- BODY FIELD --------------------
-        await this.testSteps.LogInfo('Verifying "new" text has been removed from Body field');
-        await expect(this.page.locator('//div[@class="page-summary"]/following-sibling::p/del[text()="new"]')).toBeVisible();
+        const articleBody = this.page.locator('//p[contains(normalize-space(.), "article body content")]');
+        await this.testSteps.LogInfo('Verifying "new" text has been removed from Body section');
+        await expect(articleBody.locator('del')).toHaveText('new');
 
-        await this.testSteps.LogInfo('Verifying "edited" text has been added to Body field');
-        await expect(this.page.locator('//div[@class="page-summary"]/following-sibling::p/ins[text()="edited"]')).toBeVisible();
+        await this.testSteps.LogInfo('Verifying "edited" text has been added to Body section');
+        await expect(articleBody.locator('ins')).toHaveText('edited');
 
-        //-------------------- GLOBAL TOPICS --------------------
-        await this.testSteps.LogInfo('Verifying "Employment" has been removed from Global topics');
-        await expect(this.page.locator('//div[text()="Global topics"]/following-sibling::div//del/a[text()="Employment"]')).toBeVisible();
+        //-------------------- Area of Expertise --------------------
+        const areaOfExpertiseList = this.page.locator('//span[contains(@class,"site-topics--label") and normalize-space(.)="Areas of Expertise:"]/following-sibling::span[contains(@class,"site-topics--list")]');
+        await this.testSteps.LogInfo(`Verifying "${this.testData.Article.areaOfExpertise}" has been removed from Area of Expertise`);
+        await expect(areaOfExpertiseList.locator('.site-topics--item a del')).toHaveText(this.testData.Article.areaOfExpertise);
 
-        await this.testSteps.LogInfo('Verifying "Energy" has been added to Global topics');
-        await expect(this.page.locator('//div[text()="Global topics"]/following-sibling::div//ins/a[text()="Energy"]')).toBeVisible();
+        await this.testSteps.LogInfo(`Verifying "${this.testData.Article.areaOfExpertise2}" has been removed from Area of Expertise`);
+        await expect(areaOfExpertiseList.locator('.site-topics--item del a')).toHaveText(this.testData.Article.areaOfExpertise2);
+
+        await this.testSteps.LogInfo(`Verifying "${this.testData.Article.areaOfExpertise2Edited}" has been added to Area of Expertise`);
+        await expect(areaOfExpertiseList.locator('.site-topics--item ins a')).toHaveText(this.testData.Article.areaOfExpertise2Edited);
+
+
+        //-------------------- SERVICE --------------------
+        const serviceList = this.page.locator('//span[contains(@class,"site-topics--label") and normalize-space(.)="Service:"]/following-sibling::span[contains(@class,"site-topics--list")]');
+        await this.testSteps.LogInfo(`Verifying "${this.testData.Article.service}" has been removed from Service`);
+        await expect(serviceList.locator('.site-topics--item del a')).toHaveText(this.testData.Article.service);
+
+        await this.testSteps.LogInfo(`Verifying "${this.testData.Article.serviceEdited}" has been added to Service`);
+        await expect(serviceList.locator('.site-topics--item ins a')).toHaveText(this.testData.Article.serviceEdited);
+
+        await this.testSteps.LogInfo(`Verifying unchanged service "${this.testData.Article.service2}" remains visible`);
+        await expect(serviceList.getByRole('link', { name: this.testData.Article.service2, exact: true })).toBeVisible();
     }
 
 
-    // -------------------- Verify Gallery methods --------------------
 
     //verify article when being compared method
     async verifyCompareGallery()

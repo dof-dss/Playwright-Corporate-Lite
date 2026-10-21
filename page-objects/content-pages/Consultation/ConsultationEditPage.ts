@@ -11,7 +11,9 @@ import { UploadMediaHelper } from '@helpers/general/UploadMediaHelper';
 export interface ConsultationEditSaveData
 {
   consultationTitle: string;
-  consPubDate: string;
+  consultationSiteTopic: string;
+  consultationSiteTopic2: string;
+  consultationPublishedDate: string;
   revisionLogMessage: string;
   consultationSummary: string;
   consultationStartDate: string;
@@ -22,6 +24,7 @@ export interface ConsultationEditSaveData
   consultationRespondOnline: string;
   consultationEmailAddress: string;
   consultationPostalAddress: string;
+  existingRemoteDocumentName?: string;
 }
 
 export class ConsultationEditPage
@@ -68,7 +71,7 @@ export class ConsultationEditPage
 
     // locators
     this.consultationTitleField = page.locator('#edit-title-0-value');
-    this.consultationDatePubField = page.locator('#edit-field-published-date-0-value-date');
+    this.consultationDatePubField = page.getByRole('textbox', { name: 'Date *', description: /published date/ });
     this.consultationSummaryField = page.locator('#edit-field-summary-0-value');
     this.consultationStartDate = page.locator('#edit-field-consultation-dates-0-value-date');
     this.consultationStartTime = page.locator('#edit-field-consultation-dates-0-value-time');
@@ -102,6 +105,25 @@ export class ConsultationEditPage
   {
     await this.testSteps.LogInfo(`Entering "${consultationTitle}" into the Title field`);
     await this.consultationTitleField.fill(consultationTitle);
+  }
+
+  async selectConsultationSiteTopic(siteTopic: string)
+  {
+    await this.testSteps.LogInfo(`Selecting "${siteTopic}" from the Site topics dropdown`);
+    await this.page.locator('#edit-field-site-topics-shs-0-0').selectOption({ label: siteTopic });
+  }
+
+  async selectConsultationSiteTopic2(siteTopic2: string)
+  {
+    const secondSiteTopic = this.page.locator('#edit-field-site-topics-shs-1-0');
+    if (await secondSiteTopic.count() === 0)
+    {
+      await this.testSteps.LogInfo('Clicking Add another item for Site topics');
+      await this.page.locator('.js-form-item-field-site-topics')
+        .getByText('Add another item', { exact: true }).click();
+    }
+    await this.testSteps.LogInfo(`Selecting "${siteTopic2}" from the second Site topics dropdown`);
+    await secondSiteTopic.selectOption({ label: siteTopic2 });
   }
 
   // enter consultation published date
@@ -149,7 +171,7 @@ export class ConsultationEditPage
   // enter consultation consultation Respond Online
   async editConsultationRespondOnline(respondeOnline: string)
   {
-    await this.testSteps.LogInfo(`Entering "${respondeOnline}" into the Respond Online field`);
+    await this.testSteps.LogInfo(`Entering "${respondeOnline}" into Respond Online and selecting matching item`);
     await this.consultationRespondOnline.fill(respondeOnline);
   }
 
@@ -174,24 +196,34 @@ export class ConsultationEditPage
   {
     await this.editConsultationPageURLCheck();
     await this.editConsultationTitle(data.consultationTitle);
-    await this.editPubPublishedDate(data.consPubDate);
     await this.createPages.enterRevisionLogMessage(data.revisionLogMessage);
-    await this.editConsultationSummary(data.consultationSummary);
+    await this.selectConsultationSiteTopic(data.consultationSiteTopic);
+    await this.selectConsultationSiteTopic2(data.consultationSiteTopic2);
+    await this.editPubPublishedDate(data.consultationPublishedDate);
     await this.editConsultationStartDate(data.consultationStartDate);
     await this.editConsultationStartTime(data.consultationStartTime);
     await this.editConsultationEndDate(data.consultationEndDate);
     await this.editConsultationEndTime(data.consultationEndTime);
+    await this.editConsultationSummary(data.consultationSummary);
+    await this.ckeditor.enterCKEditorBody(data.consultationBody);
     await this.page.waitForTimeout(1000);
     await expect(this.page.locator('//input[contains(@id,"edit-field-attachment-selection-0-remove-button")]')).toBeEnabled();
     await this.page.locator('//input[contains(@id,"edit-field-attachment-selection-0-remove-button")]').click();
     await this.page.waitForTimeout(1000);
-    await this.ckeditor.enterCKEditorBody(data.consultationBody);
+    if (data.existingRemoteDocumentName)
+    {
+      await this.uploadMediaHelper.selectExistingRemoteDocumentFromLibrary(data.existingRemoteDocumentName);
+    }
+    else
+    {
+      await this.uploadMediaHelper.uploadAttachmentWorkflow({
+        original: false,
+        edited: true
+      });
+    }
+
     await this.editConsultationRespondOnline(data.consultationRespondOnline);
     await this.editConsultationEmailAddress(data.consultationEmailAddress);
     await this.editConsultationPostalAddress(data.consultationPostalAddress);
-    await this.uploadMediaHelper.uploadAttachmentWorkflow({
-      original: false,
-      edited: true
-    });
   }
 }
