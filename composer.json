@@ -1,6 +1,6 @@
 {
-    "name": "dof-dss/playwright-dept",
-    "description": "Playwright tests for Departmental sites",
+    "name": "dof-dss/playwright-corplite",
+    "description": "Playwright tests for corporate lite sites",
     "type": "drupal-library",
     "require": {}
 }
