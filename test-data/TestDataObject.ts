@@ -250,7 +250,7 @@ export const TestData = {
     remoteVideoURLEdited: 'https://www.youtube.com/watch?v=H6k77SXU6cU',
 
     attachmentName: 'Automated attachment Testing New',
-    attachmentNameEdited: 'Automated attachement Testing Edited',
+    attachmentNameEdited: 'Automated attachment Testing Edited',
 
     secureAttachmentName: 'Automated secure attachment Testing New',
     secureAttachmentNameEdited: 'Automated secure attachement Testing Edited',
@@ -264,7 +264,8 @@ export const TestData = {
   HSE_SiteTopics: {
     topic: 'Diving',
     topicEdited: 'Petrol',
-    topic2: 'COMAH',
+    topic2: 'Construction',
+    topic2Edited: '- None -',
   },
 
   Alert: {
@@ -340,8 +341,11 @@ export const TestData = {
     title: 'Automated Test - New sample Consultation title' + ' - ' + getTimestamp(),
     titleEdited: 'Automated Test - Edited sample Consultation title' + ' - ' + getTimestamp(),
     datePublished: '2025-12-31',
+    datePublishedEdited: '2023-01-01',
     consultationSiteTopic: 'Diving',
+    consultationSiteTopicEdited: 'First aid at work',
     consultationSiteTopic2: 'COMAH',
+    consultationSiteTopic2Edited: '- None -',
     existingRemoteDocumentName: 'HSENI Annual Report and Statement of Accounts 2025-26',
     revisionlog: 'This is an automated revision log message',
     revisionlogEdited: 'This is an edited automated revision log message',
@@ -365,6 +369,8 @@ export const TestData = {
     postalAddressEdited: 'NICS Library Service Craigantlet Buildings Stoney LE3 3SX',
     verifyStartDateAndTime: verifyStartDateFormated + ', ' + '12.00 am',
     verifyEndDateAndTime: verifyEndDateFormated + ', ' + '11.59 pm',
+    verifyEditedStartDateAndTime: '31 December 2025, 10.00 am',
+    verifyEditedEndDateAndTime: '31 December 2025, 5.00 pm',
     verifyStartDate: verifyStartDateFormated,
     verifyEndDate: verifyEndDateFormated,
     futureStartDate: formattedFutureStartDate,
