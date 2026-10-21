@@ -34,7 +34,7 @@ export class HomePage
         // locators 
         this.siteSearchField = page.locator('#edit-query');
         this.siteSearchButton = page.locator('#edit-submit-search');
-        this.conultationNavBarLink = this.page.getByRole('link', { name: 'Consultations', exact: true });
+        this.conultationNavBarLink = this.page.getByRole('link', { name: 'Latest Consultations' });
         this.moreNewsLink = this.page.getByRole('link', { name: 'More news...', exact: true });
         this.publicationNavBarLink = this.page.getByRole('link', { name: 'Publications', exact: true });
     }
