@@ -189,9 +189,6 @@ export class ArticleCreatePage
       case 'functionality':
         await this.ckeditor.enterCKEditorBodyFunctionality(data.articleBodyField, data.existingAudioName);
         break;
-      case 'importFromWord':
-        await this.ckeditor.enterCKEditorBodyImportFromWord(data.articleBodyField);
-        break;
       default:
         await this.ckeditor.enterCKEditorBody(data.articleBodyField);
     }

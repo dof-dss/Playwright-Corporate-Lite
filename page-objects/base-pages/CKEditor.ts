@@ -69,15 +69,6 @@ export class CKEditor
         await this.ckEditorFullWorkflow(existingAudioName);
     }
 
-    // enter body CKEditor 
-    async enterCKEditorBodyImportFromWord(body: string)
-    {
-        await this.testSteps.LogInfo(`Entering "${body}" into the Body field`);
-        await this.enterBodyField.fill(body);
-
-        await this.ImportWordFileToBodyField();
-    }
-
 
     // enter body CKEditor 
     async linkInternalNodeCKEditor(link: string)
@@ -791,29 +782,5 @@ export class CKEditor
 
         await this.testSteps.LogInfo('Typing "Row 2, Column 3" Into Second row, Third Column');
         await this.page.getByRole('cell').nth(5).pressSequentially('Row 2, Column 3');
-    }
-
-    async ImportWordFileToBodyField()
-    {
-
-        // If this method is to be expanded out to all content types it will need to be updated to include ids on selectors 
-        await this.enterBodyField.clear();
-
-        await this.testSteps.LogInfo('Hitting "Enter" on keyboard to take a new line');
-        await this.page.keyboard.press('Enter');
-
-        await this.page.waitForTimeout(1000);
-        await this.testSteps.LogInfo('Verifying "Show more items" option is enabled');
-        await expect(this.page.getByRole('button', { name: 'Show more items' })).toBeEnabled();
-
-        await this.testSteps.LogInfo('Clicking "Show more items" option clicked');
-        await this.page.getByRole('button', { name: 'Show more items' }).click();
-
-        await this.testSteps.LogInfo('Verifying "Import from Word" option is enabled');
-        await expect(this.page.getByRole('button', { name: 'Import from Word' })).toBeEnabled();
-
-        // uploading Audio
-        await this.uploadMedia.ImportWordFile(TestData.Media.wordFile);
-        await this.page.waitForTimeout(1000);
     }
 }
