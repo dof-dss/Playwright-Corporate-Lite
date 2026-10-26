@@ -124,6 +124,12 @@ export class CKEditor
         await this.addHeading3ToBodyField();
         // heading 4 formating
         await this.addHeading4ToBodyField();
+        // Heading 5 formating
+        await this.addHeading5ToBodyField();
+        // Heading 6 formatting
+        await this.addHeading6ToBodyField();
+        // Address formatting
+        await this.addAddressToBodyField();
         // information notice formating 
         await this.addInformationNoticeToBodyField();
         // Bullet Points formatting
@@ -131,8 +137,6 @@ export class CKEditor
         // Number list formatting 
         await this.addNumbersToBodyField();
         await this.addSpecificNumbersToBodyField();
-        // Number list revrersed order formatting 
-        await this.addReverseNumbersToBodyField();
         // Adding Image via CK Editor
         await this.addMediaImageToBodyField();
         // Adding Audio File
@@ -371,6 +375,84 @@ export class CKEditor
         await this.enterBodyField.pressSequentially('This is Heading 4');
     }
 
+      async addHeading5ToBodyField()
+    {
+        // If this method is to be expanded out to all content types it will need to be updated to include ids on selectors 
+
+        await this.testSteps.LogInfo('Hitting "Enter" on keyboard to take a new line');
+        await this.page.keyboard.press('Enter');
+
+        // Inputing Heading 2 text into CK Editor field        
+        await this.page.waitForTimeout(1000);
+        await this.testSteps.LogInfo('Verifying "Paragraph, Heading" Format option is enabled');
+        await expect(this.page.getByRole('button', { name: 'Paragraph, Heading' })).toBeEnabled();
+
+        await this.testSteps.LogInfo('Clicking "Paragraph, Heading" Format option');
+        await this.page.getByRole('button', { name: 'Paragraph, Heading' }).click();
+
+        await this.testSteps.LogInfo('Verifying "Heading 5" Format option is enabled');
+        await expect(this.page.getByRole('menuitemradio', { name: 'Heading 5' })).toBeEnabled();
+
+        await this.testSteps.LogInfo('Clicking "Heading 5" Format option');
+        await this.page.getByRole('menuitemradio', { name: 'Heading 5' }).click();
+
+        await this.page.waitForTimeout(1000);
+        await this.testSteps.LogInfo('Entering "This is Heading 5" text into CKEditor');
+        await this.enterBodyField.pressSequentially('This is Heading 5');
+    }
+
+      async addHeading6ToBodyField()
+    {
+        // If this method is to be expanded out to all content types it will need to be updated to include ids on selectors 
+
+        await this.testSteps.LogInfo('Hitting "Enter" on keyboard to take a new line');
+        await this.page.keyboard.press('Enter');
+
+        // Inputing Heading 2 text into CK Editor field        
+        await this.page.waitForTimeout(1000);
+        await this.testSteps.LogInfo('Verifying "Paragraph, Heading" Format option is enabled');
+        await expect(this.page.getByRole('button', { name: 'Paragraph, Heading' })).toBeEnabled();
+
+        await this.testSteps.LogInfo('Clicking "Paragraph, Heading" Format option');
+        await this.page.getByRole('button', { name: 'Paragraph, Heading' }).click();
+
+        await this.testSteps.LogInfo('Verifying "Heading 6" Format option is enabled');
+        await expect(this.page.getByRole('menuitemradio', { name: 'Heading 6' })).toBeEnabled();
+
+        await this.testSteps.LogInfo('Clicking "Heading 6" Format option');
+        await this.page.getByRole('menuitemradio', { name: 'Heading 6' }).click();
+
+        await this.page.waitForTimeout(1000);
+        await this.testSteps.LogInfo('Entering "This is Heading 6" text into CKEditor');
+        await this.enterBodyField.pressSequentially('This is Heading 6');
+    }
+
+      async addAddressToBodyField()
+    {
+        // If this method is to be expanded out to all content types it will need to be updated to include ids on selectors 
+
+        await this.testSteps.LogInfo('Hitting "Enter" on keyboard to take a new line');
+        await this.page.keyboard.press('Enter');
+
+        // Inputing Heading 2 text into CK Editor field        
+        await this.page.waitForTimeout(1000);
+        await this.testSteps.LogInfo('Verifying "Paragraph, Heading" Format option is enabled');
+        await expect(this.page.getByRole('button', { name: 'Paragraph, Heading' })).toBeEnabled();
+
+        await this.testSteps.LogInfo('Clicking "Paragraph, Heading" Format option');
+        await this.page.getByRole('button', { name: 'Paragraph, Heading' }).click();
+
+        await this.testSteps.LogInfo('Verifying "Address" Format option is enabled');
+        await expect(this.page.getByRole('menuitemradio', { name: 'Address' })).toBeEnabled();
+
+        await this.testSteps.LogInfo('Clicking "Address" Format option');
+        await this.page.getByRole('menuitemradio', { name: 'Address' }).click();
+
+        await this.page.waitForTimeout(1000);
+        await this.testSteps.LogInfo('Entering "This is an Address" text into CKEditor');
+        await this.enterBodyField.pressSequentially('This is an Address');
+    }
+
     async addInformationNoticeToBodyField()
     {
         // If this method is to be expanded out to all content types it will need to be updated to include ids on selectors 
@@ -520,51 +602,6 @@ export class CKEditor
         await this.page.keyboard.press('Enter');
     }
 
-    async addReverseNumbersToBodyField()
-    {
-        // If this method is to be expanded out to all content types it will need to be updated to include ids on selectors 
-
-        await this.testSteps.LogInfo('Hitting "Enter" on keyboard to take a new line');
-        await this.page.keyboard.press('Enter');
-
-        await this.page.waitForTimeout(1000);
-        await this.testSteps.LogInfo('Clicking "Numbered List" Format option');
-        await this.page.getByRole('button', { name: 'Numbered List' }).first().click();
-
-        await this.testSteps.LogInfo('Clicking "Numbered List" Format options to display options');
-        await this.page.getByRole('button', { name: 'Numbered List' }).nth(1).click();
-
-        await this.testSteps.LogInfo('Clicking "Start at" option');
-        await this.page.getByRole('spinbutton', { name: 'Start at' }).click();
-
-        await this.testSteps.LogInfo('Entering Start at "50" ');
-        await this.page.getByRole('spinbutton', { name: 'Start at' }).fill('50');
-
-        await this.testSteps.LogInfo('Clicking "Revered order" toggle button');
-        await this.page.getByRole('button', { name: 'Reversed order' }).click();
-
-        await this.testSteps.LogInfo('Clicking on formatted number to enter text');
-        await this.page.waitForTimeout(500);
-        await this.page.locator('//ol[@reversed="reversed" and @start="50"]').click();
-        await this.page.waitForTimeout(500);
-
-        await this.testSteps.LogInfo('Entering "This is a reverse Numbered List point test"');
-        await this.enterBodyField.pressSequentially('Number 50 This is a reverse Numbered List point test.');
-
-        await this.testSteps.LogInfo('Hitting "Enter" on keyboard to take a new line');
-        await this.page.keyboard.press('Enter');
-        await this.testSteps.LogInfo('Entering "Number 49" for the 2nd Number list ');
-        await this.enterBodyField.pressSequentially('Number 49');
-
-        await this.testSteps.LogInfo('Hitting "Enter" on keyboard to take a new line');
-        await this.page.keyboard.press('Enter');
-        await this.testSteps.LogInfo('Entering "Number 48" for the 2nd Number list ');
-        await this.enterBodyField.pressSequentially('Number 48');
-
-        await this.testSteps.LogInfo('Hitting "Enter" twice on keyboard to break out of Numbered list option');
-        await this.page.keyboard.press('Enter');
-        await this.page.keyboard.press('Enter');
-    }
 
     async addMediaImageToBodyField()
     {

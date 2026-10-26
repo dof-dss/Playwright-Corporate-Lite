@@ -203,12 +203,6 @@ export class ArticleCreatePage
     await this.fillArticleForm(data, 'functionality');
   }
 
-  // // fill in article form elements with CKEditor importing from Word
-  // async fillArticleFormWithCKEditorImportingFromWord(data: ArticleSaveData)
-  // {
-  //   await this.fillArticleForm(data, 'importFromWord');
-  // }
-
   async fillArticleFormWithBook(data: ArticleSaveData, option: BooksHelper)
   {
     await this.fillArticleForm(data, 'standard');

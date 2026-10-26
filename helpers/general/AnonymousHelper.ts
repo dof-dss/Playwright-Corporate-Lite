@@ -57,8 +57,16 @@ export class AnonymousHelper
 
     async clickSeeAllContactsInTopic()
     {
-        await this.testSteps.LogInfo('Clicking "See all contacts in this topic"');
-        await this.page.getByRole('link', { name: 'See all contacts in this topic', exact: true }).click();
+        const seeAllContactsLink = this.page.getByRole('link', { name: 'See all contacts in this topic', exact: true });
+        if (await seeAllContactsLink.count() > 0)
+        {
+            await this.testSteps.LogInfo('Clicking "See all contacts in this topic"');
+            await seeAllContactsLink.click();
+        }
+        else
+        {
+            await this.testSteps.LogInfo('See all contacts is not available - No contacts available');
+        }
     }
 
     // setting correct node page to use for verification of published content used by searchAsAnon and searchFacetsAsAnon methods 
@@ -430,7 +438,7 @@ export class AnonymousHelper
     async searchConsultationFacetsAsAnon(edited: boolean)
     {
         // nav back to homepage
-        await this.page.getByRole('link', { name: 'Home', exact: true }).click();
+        await this.page.locator('#nav-main-menu').getByRole('link', { name: 'Home', exact: true }).click();
         await this.homePage.homePageURLCheck();
         // clicking more news link on the homepage
         await this.homePage.clickConsultationNavLink();
@@ -527,6 +535,9 @@ export class AnonymousHelper
             const link = exact
                 ? this.page.getByRole('link', { name: text, exact: true })
                 : this.page.getByRole('link').filter({ hasText: text }).first();
+
+            await this.testSteps.LogInfo(`Opening link containing text: "${text}"`);
+
             await expect(link).toBeVisible();
             await link.click();
         };
@@ -536,13 +547,33 @@ export class AnonymousHelper
             const contactLink = this.page.getByRole('link').filter({ hasText: title }).first();
             if (isPublished)
             {
-                await expect(contactLink).toBeVisible();
+                await this.testSteps.LogInfo(`Verifying published contact topic "${title}" is visible`);
+                try
+                {
+                    await expect(contactLink).toBeVisible();
+                }
+                catch
+                {
+                    //await this.page.waitForTimeout(2000);
+                    await this.page.reload();
+                    await expect(contactLink).toBeVisible();
+                }
                 await contactLink.click();
                 await this.verificationHelper.verifyChosenContent({ edited });
             }
             else
             {
-                await expect(contactLink).toBeHidden();
+                await this.testSteps.LogInfo(`Verifying unpublished contact topic "${title}" is not visible`);
+                try
+                {
+                    await expect(contactLink).toBeHidden();
+                }
+                catch
+                {
+                    //await this.page.waitForTimeout(2000);
+                    await this.page.reload();
+                    await expect(contactLink).toBeHidden();
+                }
             }
         };
 

@@ -45,7 +45,7 @@ export class HomePage
 
         if (!(await activeHome.isVisible()))
         {
-            await this.page.getByRole('link', { name: 'Home', exact: true }).click();
+            await this.page.getByRole('link', { name: 'Home', exact: true }).first().click();
         }
 
         await this.homePageURLCheck();

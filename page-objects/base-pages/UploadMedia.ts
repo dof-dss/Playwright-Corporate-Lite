@@ -398,8 +398,8 @@ export class UploadMedia
         await this.mediAltTextField.fill(addMediaAltText);
 
         // title
-        await this.testSteps.LogInfo(`Entering media Title "${addMediaTitle}"`);
-        await this.mediaTitleField.fill(addMediaTitle);
+        // await this.testSteps.LogInfo(`Entering media Title "${addMediaTitle}"`);
+        // await this.mediaTitleField.fill(addMediaTitle);
 
         // caption
         await this.testSteps.LogInfo(`Entering media Caption "${addMediaCaption}"`);

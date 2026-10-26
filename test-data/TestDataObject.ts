@@ -171,9 +171,9 @@ export const TestData = {
 
     // image 1 values 
     imageFileName: 'TestingImage.jpg',
-    imageAltText: '',
-    imageTitle: '',
-    imageCaption: '',
+    imageAltText: 'Testing Image Alt text',
+    imageTitle: 'Testing Image Title',
+    imageCaption: 'Testing Image Caption',
     imageName: 'Automated image Testing New',
 
     // image 2 name has no other values as this tests that the other fields are not mandatory

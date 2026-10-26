@@ -182,23 +182,23 @@ export class ArticleNodePage
 
         // verify ckeditor bold
         await this.testSteps.LogInfo('Verifying Body Field Bold Text "This is Bold" is visible');
-        await expect(this.page.locator('//div[@class="article-content"]/p/strong[contains(text(),"This is Bold")]')).toBeVisible();
+        await expect(this.page.locator('//article[@id="main-article"]/p/strong[contains(text(),"This is Bold")]')).toBeVisible();
 
         // verify ckeditor italics
         await this.testSteps.LogInfo('Verifying Body Field Italics Text "This is Italics" is visible');
-        await expect(this.page.locator('//div[@class="article-content"]/p/em[contains(text(),"This is Italics")]')).toBeVisible();
+        await expect(this.page.locator('//article[@id="main-article"]/p/em[contains(text(),"This is Italics")]')).toBeVisible();
 
         // verify ckeditor block quote
         await this.testSteps.LogInfo('Verifying Body Field Block Quote "This is a Block Quote" is visible');
-        await expect(this.page.locator('//div[@class="article-content"]/blockquote/p[contains(text(),"This is a Block quote")]')).toBeVisible();
+        await expect(this.page.locator('//article[@id="main-article"]/blockquote/p[contains(text(),"This is a Block quote")]')).toBeVisible();
 
         // verify ckeditor Superscript
         await this.testSteps.LogInfo('Verifying Body Field Superscript Text "This is a Superscript" is visible');
-        await expect(this.page.locator('//div[@class="article-content"]/p/sup[contains(text(),"This is a Superscript")]')).toBeVisible();
+        await expect(this.page.locator('//article[@id="main-article"]/p/sup[contains(text(),"This is a Superscript")]')).toBeVisible();
 
         // verify ckeditor nomral paragraph
         await this.testSteps.LogInfo('Verifying Body Field normal paragraph Text "This is a normal Paragraph" is visible');
-        await expect(this.page.locator('//div[@class="article-content"]/p[contains(text(),"This is a normal Paragraph")]')).toBeVisible();
+        await expect(this.page.locator('//article[@id="main-article"]/p[contains(text(),"This is a normal Paragraph")]')).toBeVisible();
 
         // verify  ckeditor h2
         await this.testSteps.LogInfo('Verifying Body Field Heading 2 "This is Heading 2" is visible');
@@ -212,62 +212,62 @@ export class ArticleNodePage
         await this.testSteps.LogInfo('Verifying Body Field Heading 4 "This is Heading 4" is visible');
         await expect(this.page.getByRole('heading', { name: 'This is Heading 4', level: 4, exact: true })).toBeVisible();
 
+         // verify  ckeditorh5
+        await this.testSteps.LogInfo('Verifying Body Field Heading 5 "This is Heading 5" is visible');
+        await expect(this.page.getByRole('heading', { name: 'This is Heading 5', level: 5, exact: true })).toBeVisible();
+
+         // verify  ckeditorh6
+        await this.testSteps.LogInfo('Verifying Body Field Heading 6 "This is Heading 6" is visible');
+        await expect(this.page.getByRole('heading', { name: 'This is Heading 6', level: 6, exact: true })).toBeVisible();
+
+         // verify ckeditor Address
+        await this.testSteps.LogInfo('Verifying Body Field Address Text "This is an Address" is visible');
+        await expect(this.page.locator('//article[@id="main-article"]/address[contains(text(),"This is an Address")]')).toBeVisible();
+
         // verify ckeditor Information notice
         await this.testSteps.LogInfo('Verifying Body Field Information notice Text "This is an Information notice" is visible');
-        await expect(this.page.locator('//strong[@class="visually-hidden"]')).toHaveText("Important information ");
+        await expect(this.page.locator('//article[@id="main-article"]//strong[@class="visually-hidden"]')).toHaveText("Important information ");
         await expect(this.page.getByText('This is an information notice')).toBeVisible();
 
         // verify ckeditor first bullet point
         await this.testSteps.LogInfo('Verifying Body Field Bullet Point 1 "First This is a Bullet point test" is visible');
-        await expect(this.page.locator('//ul/li[contains(text(),"First This is a Bullet point test")]')).toBeVisible();
+        await expect(this.page.locator('//article[@id="main-article"]//ul/li[contains(text(),"First This is a Bullet point test")]')).toBeVisible();
 
         // verify ckeditor second bullet point
         await this.testSteps.LogInfo('Verifying Body Field Bullet Point 2 "Second Bullet point" is visible');
-        await expect(this.page.locator('//ul/li[contains(text(),"Second Bullet point")]')).toBeVisible();
+        await expect(this.page.locator('//article[@id="main-article"]//ul/li[contains(text(),"Second Bullet point")]')).toBeVisible();
 
         // verify ckeditor third bullet point
         await this.testSteps.LogInfo('Verifying Body Field Bullet Point 3 "Third Bullet point" is visible');
-        await expect(this.page.locator('//ul/li[contains(text(),"Third Bullet point")]')).toBeVisible();
+        await expect(this.page.locator('//article[@id="main-article"]//ul/li[contains(text(),"Third Bullet point")]')).toBeVisible();
 
         // verify ckeditor first numbered list point
         await this.testSteps.LogInfo('Verifying Body Numbered list point 1 "Number 1 This is a Numbered List point test." is visible');
-        await expect(this.page.locator('//ol/li[contains(text(),"Number 1 This is a Numbered List point test.")]')).toBeVisible();
+        await expect(this.page.locator('//article[@id="main-article"]//ol/li[contains(text(),"Number 1 This is a Numbered List point test.")]')).toBeVisible();
 
         // verify ckeditor second numbered list point
         await this.testSteps.LogInfo('Verifying Body Field Numbered list point 2 "Number 2" is visible');
-        await expect(this.page.locator('//ol/li[contains(text(),"Number 2")]')).toBeVisible();
+        await expect(this.page.locator('//article[@id="main-article"]//ol/li[contains(text(),"Number 2")]')).toBeVisible();
 
         // verify ckeditor numbered list point
         await this.testSteps.LogInfo('Verifying Body Field Numbered list point 3 "Number 3" is visible');
-        await expect(this.page.locator('//ol/li[contains(text(),"Number 3")]')).toBeVisible();
+        await expect(this.page.locator('//article[@id="main-article"]//ol/li[contains(text(),"Number 3")]')).toBeVisible();
 
         // verify ckeditor first numbered list point starting from 10
         await this.testSteps.LogInfo('Verifying Body Field Numbered list point 1 "Number 10 This is Numbered List point test when started at value 10." is visible');
-        await expect(this.page.locator('//ol[@start="10"]/li[contains(text(),"Number 10 This is Numbered List point test when started at value 10.")]')).toBeVisible();
+        await expect(this.page.locator('//article[@id="main-article"]//ol[@start="10"]/li[contains(text(),"Number 10 This is Numbered List point test when started at value 10.")]')).toBeVisible();
 
         // verify ckeditor second numbered list point
         await this.testSteps.LogInfo('Verifying Body Field Numbered list point 2 "Number 11" is visible');
-        await expect(this.page.locator('//ol[@start="10"]/li[contains(text(),"Number 11")]')).toBeVisible();
+        await expect(this.page.locator('//article[@id="main-article"]//ol[@start="10"]/li[contains(text(),"Number 11")]')).toBeVisible();
 
         // verify ckeditor numbered list point
         await this.testSteps.LogInfo('Verifying Body Field Numbered list point 3 "Number 12" is visible');
-        await expect(this.page.locator('//ol[@start="10"]/li[contains(text(),"Number 12")]')).toBeVisible();
-
-        // verify ckeditor first numbered list point going in reverse order from 50
-        // await this.testSteps.LogInfo('Verifying Body Field Numbered list point 1 "Number 50 This is a reverse Numbered List point test." is visible');
-        // await expect(this.page.locator('//ol[@start="50"][@reversed="reversed"]/li[contains(text(),"Number 50 This is a reverse Numbered List point test.")]')).toBeVisible();
-
-        // verify ckeditor second numbered list point going in reverse order from 50
-        // await this.testSteps.LogInfo('Verifying Body Field Numbered list point 2 "Number 49" is visible');
-        // await expect(this.page.locator('//ol[@start="50"][@reversed="reversed"]/li[contains(text(),"Number 49")]')).toBeVisible();
-
-        // verify ckeditor numbered list point going in reverse order from 50
-        // await this.testSteps.LogInfo('Verifying Body Field Numbered list point 3 "Number 48" is visible');
-        // await expect(this.page.locator('//ol[@start="50"][@reversed="reversed"]/li[contains(text(),"Number 48")]')).toBeVisible();
+        await expect(this.page.locator('//article[@id="main-article"]//ol[@start="10"]/li[contains(text(),"Number 12")]')).toBeVisible();
 
         // verify ckeditor img is embeded
         await this.testSteps.LogInfo('Verifying Body Field image is embeded - NEEDS MANUAL ATTENTION');
-        await expect(this.page.locator('//div[@class="media-image"]/img')).toBeVisible();
+        await expect(this.page.locator('//figure/img')).toBeVisible();
 
         // verify ckeditor audio file is embeded
         await this.testSteps.LogInfo('Verifying Body Field audio file is embeded - NEEDS MANUAL ATTENTION');
