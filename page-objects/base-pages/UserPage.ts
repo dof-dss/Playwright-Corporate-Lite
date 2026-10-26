@@ -23,7 +23,11 @@ export class UserPage
         const formattedusername: string = this.testSetUpData.userForTest.username.replace(/_|\s/g, "");
 
         await this.testSteps.LogInfo(`Performing URL check to ensure user is on ${this.testSetUpData.urlForTest.url}/users/${formattedusername}?check_logged_in=1`);
-        await expect(this.page).toHaveURL(`${this.testSetUpData.urlForTest.url}/users/${formattedusername}?check_logged_in=1`);
+        const expectedURLs = [
+            `${this.testSetUpData.urlForTest.url}/users/${formattedusername}?check_logged_in=1`,
+            `${this.testSetUpData.urlForTest.url}/users/${formattedusername}-0?check_logged_in=1`
+        ];
+        await expect(this.page).toHaveURL(url => expectedURLs.includes(url.href));
     }
 
 

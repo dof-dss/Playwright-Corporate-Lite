@@ -40,25 +40,26 @@ export class ContactComparePage
     async verifyCompareContact()
     {
         //-------------------- TITLE --------------------
-        await this.testSteps.LogInfo('Verifying "New" text has been removed from Title');
-        await expect(this.page.locator('//a[contains(text(),"Automated Test - ")]/del[text()="New"]')).toBeVisible();
+        const consultationTitle = this.page.locator('//h2//a//span');
+        await this.testSteps.LogInfo('Verifying "New" text has been removed from the title');
+        await expect(consultationTitle.locator('del')).toHaveText('New');
 
-        await this.testSteps.LogInfo('Verifying "Edited" text has been added to Title');
-        await expect(this.page.locator('//a[contains(text(),"Automated Test - ")]/ins[text()="Edited"]')).toBeVisible();
-
-        //-------------------- TOPICS --------------------
-        ///
-        //
-        // ------------------ ADD TOPICS WHEN FIXED - CURRENTLY A BUG  ------------------
-        //
-        ///
+        await this.testSteps.LogInfo('Verifying "Edited" text has been added to the title');
+        await expect(consultationTitle.locator('ins')).toHaveText('Edited');
 
         //-------------------- BODY FIELD --------------------
+        const contactBody = this.page.locator('//p[contains(normalize-space(.), "contact body field")]');
         await this.testSteps.LogInfo('Verifying "new" text has been removed from Body field');
-        await expect(this.page.locator('//p/del[text()="new"]')).toBeVisible();
+        await expect(contactBody.locator('del')).toHaveText('new');
 
         await this.testSteps.LogInfo('Verifying "edited" text has been added to Body field');
-        await expect(this.page.locator('//p/ins[text()="edited"]')).toBeVisible();
+        await expect(contactBody.locator('ins')).toHaveText('edited');
+
+
+        // NEEDS FIXED: Implement verification when big is fixed
+        //-------------------- Statistics --------------------
+      
+        //--------------- Research and Support ---------------
 
     }
 }

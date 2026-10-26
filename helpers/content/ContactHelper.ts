@@ -92,6 +92,15 @@ export class ContactHelper
             contactTitle: this.testData.Contact.title,
             revisionLogMessage: this.testData.Contact.revisionlog,
             contactBody: this.testData.Contact.body,
+            statistics: this.testData.Contact.statistics,
+            statisticslevel1: this.testData.Contact.statisticslevel1,
+            statisticslevel2: this.testData.Contact.statisticslevel2,
+            statisticslevel3: this.testData.Contact.statisticslevel3,
+            statistics2: this.testData.Contact.statistics2,
+            researchAndSupport: this.testData.Contact.researchAndSupport,
+            researchAndSupportlevel1: this.testData.Contact.researchAndSupportlevel1,
+            researchAndSupportlevel2: this.testData.Contact.researchAndSupportlevel2,
+            researchAndSupport2: this.testData.Contact.researchAndSupport2,
             mapName: this.testData.Contact.mapName,
             mapLatitude: this.testData.Contact.mapLatitude,
             mapLongitude: this.testData.Contact.mapLongitude,
@@ -132,10 +141,16 @@ export class ContactHelper
         // complete contact form using edit isolated test data 
         await this.contactEditPage.editContactForm({
             contactTitle: this.testData.Contact.titleEdited,
+            statistics: this.testData.Contact.statisticsEdited,
+            statistics2: this.testData.Contact.statisticsEdited2,
+            researchAndSupport: this.testData.Contact.researchAndSupportEdited,
+            researchAndSupport2: this.testData.Contact.researchAndSupportEdited2,
             revisionLogMessage: this.testData.Contact.revisionlogEdited,
             contactBody: this.testData.Contact.bodyEdited,
             mapLocationModalName: this.testData.Contact.mapLocationModalName,
             mapName: this.testData.Contact.mapNameEdited,
+            mapLatitude: this.testData.Contact.mapLatitudeEdited,
+            mapLongitude: this.testData.Contact.mapLongitudeEdited,
         });
 
         // setting test set up data to new title

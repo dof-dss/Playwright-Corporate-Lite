@@ -48,13 +48,24 @@ export class ContactNodePage
         await this.testSteps.LogInfo(`Verifying title "${this.testData.Contact.title}" is visible`);
         await expect(this.page.getByRole('heading', { level: 1 })).toHaveText(this.testData.Contact.title);
 
+        // 
+        // Leave for adding of Statsistics to node page
+        //         
+        // Leave for addnig of Research and support to node page
+        //
+
         await this.testSteps.LogInfo(`Verifying Contact Body Field topic  "${this.testData.Contact.body}" IS visible`);
         await expect(this.page.getByText(this.testData.Contact.body)).toBeVisible();
 
-        if (TestSetUpData.userForTest.username === TestSetUpData.validUserList.supervisor_username)
+        if (this.testSetUpData.userForTest.username === this.testSetUpData.validUserList.supervisor_username)
         {
-            await this.testSteps.LogInfo(`Verifying Contact Map IS visible`);
-            await expect(this.page.getByRole('menuitemradio', { name: 'Show street map' })).toBeVisible();
+            await this.testSteps.LogInfo('Verifying the map container is visible');
+            await expect(this.page.locator('iframe[title="Map showing the location of this contact"]').contentFrame().getByRole('region', { name: 'Map' })).toBeVisible();
+
+            const coordinates = `${this.testData.Contact.mapLatitude.trim()},${this.testData.Contact.mapLongitude.trim()}`;
+            const mapLink = this.page.locator('a[href^="https://maps.google.com/?q="]');
+            await this.testSteps.LogInfo(`Verifying map link contains coordinates "${coordinates}"`);
+            await expect(mapLink).toHaveAttribute('href', `https://maps.google.com/?q=${coordinates}`);
         }
     }
 
@@ -65,13 +76,26 @@ export class ContactNodePage
         await this.testSteps.LogInfo(`Verifying title "${this.testData.Contact.titleEdited}" is visible`);
         await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.Contact.titleEdited);
 
+
+        // 
+        // Leave for adding of Statsistics to node page
+        //         
+        // Leave for addnig of Research and support to node page
+        //
+
         await this.testSteps.LogInfo(`Verifying Contact Body Field topic  "${this.testData.Contact.bodyEdited}" IS visible`);
         await expect(this.page.getByText(this.testData.Contact.bodyEdited)).toBeVisible();
 
-        if (TestSetUpData.userForTest.username === TestSetUpData.validUserList.supervisor_username)
+
+        if (this.testSetUpData.userForTest.username === this.testSetUpData.validUserList.supervisor_username)
         {
-            await this.testSteps.LogInfo(`Verifying Contact Map IS visible`);
-            await expect(this.page.getByRole('menuitemradio', { name: 'Show street map' })).toBeVisible();
+            await this.testSteps.LogInfo('Verifying the map container is visible');
+            await expect(this.page.locator('iframe[title="Map showing the location of this contact"]').contentFrame().getByRole('region', { name: 'Map' })).toBeVisible();
+
+            const coordinates = `${this.testData.Contact.mapLatitudeEdited.trim()},${this.testData.Contact.mapLongitudeEdited.trim()}`;
+            const mapLink = this.page.locator('a[href^="https://maps.google.com/?q="]');
+            await this.testSteps.LogInfo(`Verifying map link contains coordinates "${coordinates}"`);
+            await expect(mapLink).toHaveAttribute('href', `https://maps.google.com/?q=${coordinates}`);
         }
     }
 }

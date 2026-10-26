@@ -43,7 +43,7 @@ export class AddContentPage
         await expect(this.page.getByRole('link', { name: contentTypeName, exact: true })).toBeVisible();
     }
 
-        // Verifies the visibility of the content type link
+    // Verifies the visibility of the content type link
     async VerifyContentIsNOTVisible()
     {
         const contentTypeName = this.testSetUpData.contentTypeforTest.contentType;

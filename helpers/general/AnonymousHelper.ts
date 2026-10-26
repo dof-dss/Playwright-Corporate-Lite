@@ -55,6 +55,20 @@ export class AnonymousHelper
         return this.page.getByRole('heading', { name: title, level: 3 });
     }
 
+    async clickSeeAllContactsInTopic()
+    {
+        const seeAllContactsLink = this.page.getByRole('link', { name: 'See all contacts in this topic', exact: true });
+        if (await seeAllContactsLink.count() > 0)
+        {
+            await this.testSteps.LogInfo('Clicking "See all contacts in this topic"');
+            await seeAllContactsLink.click();
+        }
+        else
+        {
+            await this.testSteps.LogInfo('See all contacts is not available - No contacts available');
+        }
+    }
+
     // setting correct node page to use for verification of published content used by searchAsAnon and searchFacetsAsAnon methods 
     async verifyNodePageForSearch(editedStatus: boolean)
     {
@@ -149,6 +163,11 @@ export class AnonymousHelper
         {
             await this.searchConsultationFacetsAsAnon(edited);
         }
+
+        if (this.testSetUpData.contentTypeforTest.contentType === this.testSetUpData.validContentTypeList.contact)
+        {
+            await this.VerifyContactAsAnon({ edited });
+        }
     }
 
     // this method is used for the searchFacetsAsAnon method above as it is reused multiple times is accepts the edited param to determine what content to seek
@@ -220,513 +239,131 @@ export class AnonymousHelper
         // await this.verificationHelper.verifyChosenContent({ edited });
     }
 
+
+
     async VerifyArticleAsAnon({ edited }: ContentEdited)
     {
-        await this.testSteps.LogInfo('----- Verifying Article Dropdowns -----');
+        const article = this.testData.Article;
+        const articleAreas = edited
+            ? [article.areaOfExpertiseEdited, article.areaOfExpertise2Edited]
+            : [article.areaOfExpertise, article.areaOfExpertise2];
+        const articleServices = edited
+            ? [article.serviceEdited, article.service2Edited]
+            : [article.service, article.service2];
+        const title = edited ? article.titleEdited : article.title;
+        const isPublished = this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published;
+
+        const verifyArticleListing = async () =>
+        {
+            const articleLink = this.page.getByRole('link', { name: title, exact: true });
+            if (isPublished)
+            {
+                await expect(articleLink).toBeVisible();
+                await articleLink.click();
+                await this.verificationHelper.verifyChosenContent({ edited });
+            }
+            else
+            {
+                await expect(articleLink).toBeHidden();
+            }
+        };
 
         await this.testSteps.LogInfo('Opening Home to verify Areas of Expertise');
         await this.homePage.navigateToHome();
         await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
 
-        if (!edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
+        for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
         {
-            const article = this.testData.Article;
-            const articleAreas = [
-                article.areaOfExpertise,
-                article.areaOfExpertise2,
-            ];
-            const articleServices = [
-                article.service,
-                article.service2,
-            ];
-
-            await this.testSteps.LogInfo('----- Verifying via Areas of Expertise  ----- ');
-
-            for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
+            if (areaIndex > 0)
             {
-                if (areaIndex > 0)
-                {
-                    await this.testSteps.LogInfo('Returning Home to verify the next Area of Expertise');
-                    await this.homePage.navigateToHome();
-                    await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
-                }
-
-                if (areaOfExpertise === '- None -')
-                {
-                    await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is not visible`);
-                    await expect(this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })).toBeHidden();
-                    continue;
-                }
-
-                await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}"`);
-                await this.page.locator('a.card').filter({
-                    has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
-                }).click();
-
-                for (const [serviceIndex, service] of articleServices.entries())
-                {
-                    if (serviceIndex > 0)
-                    {
-                        await this.testSteps.LogInfo(`Returning to Area of Expertise "${areaOfExpertise}" for the next Service`);
-                        await this.homePage.navigateToHome();
-                        await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
-                        await this.page.locator('a.card').filter({
-                            has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
-                        }).click();
-                    }
-
-                    if (service === '- None -')
-                    {
-                        await this.testSteps.LogInfo(`Verifying Service "${service}" is not visible under Area of Expertise "${areaOfExpertise}"`);
-                        await expect(this.page.getByRole('link', { name: service, exact: true })).toBeHidden();
-                        continue;
-                    }
-
-                    await this.testSteps.LogInfo(`Opening Service "${service}" under Area of Expertise "${areaOfExpertise}"`);
-                    await this.page.getByRole('link', { name: service, exact: true }).click();
-
-                    await this.testSteps.LogInfo(`Verifying Article "${article.title}" is visible under Service "${service}"`);
-                    await expect(this.page.getByRole('link', { name: article.title, exact: true })).toBeVisible();
-
-                    await this.testSteps.LogInfo(`Verifying Article "${article.title}" can be opened under Area of Expertise "${areaOfExpertise}" and Service "${service}"`);
-                    await (this.page.getByRole('link', { name: article.title, exact: true })).click();
-
-                    await this.verificationHelper.verifyChosenContent({ edited });
-                }
+                await this.testSteps.LogInfo('Returning Home to verify the next Area of Expertise');
+                await this.homePage.navigateToHome();
+                await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
             }
 
-            await this.testSteps.LogInfo('----- Verifying via Services  ----- ');
-
-            await this.testSteps.LogInfo('Opening Services to verify Areas of Expertise');
-            await this.page.getByRole('link', { name: 'Services', exact: true }).click();
-            await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
-
-            for (const service of articleServices)
+            if (areaOfExpertise === '- None -')
             {
-                const serviceCard = this.page.locator('a.card').filter({
-                    has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
-                });
+                await expect(this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })).toBeHidden();
+                continue;
+            }
+
+            const expertiseCard = this.page.locator('a.card').filter({
+                has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
+            });
+            await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}"`);
+            await expertiseCard.click();
+
+            for (const [serviceIndex, service] of articleServices.entries())
+            {
+                if (serviceIndex > 0)
+                {
+                    await this.testSteps.LogInfo(`Returning to Area of Expertise "${areaOfExpertise}" for the next Service`);
+                    await this.homePage.navigateToHome();
+                    await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
+                    await this.page.locator('a.card').filter({
+                        has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
+                    }).click();
+                }
 
                 if (service === '- None -')
                 {
-                    await this.testSteps.LogInfo(`Verifying Service "${service}" is not visible`);
-                    await expect(serviceCard).toBeHidden();
+                    await expect(this.page.getByRole('link', { name: service, exact: true })).toBeHidden();
                     continue;
                 }
 
-                await this.testSteps.LogInfo(`Opening Service "${service}" to verify its Areas of Expertise`);
-                await serviceCard.click();
-
-                for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
-                {
-                    if (areaIndex > 0)
-                    {
-                        await this.testSteps.LogInfo(`Returning to Services to check Area of Expertise "${areaOfExpertise}" under "${service}"`);
-                        await this.page.getByRole('link', { name: 'Services', exact: true }).click();
-                        await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
-                        await this.page.locator('a.card').filter({
-                            has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
-                        }).click();
-                    }
-
-                    await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is listed under Service "${service}"`);
-                    const expertiseCard = this.page.locator('div.card').filter({
-                        has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
-                    });
-                    if (areaOfExpertise === '- None -')
-                    {
-                        await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is not visible under Service "${service}"`);
-                        await expect(expertiseCard).toBeHidden();
-                        continue;
-                    }
-
-                    await expect(expertiseCard).toBeVisible();
-
-                    await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}" under Service "${service}"`);
-                    await expertiseCard.getByRole('link', { name: areaOfExpertise, exact: true }).click();
-
-                    await this.testSteps.LogInfo(`Verifying Article "${article.title}" is visible under Area of Expertise "${areaOfExpertise}" and Service "${service}"`);
-                    await expect(this.page.getByRole('link', { name: article.title, exact: true })).toBeVisible();
-
-                    await this.testSteps.LogInfo(`Verifying Article "${article.title}" can be opened under Area of Expertise "${areaOfExpertise}" and Service "${service}"`);
-                    await (this.page.getByRole('link', { name: article.title, exact: true })).click();
-
-                    await this.verificationHelper.verifyChosenContent({ edited });
-                }
-                await this.page.getByRole('link', { name: 'Services', exact: true }).click();
-                await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
+                await this.testSteps.LogInfo(`Opening Service "${service}" under Area of Expertise "${areaOfExpertise}"`);
+                await this.page.getByRole('link', { name: service, exact: true }).click();
+                await verifyArticleListing();
             }
         }
 
-        if (edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
-        {
-            const article = this.testData.Article;
-            const articleAreas = [
-                article.areaOfExpertiseEdited,
-                article.areaOfExpertise2Edited,
-            ];
-            const articleServices = [
-                article.serviceEdited,
-                article.service2Edited,
-            ];
+        await this.testSteps.LogInfo('Opening Services to verify Areas of Expertise');
+        await this.page.getByRole('link', { name: 'Services', exact: true }).click();
+        await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
 
-            await this.testSteps.LogInfo('----- Verifying via Areas of Expertise  ----- ');
+        for (const service of articleServices)
+        {
+            const serviceCard = this.page.locator('a.card').filter({
+                has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
+            });
+
+            if (service === '- None -')
+            {
+                await expect(serviceCard).toBeHidden();
+                continue;
+            }
+
+            await this.testSteps.LogInfo(`Opening Service "${service}" to verify its Areas of Expertise`);
+            await serviceCard.click();
 
             for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
             {
                 if (areaIndex > 0)
                 {
-                    await this.testSteps.LogInfo('Returning Home to verify the next Area of Expertise');
-                    await this.homePage.navigateToHome();
-                    await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
+                    await this.page.getByRole('link', { name: 'Services', exact: true }).click();
+                    await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
+                    await serviceCard.click();
                 }
 
+                const expertiseCard = this.page.locator('div.card').filter({
+                    has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
+                });
                 if (areaOfExpertise === '- None -')
                 {
-                    await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is not visible`);
-                    await expect(this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })).toBeHidden();
+                    await expect(expertiseCard).toBeHidden();
                     continue;
                 }
 
-                await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}"`);
-                await this.page.locator('a.card').filter({
-                    has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
-                }).click();
-
-                for (const [serviceIndex, service] of articleServices.entries())
-                {
-                    if (serviceIndex > 0)
-                    {
-                        await this.testSteps.LogInfo(`Returning to Area of Expertise "${areaOfExpertise}" for the next Service`);
-                        await this.homePage.navigateToHome();
-                        await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
-                        await this.page.locator('a.card').filter({
-                            has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
-                        }).click();
-                    }
-
-                    if (service === '- None -')
-                    {
-                        await this.testSteps.LogInfo(`Verifying Service "${service}" is not visible under Area of Expertise "${areaOfExpertise}"`);
-                        await expect(this.page.getByRole('link', { name: service, exact: true })).toBeHidden();
-                        continue;
-                    }
-
-                    await this.testSteps.LogInfo(`Opening Service "${service}" under Area of Expertise "${areaOfExpertise}"`);
-                    await this.page.getByRole('link', { name: service, exact: true }).click();
-
-                    await this.testSteps.LogInfo(`Verifying Article "${article.titleEdited}" is visible under Service "${service}" `);
-                    await expect(this.page.getByRole('link', { name: article.titleEdited, exact: true })).toBeVisible();
-
-                    await this.testSteps.LogInfo(`Verifying Article "${article.titleEdited}" can be opened under Area of Expertise "${areaOfExpertise}" and Service "${service}"`);
-                    await (this.page.getByRole('link', { name: article.titleEdited, exact: true })).click();
-
-                    await this.verificationHelper.verifyChosenContent({ edited });
-                }
+                await expect(expertiseCard).toBeVisible();
+                await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}" under Service "${service}"`);
+                await expertiseCard.getByRole('link', { name: areaOfExpertise, exact: true }).click();
+                await verifyArticleListing();
             }
 
-            await this.testSteps.LogInfo('----- Verifying via Services  ----- ');
-
-            await this.testSteps.LogInfo('Opening Services to verify Areas of Expertise');
             await this.page.getByRole('link', { name: 'Services', exact: true }).click();
             await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
-
-            for (const service of articleServices)
-            {
-                const serviceCard = this.page.locator('a.card').filter({
-                    has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
-                });
-
-                if (service === '- None -')
-                {
-                    await this.testSteps.LogInfo(`Verifying Service "${service}" is not visible`);
-                    await expect(serviceCard).toBeHidden();
-                    continue;
-                }
-
-                await this.testSteps.LogInfo(`Opening Service "${service}" to verify its Areas of Expertise`);
-                await serviceCard.click();
-
-                for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
-                {
-                    if (areaIndex > 0)
-                    {
-                        await this.testSteps.LogInfo(`Returning to Services to check Area of Expertise "${areaOfExpertise}" under "${service}"`);
-                        await this.page.getByRole('link', { name: 'Services', exact: true }).click();
-                        await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
-                        await this.page.locator('a.card').filter({
-                            has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
-                        }).click();
-                    }
-
-                    await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is listed under Service "${service}"`);
-                    const expertiseCard = this.page.locator('div.card').filter({
-                        has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
-                    });
-                    if (areaOfExpertise === '- None -')
-                    {
-                        await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is not visible under Service "${service}"`);
-                        await expect(expertiseCard).toBeHidden();
-                        continue;
-                    }
-
-                    await expect(expertiseCard).toBeVisible();
-
-                    await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}" under Service "${service}"`);
-                    await expertiseCard.getByRole('link', { name: areaOfExpertise, exact: true }).click();
-
-                    await this.testSteps.LogInfo(`Verifying Article "${article.titleEdited}" is visible under Area of Expertise "${areaOfExpertise}" and Service "${service}"`);
-                    await expect(this.page.getByRole('link', { name: article.titleEdited, exact: true })).toBeVisible();
-
-                    await this.testSteps.LogInfo(`Verifying Article "${article.titleEdited}" can be opened under Area of Expertise "${areaOfExpertise}" and Service "${service}"`);
-                    await (this.page.getByRole('link', { name: article.titleEdited, exact: true })).click();
-
-                    await this.verificationHelper.verifyChosenContent({ edited });
-                }
-                await this.page.getByRole('link', { name: 'Services', exact: true }).click();
-                await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
-            }
-        }
-
-        if (!edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
-        {
-            const article = this.testData.Article;
-            const articleAreas = [
-                article.areaOfExpertise,
-                article.areaOfExpertise2,
-            ];
-            const articleServices = [
-                article.service,
-                article.service2,
-            ];
-
-
-            for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
-            {
-                if (areaIndex > 0)
-                {
-                    await this.testSteps.LogInfo('Returning Home to verify the next Area of Expertise');
-                    await this.homePage.navigateToHome();
-                    await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
-                }
-
-                if (areaOfExpertise === '- None -')
-                {
-                    await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is not visible`);
-                    await expect(this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })).toBeHidden();
-                    continue;
-                }
-
-                await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}"`);
-                await this.page.locator('a.card').filter({
-                    has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
-                }).click();
-
-                for (const [serviceIndex, service] of articleServices.entries())
-                {
-                    if (serviceIndex > 0)
-                    {
-                        await this.testSteps.LogInfo(`Returning to Area of Expertise "${areaOfExpertise}" for the next Service`);
-                        await this.homePage.navigateToHome();
-                        await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
-                        await this.page.locator('a.card').filter({
-                            has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
-                        }).click();
-                    }
-
-                    if (service === '- None -')
-                    {
-                        await this.testSteps.LogInfo(`Verifying Service "${service}" is not visible under Area of Expertise "${areaOfExpertise}"`);
-                        await expect(this.page.getByRole('link', { name: service, exact: true })).toBeHidden();
-                        continue;
-                    }
-
-                    await this.testSteps.LogInfo(`Opening Service "${service}" under Area of Expertise "${areaOfExpertise}"`);
-                    await this.page.getByRole('link', { name: service, exact: true }).click();
-
-                    await this.testSteps.LogInfo(`Verifying Article "${article.title}" is NOT visible under Service "${service}" as it is NOT published`);
-                    await expect(this.page.getByRole('link', { name: article.title, exact: true })).toBeHidden();
-                }
-            }
-
-            // Verifying can go via service links to the Areas of Expertise and verify content
-            await this.testSteps.LogInfo('Opening Services to verify Areas of Expertise');
-            await this.page.getByRole('link', { name: 'Services', exact: true }).click();
-            await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
-
-            for (const service of articleServices)
-            {
-                const serviceCard = this.page.locator('a.card').filter({
-                    has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
-                });
-
-                if (service === '- None -')
-                {
-                    await this.testSteps.LogInfo(`Verifying Service "${service}" is not visible`);
-                    await expect(serviceCard).toBeHidden();
-                    continue;
-                }
-
-                await this.testSteps.LogInfo(`Opening Service "${service}" to verify its Areas of Expertise`);
-                await serviceCard.click();
-
-                for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
-                {
-                    if (areaIndex > 0)
-                    {
-                        await this.testSteps.LogInfo(`Returning to Services to check Area of Expertise "${areaOfExpertise}" under "${service}"`);
-                        await this.page.getByRole('link', { name: 'Services', exact: true }).click();
-                        await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
-                        await this.page.locator('a.card').filter({
-                            has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
-                        }).click();
-                    }
-
-                    await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is listed under Service "${service}"`);
-                    const expertiseCard = this.page.locator('div.card').filter({
-                        has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
-                    });
-                    if (areaOfExpertise === '- None -')
-                    {
-                        await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is not visible under Service "${service}"`);
-                        await expect(expertiseCard).toBeHidden();
-                        continue;
-                    }
-
-                    await expect(expertiseCard).toBeVisible();
-
-                    await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}" under Service "${service}"`);
-                    await expertiseCard.getByRole('link', { name: areaOfExpertise, exact: true }).click();
-
-                    await this.testSteps.LogInfo(`Verifying Article "${article.title}" is NOT visible under Area of Expertise "${areaOfExpertise}" and Service "${service}" as it is NOT published`);
-                    await expect(this.page.getByRole('link', { name: article.title, exact: true })).toBeHidden();
-                }
-
-                await this.page.getByRole('link', { name: 'Services', exact: true }).click();
-                await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
-            }
-        }
-
-        if (edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
-        {
-            const article = this.testData.Article;
-            const articleAreas = [
-                article.areaOfExpertiseEdited,
-                article.areaOfExpertise2Edited,
-            ];
-            const articleServices = [
-                article.serviceEdited,
-                article.service2Edited,
-            ];
-
-
-            for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
-            {
-                if (areaIndex > 0)
-                {
-                    await this.testSteps.LogInfo('Returning Home to verify the next Area of Expertise');
-                    await this.homePage.navigateToHome();
-                    await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
-                }
-
-                if (areaOfExpertise === '- None -')
-                {
-                    await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is not visible`);
-                    await expect(this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })).toBeHidden();
-                    continue;
-                }
-
-                await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}"`);
-                await this.page.locator('a.card').filter({
-                    has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
-                }).click();
-
-                for (const [serviceIndex, service] of articleServices.entries())
-                {
-                    if (serviceIndex > 0)
-                    {
-                        await this.testSteps.LogInfo(`Returning to Area of Expertise "${areaOfExpertise}" for the next Service`);
-                        await this.homePage.navigateToHome();
-                        await expect(this.page.getByRole('heading', { name: 'Areas of Expertise', level: 2, exact: true })).toBeVisible();
-                        await this.page.locator('a.card').filter({
-                            has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
-                        }).click();
-                    }
-
-                    if (service === '- None -')
-                    {
-                        await this.testSteps.LogInfo(`Verifying Service "${service}" is not visible under Area of Expertise "${areaOfExpertise}"`);
-                        await expect(this.page.getByRole('link', { name: service, exact: true })).toBeHidden();
-                        continue;
-                    }
-
-                    await this.testSteps.LogInfo(`Opening Service "${service}" under Area of Expertise "${areaOfExpertise}"`);
-                    await this.page.getByRole('link', { name: service, exact: true }).click();
-
-                    await this.testSteps.LogInfo(`Verifying Article "${article.titleEdited}" is NOT visible under Service "${service}" as is it NOT published`);
-                    await expect(this.page.getByRole('link', { name: article.titleEdited, exact: true })).toBeHidden();
-                }
-            }
-
-            // Verifying can go via service links to the Areas of Expertise and verify content
-            await this.testSteps.LogInfo('Opening Services to verify Areas of Expertise');
-            await this.page.getByRole('link', { name: 'Services', exact: true }).click();
-            await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
-
-            for (const service of articleServices)
-            {
-                const serviceCard = this.page.locator('a.card').filter({
-                    has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
-                });
-
-                if (service === '- None -')
-                {
-                    await this.testSteps.LogInfo(`Verifying Service "${service}" is not visible`);
-                    await expect(serviceCard).toBeHidden();
-                    continue;
-                }
-
-                await this.testSteps.LogInfo(`Opening Service "${service}" to verify its Areas of Expertise`);
-                await serviceCard.click();
-
-                for (const [areaIndex, areaOfExpertise] of articleAreas.entries())
-                {
-                    if (areaIndex > 0)
-                    {
-                        await this.testSteps.LogInfo(`Returning to Services to check Area of Expertise "${areaOfExpertise}" under "${service}"`);
-                        await this.page.getByRole('link', { name: 'Services', exact: true }).click();
-                        await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
-                        await this.page.locator('a.card').filter({
-                            has: this.page.getByRole('heading', { level: 3, name: service, exact: true })
-                        }).click();
-                    }
-
-                    await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is listed under Service "${service}"`);
-                    const expertiseCard = this.page.locator('div.card').filter({
-                        has: this.page.getByRole('heading', { level: 3, name: areaOfExpertise, exact: true })
-                    });
-                    if (areaOfExpertise === '- None -')
-                    {
-                        await this.testSteps.LogInfo(`Verifying Area of Expertise "${areaOfExpertise}" is not visible under Service "${service}"`);
-                        await expect(expertiseCard).toBeHidden();
-                        continue;
-                    }
-
-                    await expect(expertiseCard).toBeVisible();
-
-                    await this.testSteps.LogInfo(`Opening Area of Expertise "${areaOfExpertise}" under Service "${service}"`);
-                    await expertiseCard.getByRole('link', { name: areaOfExpertise, exact: true }).click();
-
-                    await this.testSteps.LogInfo(`Verifying Article "${article.titleEdited}" is NOT visible under Area of Expertise "${areaOfExpertise}" and Service "${service}" as it is NOT published`);
-                    await expect(this.page.getByRole('link', { name: article.titleEdited, exact: true })).toBeHidden();
-                }
-
-                await this.page.getByRole('link', { name: 'Services', exact: true }).click();
-                await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
-            }
         }
     }
-
     async VerifyArticleCorrectDisplays()
     {
         const areaOfExpertiseLinks = [
@@ -801,7 +438,7 @@ export class AnonymousHelper
     async searchConsultationFacetsAsAnon(edited: boolean)
     {
         // nav back to homepage
-        await this.page.getByRole('link', { name: 'Home', exact: true }).click();
+        await this.page.locator('#nav-main-menu').getByRole('link', { name: 'Home', exact: true }).click();
         await this.homePage.homePageURLCheck();
         // clicking more news link on the homepage
         await this.homePage.clickConsultationNavLink();
@@ -885,6 +522,121 @@ export class AnonymousHelper
             await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.titleEdited}")]`)).toBeHidden();
         }
 
+    }
+
+    async VerifyContactAsAnon({ edited }: ContentEdited)
+    {
+        await this.testSteps.LogInfo('----- Verifying Contact Topics -----');
+        const contact = this.testData.Contact;
+        const title = edited ? contact.titleEdited : contact.title;
+        const isPublished = this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published;
+        const openLinkContaining = async (text: string, exact = false) =>
+        {
+            const link = exact
+                ? this.page.getByRole('link', { name: text, exact: true })
+                : this.page.getByRole('link').filter({ hasText: text }).first();
+
+            await this.testSteps.LogInfo(`Opening link containing text: "${text}"`);
+
+            await expect(link).toBeVisible();
+            await link.click();
+        };
+        const verifyContactTopicListing = async () =>
+        {
+            await this.clickSeeAllContactsInTopic();
+            const contactLink = this.page.getByRole('link').filter({ hasText: title }).first();
+            if (isPublished)
+            {
+                await this.testSteps.LogInfo(`Verifying published contact topic "${title}" is visible`);
+                try
+                {
+                    await expect(contactLink).toBeVisible();
+                }
+                catch
+                {
+                    //await this.page.waitForTimeout(2000);
+                    await this.page.reload();
+                    await expect(contactLink).toBeVisible();
+                }
+                await contactLink.click();
+                await this.verificationHelper.verifyChosenContent({ edited });
+            }
+            else
+            {
+                await this.testSteps.LogInfo(`Verifying unpublished contact topic "${title}" is not visible`);
+                try
+                {
+                    await expect(contactLink).toBeHidden();
+                }
+                catch
+                {
+                    //await this.page.waitForTimeout(2000);
+                    await this.page.reload();
+                    await expect(contactLink).toBeHidden();
+                }
+            }
+        };
+
+        if (edited)
+        {
+            await this.testSteps.LogInfo('----- Verifying Edited Contact Topics -----');
+            if (contact.statisticsEdited !== '- None -')
+            {
+                await this.homePage.navigateToHome();
+                await openLinkContaining('Statistics and Research');
+                await openLinkContaining(contact.statisticsEdited);
+                await verifyContactTopicListing();
+            }
+            if (contact.researchAndSupportEdited !== '- None -')
+            {
+                await this.homePage.navigateToHome();
+                await this.homePage.enterContentTitleInSearch(contact.researchAndSupportEdited);
+                await this.homePage.clickSearchButton();
+                const editedResearchLink = this.page.getByRole('link').filter({
+                    has: this.page.getByRole('heading', { name: contact.researchAndSupportEdited, exact: true })
+                });
+                await expect(editedResearchLink).toBeVisible();
+                await editedResearchLink.click();
+                await verifyContactTopicListing();
+            }
+            return;
+        }
+
+        await this.testSteps.LogInfo('----- Verifying via Statistics -----');
+        await this.homePage.navigateToHome();
+        await openLinkContaining(`${contact.statistics} ${contact.statisticslevel1}`);
+        await openLinkContaining('Census Information');
+        await openLinkContaining(`${contact.statisticslevel2} Find information`);
+        await openLinkContaining(contact.statisticslevel3);
+        await verifyContactTopicListing();
+
+        await this.homePage.navigateToHome();
+        await openLinkContaining('Statistics and Research');
+        await openLinkContaining(contact.statistics2);
+        await verifyContactTopicListing();
+
+        await this.testSteps.LogInfo('----- Verifying via Research and support -----');
+        await this.homePage.navigateToHome();
+        await this.homePage.enterContentTitleInSearch(contact.researchAndSupport);
+        await this.homePage.clickSearchButton();
+        const researchAndSupportLink = this.page.getByRole('link').filter({
+            has: this.page.getByRole('heading', { name: contact.researchAndSupport, exact: true })
+        });
+        await expect(researchAndSupportLink).toBeVisible();
+        await researchAndSupportLink.click();
+        await openLinkContaining(contact.researchAndSupportlevel1);
+        await openLinkContaining(contact.researchAndSupportlevel2);
+        await verifyContactTopicListing();
+
+        await this.homePage.navigateToHome();
+        await this.homePage.enterContentTitleInSearch(contact.researchAndSupport2);
+        await this.homePage.clickSearchButton();
+        const researchAndSupport2Link = this.page.getByRole('link').filter({
+            has: this.page.getByRole('heading', { name: contact.researchAndSupport2, exact: true })
+        });
+        await expect(researchAndSupport2Link).toBeVisible();
+        await researchAndSupport2Link.click();
+        await verifyContactTopicListing();
     }
 
 

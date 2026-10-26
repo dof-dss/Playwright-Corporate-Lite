@@ -189,9 +189,6 @@ export class ArticleCreatePage
       case 'functionality':
         await this.ckeditor.enterCKEditorBodyFunctionality(data.articleBodyField, data.existingAudioName);
         break;
-      case 'importFromWord':
-        await this.ckeditor.enterCKEditorBodyImportFromWord(data.articleBodyField);
-        break;
       default:
         await this.ckeditor.enterCKEditorBody(data.articleBodyField);
     }
@@ -202,12 +199,6 @@ export class ArticleCreatePage
   {
     await this.fillArticleForm(data, 'functionality');
   }
-
-  // // fill in article form elements with CKEditor importing from Word
-  // async fillArticleFormWithCKEditorImportingFromWord(data: ArticleSaveData)
-  // {
-  //   await this.fillArticleForm(data, 'importFromWord');
-  // }
 
   async fillArticleFormWithBook(data: ArticleSaveData, option: BooksHelper)
   {
