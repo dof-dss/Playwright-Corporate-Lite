@@ -434,7 +434,7 @@ export class UploadMedia
         {
             const values = details[i];
             await this.page.fill(`//input[contains(@id, "edit-media-${i}-fields-field-media-image-0-alt")]`, values.alt);
-            await this.page.fill(`//input[contains(@id, "edit-media-${i}-fields-field-media-image-0-title")]`, values.title);
+            //await this.page.fill(`//input[contains(@id, "edit-media-${i}-fields-field-media-image-0-title")]`, values.title);
             await this.page.fill(`//input[contains(@id, "edit-media-${i}-fields-field-caption-0-value")]`, values.caption);
             await this.page.fill(`//input[contains(@id, "edit-media-${i}-fields-name-0-value")]`, values.name);
         }

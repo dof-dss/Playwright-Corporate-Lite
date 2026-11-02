@@ -185,35 +185,35 @@ export const TestData = {
     galleryImageAltText: 'Gallery Image 1 alt text',
     galleryImageTitle: 'Gallery Image 1 Title',
     galleryImageCaption: 'This is Gallery Image 1 Caption',
-    galleryImageName: 'Automated gallery image 1 Testing New',
+    galleryImageName: 'Automated gallery image 1 Testing',
 
     // gallery image 2 values
     galleryImage2FileName: 'TestGallery2.jpg',
     galleryImage2AltText: 'Gallery Image 2 alt text',
     galleryImage2Title: 'Gallery Image 2 Title',
     galleryImage2Caption: 'This is Gallery Image 2 Caption',
-    galleryImage2Name: 'Automated gallery image 2  Testing New',
+    galleryImage2Name: 'Automated gallery image 2  Testing',
 
     // gallery image 3 values
     galleryImage3FileName: 'TestGallery3.jpg',
     galleryImage3AltText: 'Gallery Image 3 alt text',
     galleryImage3Title: 'Gallery Image 3 Title',
     galleryImage3Caption: 'This is Gallery Image 3 Caption',
-    galleryImage3Name: 'Automated gallery image 3  Testing New',
+    galleryImage3Name: 'Automated gallery image 3  Testing',
 
     // gallery image 4 values
     galleryImage4FileName: 'TestGallery4.jpg',
     galleryImage4AltText: 'Gallery Image 4 alt text',
     galleryImage4Title: 'Gallery Image 4 Title',
     galleryImage4Caption: 'This is Gallery Image 4 Caption',
-    galleryImage4Name: 'Automated gallery image 4 Testing New',
+    galleryImage4Name: 'Automated gallery image 4 Testing',
 
     // gallery image 5 values
     galleryImage5FileName: 'TestGallery5.jpg',
     galleryImage5AltText: 'Gallery Image 5 alt text',
     galleryImage5Title: 'Gallery Image 5 Title',
     galleryImage5Caption: 'This is Gallery Image 5 Caption',
-    galleryImage5Name: 'Automated gallery image 5 Testing New',
+    galleryImage5Name: 'Automated gallery image 5 Testing',
 
     // Gallery image edited name has no other values as this tests that the other fields are not mandatory
     galleryImage1FileNameEdited: 'TestingImageEdited.png',
@@ -257,8 +257,6 @@ export const TestData = {
 
     audioFile: 'AutomationAudio.wav',
     audioFileName: 'Automation Audio File Wav',
-
-    wordFile: 'ImportFromWord.docx',
   },
 
   HSE_SiteTopics: {
@@ -406,13 +404,15 @@ export const TestData = {
     mapLocationModalName: 'Stormount',
   },
 
-
-
   Gallery: {
     title: 'Automated Test - New sample Gallery title' + ' - ' + getTimestamp(),
     titleEdited: 'Automated Test - Edited sample Gallery title' + ' - ' + getTimestamp(),
     revisionlog: 'This is an automated revision log message',
     revisionlogEdited: 'This is an edited automated revision log message',
+    areaOfExpertise: 'Animal Health and Welfare',
+    areaOfExpertise2: 'Food Quality and Safety',
+    areaOfExpertiseEdited: '- None -',
+    areaOfExpertise2Edited: 'Environmental Protection',
     summary: 'This is a new Gallery summary',
     summaryEdited: 'This is a edited Gallery summary',
     body: 'This is a new Gallery body content',

@@ -254,16 +254,10 @@ export class ModerationSideBar
 
     async scheduledTransitionsIsVisible()
     {
-        if (this.testSetUpData.contentTypeforTest.contentType === 'Gallery' || this.testSetUpData.contentTypeforTest.contentType === 'Link')
-        {
-            await this.testSteps.LogInfo('Verifying "Scheduled Transitions" button is NOT visible to Gallery or Link content type');
-            await expect(this.scheduledtransitionsbutton).toBeHidden();
-        }
-        else
-        {
-            await this.testSteps.LogInfo('Verifying "Scheduled Transitions" button is visible');
-            await expect(this.scheduledtransitionsbutton).toBeVisible();
-        }
+
+        await this.testSteps.LogInfo('Verifying "Scheduled Transitions" button is visible');
+        await expect(this.scheduledtransitionsbutton).toBeVisible();
+
     }
 
     async whatLinksHereIsVisible()

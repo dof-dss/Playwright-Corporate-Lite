@@ -40,31 +40,31 @@ export class GalleryComparePage
     {
         //-------------------- TITLE --------------------
         await this.testSteps.LogInfo('Verifying "New" text has been removed from the title');
-        await expect(this.page.locator('//a[contains(text(),"Automated Test - ")]/del[text()="New"]')).toBeVisible();
+        await expect(this.page.locator('//h2/a/span[contains(text(),"Automated Test - ")]/del[text()="New"]')).toBeVisible();
 
         await this.testSteps.LogInfo('Verifying "Edited" text has been added to the title');
-        await expect(this.page.locator('//a[contains(text(),"Automated Test - ")]/ins[text()="Edited"]')).toBeVisible();
+        await expect(this.page.locator('//h2/a/span[contains(text(),"Automated Test - ")]/ins[text()="Edited"]')).toBeVisible();
 
-        //-------------------- TOPICS --------------------
+        //-------------------- AREA OF EXPERTISE --------------------
         ///
         //
-        // ------------------ ADD TOPICS WHEN FIXED - CURRENTLY A BUG  ------------------
+        // ------------------ ADD AREA OF EXPERTISE WHEN FIXED - CURRENTLY A BUG  ------------------
         //
         ///
 
         //-------------------- SUMMARY --------------------
         await this.testSteps.LogInfo('Verifying "new" text has been removed from the summary');
-        await expect(this.page.locator('//div[@class="page-summary"]//del[text()="new"]')).toBeVisible();
+        await expect(this.page.locator('//p[@class="field-summary"]//del[text()="new"]')).toBeVisible();
 
         await this.testSteps.LogInfo('Verifying "edited" text has been added to the summary');
-        await expect(this.page.locator('//div[@class="page-summary"]//ins[text()="edited"]')).toBeVisible();
+        await expect(this.page.locator('//p[@class="field-summary"]//ins[text()="edited"]')).toBeVisible();
 
         //-------------------- BODY FIELD --------------------
         await this.testSteps.LogInfo('Verifying "new" text has been removed from the body field');
-        await expect(this.page.locator('//div[@class="page-summary"]/following-sibling::p//del[text()="new"]')).toBeVisible();
+        await expect(this.page.locator('//p[contains(., "Gallery body content")]/del[text()="new"]')).toBeVisible();
 
         await this.testSteps.LogInfo('Verifying "edited" text has been added to the body field');
-        await expect(this.page.locator('//div[@class="page-summary"]/following-sibling::p//ins[text()="edited"]')).toBeVisible();
+        await expect(this.page.locator('//p[contains(., "Gallery body content")]/ins[text()="edited"]')).toBeVisible();
 
         //-------------------- GALLERY IMAGES  --------------------
         const details = galleryImageDetails;
@@ -75,13 +75,14 @@ export class GalleryComparePage
             {
                 const values = details[i];
 
-                await this.testSteps.LogInfo(`Verifying gallery image: ${values.title} is in the del column`);
-                await expect(this.page.locator(`//del[(contains(@class,'diff'))]//img[@title="${values.title}"]`)).toBeVisible();
+                await this.testSteps.LogInfo(`Verifying gallery image: ${values.name} is in the del column`);
+                await expect(this.page.locator(`//a[starts-with(@href, "/media/")]/del[normalize-space(.)="${values.name}"] | 
+                    //del/a[starts-with(@href, "/media/") and normalize-space(.)="${values.name}"]`)).toBeVisible();
             }
         }
 
         await this.testSteps.LogInfo('Verifying new image is in the ins column');
-        await expect(this.page.locator('//ins[@class="diffmod diffimg diffsrc"]/img')).toBeVisible();
+        await expect(this.page.locator(`//ins/a[starts-with(@href, "/media/") and normalize-space(.)="${this.testData.Media.galleryImage1NameEdited}"]`)).toBeVisible();
 
     }
 }

@@ -13,6 +13,8 @@ export interface GallerySaveData
 {
   galleryTitle: string;
   revisionLogMessage: string;
+  areaOfExpertise: string;
+  areaOfExpertise2: string;
   gallerySummary: string;
   galleryBodyField: string;
   // when set, selects this already uploaded Media Library image instead of uploading new gallery images
@@ -99,6 +101,26 @@ export class GalleryCreatePage
     await this.galleryTitleField.fill(galleryTitle);
   }
 
+  // select area of expertise
+  async selectAreaOfExpertise(areaOfExpertise1: string)
+  {
+    await this.testSteps.LogInfo(`Selecting "${areaOfExpertise1}" from the Area of expertise dropdown`);
+    await this.page.locator('#edit-field-site-topics-shs-0-0').selectOption({ label: areaOfExpertise1 });
+  }
+
+  async clickAddAnotherAreaOfExpertise()
+  {
+    await this.testSteps.LogInfo('Clicking Add another item for Area of expertise');
+    await this.page.locator('.js-form-item-field-site-topics')
+      .getByText('Add another item', { exact: true }).click();
+  }
+
+  async selectAreaOfExpertise2(areaOfExpertise2: string)
+  {
+    await this.testSteps.LogInfo(`Selecting "${areaOfExpertise2}" from the Area of expertise dropdown`);
+    await this.page.locator('#edit-field-site-topics-shs-1-0').selectOption({ label: areaOfExpertise2 });
+  }
+
   // enter gallery summary 
   async enterGallerySummary(gallerySummary: string)
   {
@@ -124,6 +146,9 @@ export class GalleryCreatePage
     await this.createGalleryPageURLCheck();
     await this.enterGalleryTitle(data.galleryTitle);
     await this.createPages.enterRevisionLogMessage(data.revisionLogMessage);
+     await this.selectAreaOfExpertise(data.areaOfExpertise);
+    await this.clickAddAnotherAreaOfExpertise();
+    await this.selectAreaOfExpertise2(data.areaOfExpertise2);
     await this.enterGallerySummary(data.gallerySummary);
     await this.ckeditor.enterCKEditorBody(data.galleryBodyField);
 

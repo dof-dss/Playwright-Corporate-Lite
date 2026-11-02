@@ -13,6 +13,8 @@ export interface GalleryEditSaveData
 {
   galleryTitle: string;
   revisionLogMessage: string;
+   areaOfExpertise: string;
+  areaOfExpertise2: string;
   gallerySummary: string;
   galleryBodyField: string;
 }
@@ -84,6 +86,27 @@ export class GalleryEditPage
     await this.galleryTitleField.fill(galleryTitle);
   }
 
+  async selectAreaOfExpertise(areaOfExpertise: string)
+  {
+    await this.testSteps.LogInfo(`Selecting "${areaOfExpertise}" from the Area of expertise dropdown`);
+    await this.page.locator('#edit-field-site-topics-shs-0-0').selectOption({ label: areaOfExpertise });
+
+    await this.page.waitForTimeout(1000);
+  }
+
+  async clickAddAnotherAreaOfExpertise()
+  {
+    await this.testSteps.LogInfo('Clicking Add another item for Area of expertise');
+    await this.page.locator('.js-form-item-field-site-topics')
+      .getByText('Add another item', { exact: true }).click();
+  }
+
+  async selectAreaOfExpertise2(areaOfExpertise2: string)
+  {
+    await this.testSteps.LogInfo(`Selecting "${areaOfExpertise2}" from the Area of expertise dropdown`);
+    await this.page.locator('#edit-field-site-topics-shs-1-0').selectOption({ label: areaOfExpertise2 });
+  }
+
   // edit gallery summary 
   async editGallerySummary(gallerySummary: string)
   {
@@ -99,6 +122,12 @@ export class GalleryEditPage
     await this.editGalleryPageURLCheck();
     await this.editGalleryTitle(data.galleryTitle);
     await this.createPages.enterRevisionLogMessage(data.revisionLogMessage);
+    // Will always add a second area of expertise as the first one is set to - None - to ensure this does not display - None - or 
+    // if it will ignore the 2nd area of expertise
+    await this.clickAddAnotherAreaOfExpertise();
+    await this.selectAreaOfExpertise2(data.areaOfExpertise2);
+    await this.selectAreaOfExpertise(data.areaOfExpertise);
+
     await this.editGallerySummary(data.gallerySummary);
 
     // Removing of image 5

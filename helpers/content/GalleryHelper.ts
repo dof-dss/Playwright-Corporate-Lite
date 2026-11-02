@@ -91,6 +91,8 @@ export class GalleryHelper
         await this.galleryCreatePage.fillGalleryForm({
             galleryTitle: this.testData.Gallery.title,
             revisionLogMessage: this.testData.Gallery.revisionlog,
+             areaOfExpertise: this.testData.Gallery.areaOfExpertise,
+            areaOfExpertise2: this.testData.Gallery.areaOfExpertise2,
             gallerySummary: this.testData.Gallery.summary,
             galleryBodyField: this.testData.Gallery.body,
             existingImageName: options.existingImageName,
@@ -140,6 +142,8 @@ export class GalleryHelper
         await this.galleryEditPage.editGalleryForm({
             galleryTitle: this.testData.Gallery.titleEdited,
             revisionLogMessage: this.testData.Gallery.revisionlogEdited,
+            areaOfExpertise: this.testData.Gallery.areaOfExpertise,
+            areaOfExpertise2: this.testData.Gallery.areaOfExpertise2,
             gallerySummary: this.testData.Gallery.summaryEdited,
             galleryBodyField: this.testData.Gallery.bodyEdited,
         });
