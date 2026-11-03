@@ -438,8 +438,19 @@ export const TestData = {
     titleEdited: 'Automated Test - Edited sample News title' + ' - ' + getTimestamp(),
     revisionlog: 'This is an automated revision log message',
     revisionlogEdited: 'This is an edited automated revision log message',
-    newsType: 'news',
-    newsTypeEdited: 'pressrelease',
+    newsType: 'News story',
+    newsTypeEdited: 'Press release',
+    topics: [
+      'Work, pay and benefits',
+      'NI Civil Service Human Resources',
+      'Statistics Charter',
+      'WSA Data Governance and Confidentiality Statement'
+    ],
+    topicsEdited: [
+      'Service Unavailable',
+      'Education and skills'
+    ],
+    publicationDate: '2026-11-02',
     introductoryParagraph: 'This is a new introductory paragraph',
     introductoryParagraphEdited: 'This is a edited introductory paragraph',
     publicationDateEdited: '2025-12-31',

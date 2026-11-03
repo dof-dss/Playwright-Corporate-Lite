@@ -35,7 +35,7 @@ export class HomePage
         this.siteSearchField = page.locator('#edit-query');
         this.siteSearchButton = page.locator('#edit-submit-search');
         this.conultationNavBarLink = this.page.getByRole('link', { name: 'Latest Consultations' });
-        this.moreNewsLink = this.page.getByRole('link', { name: 'More news...', exact: true });
+        this.moreNewsLink = this.page.getByRole('link', { name: 'News', exact: true });
         this.publicationNavBarLink = this.page.getByRole('link', { name: 'Publications', exact: true });
     }
 
@@ -92,9 +92,9 @@ export class HomePage
     }
 
     // click more news link 
-    async clickMoreNewsLink()
+    async clickNewsLink()
     {
-        await this.testSteps.LogInfo('Clicking More news... link');
+        await this.testSteps.LogInfo('Clicking News nav bar link');
         await this.moreNewsLink.click();
     }
 

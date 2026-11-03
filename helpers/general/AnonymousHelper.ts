@@ -168,6 +168,11 @@ export class AnonymousHelper
         {
             await this.VerifyContactAsAnon({ edited });
         }
+
+        if (this.testSetUpData.contentTypeforTest.contentType === this.testSetUpData.validContentTypeList.news)
+        {
+            await this.VerifyNewsAsAnon({ edited });
+        }
     }
 
     // this method is used for the searchFacetsAsAnon method above as it is reused multiple times is accepts the edited param to determine what content to seek
@@ -522,6 +527,60 @@ export class AnonymousHelper
             await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.titleEdited}")]`)).toBeHidden();
         }
 
+    }
+
+    async VerifyNewsAsAnon({ edited }: ContentEdited)
+    {
+        await this.page.locator('#nav-main-menu').getByRole('link', { name: 'Home', exact: true }).click();
+        await this.homePage.homePageURLCheck();
+        await this.homePage.clickNewsLink();
+        await this.newsFacetPage.newsPageURLCheck();
+
+        const newsTitle = edited ? this.testData.News.titleEdited : this.testData.News.title;
+        const searchResult = this.getSearchResults(newsTitle);
+        await this.newsFacetPage.enterContentTitleInSearch(newsTitle);
+        await this.newsFacetPage.clickNewsFacetSearchButton();
+
+        const isPublished = this.testSetUpData.moderationStateForTest.moderationState
+            === this.testSetUpData.validModerationStates.published;
+
+        if (isPublished)
+        {
+            try
+            {
+                await expect(searchResult).toBeVisible();
+            }
+            catch
+            {
+                await this.testSteps.LogInfo(`Published News "${newsTitle}" has not appeared; refreshing and searching again`);
+                await this.page.waitForTimeout(5000);
+                await this.page.reload();
+                await this.newsFacetPage.enterContentTitleInSearch(newsTitle);
+                await this.newsFacetPage.clickNewsFacetSearchButton();
+                await expect(searchResult).toBeVisible();
+            }
+        }
+
+        await this.newsFacetPage.selectFacetFilterNewsType(edited);
+        await this.newsFacetPage.selectFacetFilterNewsTopic(edited);
+        await this.newsFacetPage.clickFacetFilterPubDateSpan();
+        if (edited)
+        {
+            await this.newsFacetPage.clickFacetFilterPubDateEditedFilter();
+        }
+        else
+        {
+            await this.newsFacetPage.clickFacetFilterPubDateFilter();
+        }
+
+        if (!isPublished)
+        {
+            await expect(searchResult).toBeHidden();
+            return;
+        }
+
+        await expect(searchResult).toBeVisible();
+        await this.verifyContent(edited);
     }
 
     async VerifyContactAsAnon({ edited }: ContentEdited)

@@ -91,10 +91,12 @@ export class NewsHelper
         // complete news form using isolated test data 
         await this.newsCreatePage.fillNewsForm({
             newsTitle: this.testData.News.title,
-            newsType: this.testData.News.newsType,
             revisionLogMessage: this.testData.News.revisionlog,
-            newsIntoParagraph: this.testData.News.introductoryParagraph,
+            topics: this.testData.News.topics,
+            newsType: this.testData.News.newsType,
+            pubDate: this.testData.News.publicationDate,
             newsteaser: this.testData.News.teaser,
+            newsIntoParagraph: this.testData.News.introductoryParagraph,
             newsBodyField: this.testData.News.body,
             newsNoteToEditor: this.testData.News.notesToEditor,
             existingRemoteVideoName: options.existingRemoteVideoName,
@@ -133,6 +135,7 @@ export class NewsHelper
         await this.newsEditPage.editNewsForm({
             newsTitle: this.testData.News.titleEdited,
             newsType: this.testData.News.newsTypeEdited,
+            topics: this.testData.News.topicsEdited,
             revisionLogMessage: this.testData.News.revisionlogEdited,
             newsIntoParagraph: this.testData.News.introductoryParagraphEdited,
             pubDate: this.testData.News.publicationDateEdited,
@@ -185,33 +188,6 @@ export class NewsHelper
             await this.newsNodePage.newsNodeURLCheck();
         }
     }
-
-    // create News method
-    async createNewsWithGallery()
-    {
-        // navigate to create news
-        await this.navigateTocreateNews();
-
-        // complete news form using isolated test data 
-        await this.newsCreatePage.fillNewsFormWithGallery({
-            newsTitle: this.testData.News.title,
-            newsType: this.testData.News.newsType,
-            revisionLogMessage: this.testData.News.revisionlog,
-            newsIntoParagraph: this.testData.News.introductoryParagraph,
-            newsteaser: this.testData.News.teaser,
-            newsBodyField: this.testData.Gallery.title,
-            newsNoteToEditor: this.testData.News.notesToEditor
-        });
-
-        //Selecting the save as type
-        await this.createPage.chooseSaveAsType();
-
-        // Save and verify
-        await this.createPage.clickSaveButton();
-        await this.newsNodePage.newsNodeURLCheck();
-        await this.newsNodePage.verifyNewsWithGallery();
-    }
-
 }
 
 

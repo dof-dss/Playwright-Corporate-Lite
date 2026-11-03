@@ -14,6 +14,7 @@ export interface NewsEditSaveData
   newsTitle: string;
   revisionLogMessage: string;
   newsType: string;
+  topics: string[];
   newsIntoParagraph: string;
   pubDate: string;
   newsteaser: string;
@@ -37,6 +38,7 @@ export class NewsEditPage
   // locators
   private readonly newsTitleField: Locator;
   private readonly newsTypeField: Locator;
+  private readonly newsTopicField: Locator;
   private readonly newsIntroParagraphField: Locator;
   private readonly newsPublicationDate: Locator;
   private readonly newsTeaserField: Locator;
@@ -68,6 +70,7 @@ export class NewsEditPage
     // locators
     this.newsTitleField = page.locator('#edit-title-0-value');
     this.newsTypeField = page.locator('#edit-field-news-type');
+    this.newsTopicField = page.locator('#edit-field-site-topics-shs-0-0');
     this.newsIntroParagraphField = page.locator('#edit-field-summary-0-value');
     this.newsTeaserField = page.locator('#edit-field-teaser-0-value');
     this.newsPublicationDate = page.locator('#edit-field-published-date-0-value-date');
@@ -107,6 +110,26 @@ export class NewsEditPage
   {
     await this.testSteps.LogInfo(`Selecting type "${newsType}" into the Type field`);
     await this.newsTypeField.selectOption(newsType);
+  }
+
+  // edit top-level news topics
+  async editNewsTopics(topics: string[])
+  {
+    for (const [index, topic] of topics.entries())
+    {
+      if (index > 0)
+      {
+        await this.testSteps.LogInfo('Clicking Add another item for Topics');
+        await this.page.locator('.js-form-item-field-site-topics')
+          .getByText('Add another item', { exact: true }).click();
+      }
+
+      const topicField = index === 0
+        ? this.newsTopicField
+        : this.page.locator(`#edit-field-site-topics-shs-${index}-0`);
+      await this.testSteps.LogInfo(`Selecting top-level topic "${topic}"`);
+      await topicField.selectOption({ label: topic });
+    }
   }
 
   // enter news summary 
@@ -150,12 +173,10 @@ export class NewsEditPage
     await this.editNewsTitle(data.newsTitle);
     await this.createPages.enterRevisionLogMessage(data.revisionLogMessage);
     await this.editNewsType(data.newsType);
+    await this.editNewsTopics(data.topics);
     await this.editNewsIntroParagraph(data.newsIntoParagraph);
     await this.editPublicationDate(data.pubDate);
     await this.editNewsTeaser(data.newsteaser);
-    await this.page.waitForTimeout(1000);
-    await expect(this.page.locator('//input[contains(@id,"edit-field-video-selection-0-remove-button")]')).toBeEnabled();
-    await this.page.locator('//input[contains(@id,"edit-field-video-selection-0-remove-button")]').click();
     await this.page.waitForTimeout(1000);
     await expect(this.page.locator('//input[contains(@id,"edit-field-photo-selection-0-remove-button")]')).toBeEnabled();
     await this.page.locator('//input[contains(@id,"edit-field-photo-selection-0-remove-button")]').click();
@@ -165,10 +186,6 @@ export class NewsEditPage
       edited: true
     });
     await this.page.waitForTimeout(1000);
-    await this.uploadMediaHelper.uploadRemoteVideo({
-      original: false,
-      edited: true
-    });
     await this.ckeditor.enterCKEditorBody(data.newsBodyField);
     await this.ckeditor.enterNoteToEditors(data.newsNoteToEditor);
   }

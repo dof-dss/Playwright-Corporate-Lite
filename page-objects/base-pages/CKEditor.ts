@@ -35,7 +35,8 @@ export class CKEditor
         this.enterAdditionalInfo = page.locator('#edit-field-additional-information-wrapper').getByRole('textbox', { name: 'Rich Text Editor. Editing' });
         this.enterBeforeYouStart = page.locator('#edit-body-wrapper').getByRole('textbox', { name: 'Rich Text Editor. Editing' });
         this.enterBodyField = page.locator('#edit-body-wrapper').getByRole('textbox', { name: 'Rich Text Editor. Editing' });
-        this.enterNoteToEditorField = page.locator('#edit-field-notes-to-editors-wrapper').getByRole('paragraph');
+        this.enterNoteToEditorField = page.locator('#edit-field-notes-to-editors-0-value')
+            .or(page.locator('textarea[name="field_notes_to_editors[0][value]"]')).first();
     }
 
 
