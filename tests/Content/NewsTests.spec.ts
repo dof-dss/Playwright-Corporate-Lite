@@ -2,7 +2,7 @@ import { TestSteps } from '@poms/base-pages/TestSteps';
 import { test } from '@fixtures/MyFixtures';
 import { ModerationSideBar } from '@poms/base-pages/ModerationSideBar';
 
-test.describe('News Author Tests', () =>
+test.describe('News Author Tests', { tag: ['@regression', '@news', '@author'] }, () =>
 {
   // Pass the fixture for News Authors into the beforeEach hook
   test.beforeEach(async ({ loginHelper, testSetUpData, testData }, testInfo) =>
@@ -23,7 +23,7 @@ test.describe('News Author Tests', () =>
     await loginHelper.loginWithValidUser();
   });
 
-  test('News-Auth-TC01 - Create - Create News content as an "Author", perform mandatory field check and preview content', { tag: "@regression" },
+  test('News-Auth-TC01 - Create - Create News content as an "Author", perform mandatory field check and preview content', { tag: '@create' },
     async ({ loginHelper, newsHelper, anonymousHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
     {
       await newsHelper.createNews({
@@ -52,7 +52,7 @@ test.describe('News Author Tests', () =>
 
     });
 
-  test('News-Auth-TC02 - Edit - Edit News as an "Author" and ensure it is not published', { tag: "@regression" },
+  test('News-Auth-TC02 - Edit - Edit News as an "Author" and ensure it is not published', { tag: '@edit' },
     async ({ newsHelper, anonymousHelper }) =>
     {
       await newsHelper.createNews({
@@ -70,7 +70,7 @@ test.describe('News Author Tests', () =>
 
     });
 
-  test('News-Auth-TC03 - Delete - Delete News as an "Author"', { tag: "@regression" },
+  test('News-Auth-TC03 - Delete - Delete News as an "Author"', { tag: '@delete' },
     async ({ newsHelper, navigateToCreatedContentHelper, anonymousHelper, loginHelper }) =>
     {
       await newsHelper.createNews({
@@ -103,7 +103,7 @@ test.describe('News Author Tests', () =>
 
     });
 
-  test('News-Auth-TC04 - Delete - Cannot delete News created by "Supervisor" as an "Author"', { tag: "@regression" },
+  test('News-Auth-TC04 - Delete - Cannot delete News created by "Supervisor" as an "Author"', { tag: '@delete' },
     async ({ newsHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper, page, testSetUpData, testData }) =>
     {
       const permissionCheck = new ModerationSideBar(page, testSetUpData, testData);
@@ -153,7 +153,7 @@ test.describe('News Author Tests', () =>
       await anonymousHelper.searchAsAnon({ edited: false });
     });
 
-  test('News-Auth-TC05 - Compare Revision - Edit News content and ensure user is able to compare Revisions ', { tag: "@regression" }, async ({ newsHelper, revisionHelper, testSetUpData }) =>
+  test('News-Auth-TC05 - Compare Revision - Edit News content and ensure user is able to compare Revisions ', { tag: '@revision' }, async ({ newsHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await newsHelper.createNews({
@@ -173,7 +173,7 @@ test.describe('News Author Tests', () =>
     await revisionHelper.compareRevisions();
   });
 
-  test('News-Auth-TC06 - Delete Revision - Edit News content and ensure user is able to Delete Revisions', { tag: "@regression" }, async ({ newsHelper, revisionHelper, testSetUpData }) =>
+  test('News-Auth-TC06 - Delete Revision - Edit News content and ensure user is able to Delete Revisions', { tag: '@revision' }, async ({ newsHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await newsHelper.createNews({
@@ -202,7 +202,7 @@ test.describe('News Author Tests', () =>
     });
   });
 
-  test('News-Auth-TC07 - Revert Revision - Edit News content and ensure user is able to Revert Revisions', { tag: "@regression" }, async ({ newsHelper, revisionHelper, testSetUpData }) =>
+  test('News-Auth-TC07 - Revert Revision - Edit News content and ensure user is able to Revert Revisions', { tag: '@revision' }, async ({ newsHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await newsHelper.createNews({
@@ -231,7 +231,7 @@ test.describe('News Author Tests', () =>
     });
   });
 
-  test('News-Auth-TC09 - Workbench -  Create News content as an "Author", and use Workbench to complete all moderation states available', { tag: "@regression" }, async ({ newsHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
+  test('News-Auth-TC09 - Workbench -  Create News content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ newsHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
   {
     // creating news as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -299,7 +299,7 @@ test.describe('News Author Tests', () =>
 
 });
 
-test.describe('News Supervisor Tests', () =>
+test.describe('News Supervisor Tests', { tag: ['@regression', '@news', '@supervisor'] }, () =>
 {
   // Pass the fixture for News Authors into the beforeEach hook
   test.beforeEach(async ({ loginHelper, testSetUpData, testData }, testInfo) =>
@@ -320,7 +320,7 @@ test.describe('News Supervisor Tests', () =>
     await loginHelper.loginWithValidUser();
   });
 
-  test('News-Super-TC01 - Create - Create News content as an "Supervisor", perform mandatory field check and preview content', { tag: "@regression" }, async ({ newsHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData }) =>
+  test('News-Super-TC01 - Create - Create News content as an "Supervisor", perform mandatory field check and preview content', { tag: '@create' }, async ({ newsHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData }) =>
   {
     // creating news as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -385,7 +385,7 @@ test.describe('News Supervisor Tests', () =>
     await anonymousHelper.searchAsAnon({ edited: false });
   });
 
-  test('News-Super-TC02 - Edit - Edit Published News content and ensure edit is published as a "Supervisor" ', { tag: "@regression" }, async ({ newsHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
+  test('News-Super-TC02 - Edit - Edit Published News content and ensure edit is published as a "Supervisor" ', { tag: '@edit' }, async ({ newsHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
   {
     // creating content
     await newsHelper.createNews({
@@ -416,7 +416,7 @@ test.describe('News Supervisor Tests', () =>
     await anonymousHelper.searchAsAnon({ edited: true });
   });
 
-  test('News-Super-TC03 - Delete - Delete Published News as "Supervisor" and confirm it isnt viewable as an anon user', { tag: "@regression" }, async ({ newsHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
+  test('News-Super-TC03 - Delete - Delete Published News as "Supervisor" and confirm it isnt viewable as an anon user', { tag: '@delete' }, async ({ newsHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
   {
     // creating content
     await newsHelper.createNews({
@@ -463,7 +463,7 @@ test.describe('News Supervisor Tests', () =>
     await anonymousHelper.searchAsAnon({ edited: false });
   });
 
-  test('News-Super-TC04 - Delete - Can delete News created by "Author" as an "Supervisor"', { tag: "@regression" }, async ({ newsHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper, testSetUpData }) =>
+  test('News-Super-TC04 - Delete - Can delete News created by "Author" as an "Supervisor"', { tag: '@delete' }, async ({ newsHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper, testSetUpData }) =>
   {
 
     // Logging out as Before each will log in as an Author.
@@ -515,7 +515,7 @@ test.describe('News Supervisor Tests', () =>
     });
   });
 
-  test('News-Super-TC05 - Compare Revision - Edit News content and ensure user is able to compare Revisions ', { tag: "@regression" }, async ({ newsHelper, revisionHelper, testSetUpData }) =>
+  test('News-Super-TC05 - Compare Revision - Edit News content and ensure user is able to compare Revisions ', { tag: '@revision' }, async ({ newsHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await newsHelper.createNews({
@@ -536,7 +536,7 @@ test.describe('News Supervisor Tests', () =>
 
   });
 
-  test('News-Super-TC06 - Delete Revision - Edit News content and ensure user is able to Delete Revisions', { tag: "@regression" }, async ({ newsHelper, revisionHelper, testSetUpData }) =>
+  test('News-Super-TC06 - Delete Revision - Edit News content and ensure user is able to Delete Revisions', { tag: '@revision' }, async ({ newsHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await newsHelper.createNews({
@@ -565,7 +565,7 @@ test.describe('News Supervisor Tests', () =>
     });
   });
 
-  test('News-Super-TC07 - Revert Revision - Edit News content and ensure user is able to Revert Revisions', { tag: "@regression" }, async ({ newsHelper, revisionHelper, testSetUpData }) =>
+  test('News-Super-TC07 - Revert Revision - Edit News content and ensure user is able to Revert Revisions', { tag: '@revision' }, async ({ newsHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await newsHelper.createNews({
@@ -594,7 +594,7 @@ test.describe('News Supervisor Tests', () =>
     });
   });
 
-  test('News-Super-TC09 - Workbench -  Create News content as an "Supervisor", and use Workbench to complete all moderation states', { tag: "@regression" }, async ({ newsHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
+  test('News-Super-TC09 - Workbench -  Create News content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ newsHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
   {
     // creating news as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');

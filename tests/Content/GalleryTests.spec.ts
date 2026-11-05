@@ -4,7 +4,7 @@ import { test } from '@fixtures/MyFixtures';
 import { ModerationSideBar } from '@poms/base-pages/ModerationSideBar';
 import { GalleryNodePage } from '@poms/content-pages/Gallery/GalleryNodePage';
 
-test.describe('Gallery Author Tests', () =>
+test.describe('Gallery Author Tests', { tag: ['@regression', '@gallery', '@author'] }, () =>
 {
   // Pass the fixture for Gallery Authors into the beforeEach hook
   test.beforeEach(async ({ loginHelper, testSetUpData, testData }, testInfo) =>
@@ -25,7 +25,7 @@ test.describe('Gallery Author Tests', () =>
     await loginHelper.loginWithValidUser();
   });
 
-  test('Gallery-Auth-TC01 - Create - Create Gallery content as an "Author", perform mandatory field check and preview content', { tag: "@regression" },
+  test('Gallery-Auth-TC01 - Create - Create Gallery content as an "Author", perform mandatory field check and preview content', { tag: '@create' },
     async ({ galleryHelper, anonymousHelper, loginHelper, contentModerationHelper, basePage, navigateToCreatedContentHelper, testSetUpData, testData, page }) =>
     {
       const galleryNode = new GalleryNodePage(page, testSetUpData, testData, galleryImageDetails);
@@ -55,7 +55,7 @@ test.describe('Gallery Author Tests', () =>
       await anonymousHelper.searchAsAnon({ edited: false });
     });
 
-  test('Gallery-Auth-TC02 - Edit - Edit Gallery as an "Author" and ensure it is not published', { tag: "@regression" },
+  test('Gallery-Auth-TC02 - Edit - Edit Gallery as an "Author" and ensure it is not published', { tag: '@edit' },
     async ({ galleryHelper, anonymousHelper, loginHelper, contentModerationHelper, basePage, navigateToCreatedContentHelper, testSetUpData, testData, page }) =>
     {
       const galleryNode = new GalleryNodePage(page, testSetUpData, testData, galleryImageDetails);
@@ -75,7 +75,7 @@ test.describe('Gallery Author Tests', () =>
     });
 
 
-  test('Gallery-Auth-TC03 - Delete - Delete Gallery as an "Author"', { tag: "@regression" },
+  test('Gallery-Auth-TC03 - Delete - Delete Gallery as an "Author"', { tag: '@delete' },
     async ({ galleryHelper, navigateToCreatedContentHelper, anonymousHelper, loginHelper, basePage }) =>
     {
       await galleryHelper.createGallery({
@@ -108,7 +108,7 @@ test.describe('Gallery Author Tests', () =>
 
     });
 
-  test('Gallery-Auth-TC04 - Delete - Cannot delete Gallery created by "Supervisor" as an "Author"', { tag: "@regression" },
+  test('Gallery-Auth-TC04 - Delete - Cannot delete Gallery created by "Supervisor" as an "Author"', { tag: '@delete' },
     async ({ galleryHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
     {
       // Logging out as Before each will log in as an Author.
@@ -144,7 +144,7 @@ test.describe('Gallery Author Tests', () =>
       // (This is verified through the deleteGallery method permissions)
     });
 
-  test('Gallery-Auth-TC05 - Compare Revision - Edit Gallery content and ensure user is able to compare Revisions ', { tag: "@regression" }, async ({ galleryHelper, revisionHelper, testSetUpData }) =>
+  test('Gallery-Auth-TC05 - Compare Revision - Edit Gallery content and ensure user is able to compare Revisions ', { tag: '@revision' }, async ({ galleryHelper, revisionHelper, testSetUpData }) =>
   {
     await galleryHelper.createGallery({
       preview: true,
@@ -160,7 +160,7 @@ test.describe('Gallery Author Tests', () =>
     await revisionHelper.compareRevisions();
   });
 
-  test('Gallery-Auth-TC06 - Delete Revision - Edit Gallery content and ensure user is able to Delete Revisions', { tag: "@regression" }, async ({ galleryHelper, revisionHelper, testSetUpData }) =>
+  test('Gallery-Auth-TC06 - Delete Revision - Edit Gallery content and ensure user is able to Delete Revisions', { tag: '@revision' }, async ({ galleryHelper, revisionHelper, testSetUpData }) =>
   {
     await galleryHelper.createGallery({
       preview: true,
@@ -187,7 +187,7 @@ test.describe('Gallery Author Tests', () =>
     });
   });
 
-  test('Gallery-Auth-TC07 - Revert Revision - Edit Gallery content and ensure user is able to Revert Revisions', { tag: "@regression" }, async ({ galleryHelper, revisionHelper, testSetUpData }) =>
+  test('Gallery-Auth-TC07 - Revert Revision - Edit Gallery content and ensure user is able to Revert Revisions', { tag: '@revision' }, async ({ galleryHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await galleryHelper.createGallery({
@@ -216,7 +216,7 @@ test.describe('Gallery Author Tests', () =>
     });
   });
 
-  test('Gallery-Auth-TC09 - Workbench -  Create Gallery content as an "Author", and use Workbench to complete all moderation states available', { tag: "@regression" }, async ({ galleryHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
+  test('Gallery-Auth-TC09 - Workbench -  Create Gallery content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ galleryHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
   {
     // creating gallery as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -284,7 +284,7 @@ test.describe('Gallery Author Tests', () =>
 
 });
 
-test.describe('Gallery Supervisor Tests', () =>
+test.describe('Gallery Supervisor Tests', { tag: ['@regression', '@gallery', '@supervisor'] }, () =>
 {
   // Pass the fixture for Gallery Authors into the beforeEach hook
   test.beforeEach(async ({ loginHelper, testSetUpData, testData }, testInfo) =>
@@ -305,7 +305,7 @@ test.describe('Gallery Supervisor Tests', () =>
     await loginHelper.loginWithValidUser();
   });
 
-  test('Gallery-Super-TC01 - Create - Create Gallery content as an "Supervisor", perform mandatory field check and preview content', { tag: "@regression" }, async ({ galleryHelper, anonymousHelper, loginHelper, contentModerationHelper, basePage, navigateToCreatedContentHelper, testSetUpData, testData, page }) =>
+  test('Gallery-Super-TC01 - Create - Create Gallery content as an "Supervisor", perform mandatory field check and preview content', { tag: '@create' }, async ({ galleryHelper, anonymousHelper, loginHelper, contentModerationHelper, basePage, navigateToCreatedContentHelper, testSetUpData, testData, page }) =>
   {
     const galleryNode = new GalleryNodePage(page, testSetUpData, testData, galleryImageDetails);
     await galleryHelper.createGallery({
@@ -367,7 +367,7 @@ test.describe('Gallery Supervisor Tests', () =>
 
   });
 
-  test('Gallery-Super-TC02 - Edit - Edit Published Gallery content and ensure edit is published as a "Supervisor" ', { tag: "@regression" }, async ({ galleryHelper, anonymousHelper, loginHelper, contentModerationHelper, basePage, navigateToCreatedContentHelper, testSetUpData, testData, page }) =>
+  test('Gallery-Super-TC02 - Edit - Edit Published Gallery content and ensure edit is published as a "Supervisor" ', { tag: '@edit' }, async ({ galleryHelper, anonymousHelper, loginHelper, contentModerationHelper, basePage, navigateToCreatedContentHelper, testSetUpData, testData, page }) =>
   {
     const galleryNode = new GalleryNodePage(page, testSetUpData, testData, galleryImageDetails);
     await galleryHelper.createGallery({
@@ -397,7 +397,7 @@ test.describe('Gallery Supervisor Tests', () =>
     await anonymousHelper.searchAsAnon({ edited: true });
   });
 
-  test('Gallery-Super-TC03 - Delete - Delete Published Gallery as "Supervisor" and confirm it isnt viewable as an anon user', { tag: "@regression" }, async ({ galleryHelper, newsHelper, loginHelper, contentModerationHelper, anonymousHelper, navigateToCreatedContentHelper, testSetUpData, testData, page }) =>
+  test('Gallery-Super-TC03 - Delete - Delete Published Gallery as "Supervisor" and confirm it isnt viewable as an anon user', { tag: '@delete' }, async ({ galleryHelper, newsHelper, loginHelper, contentModerationHelper, anonymousHelper, navigateToCreatedContentHelper, testSetUpData, testData, page }) =>
   {
     const galleryNode = new GalleryNodePage(page, testSetUpData, testData, galleryImageDetails);
     const moderationSideBar = new ModerationSideBar(page, testSetUpData, testData);
@@ -446,7 +446,7 @@ test.describe('Gallery Supervisor Tests', () =>
 
   });
 
-  test('Gallery-Super-TC04 - Delete - Can delete Gallery created by "Author" as an "Supervisor"', { tag: "@regression" }, async ({ galleryHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper, testSetUpData }) =>
+  test('Gallery-Super-TC04 - Delete - Can delete Gallery created by "Author" as an "Supervisor"', { tag: '@delete' }, async ({ galleryHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper, testSetUpData }) =>
   {
     // Logging out as Before each will log in as an Author.
     await basePage.logOut();
@@ -491,7 +491,7 @@ test.describe('Gallery Supervisor Tests', () =>
     });
   });
 
-  test('Gallery-Super-TC05 - Compare Revision - Edit Gallery content and ensure user is able to compare Revisions ', { tag: "@regression" }, async ({ galleryHelper, revisionHelper, testSetUpData }) =>
+  test('Gallery-Super-TC05 - Compare Revision - Edit Gallery content and ensure user is able to compare Revisions ', { tag: '@revision' }, async ({ galleryHelper, revisionHelper, testSetUpData }) =>
   {
     await galleryHelper.createGallery({
       preview: true,
@@ -507,7 +507,7 @@ test.describe('Gallery Supervisor Tests', () =>
     await revisionHelper.compareRevisions();
   });
 
-  test('Gallery-Super-TC06 - Delete Revision - Edit Gallery content and ensure user is able to Delete Revisions', { tag: "@regression" }, async ({ galleryHelper, revisionHelper, testSetUpData }) =>
+  test('Gallery-Super-TC06 - Delete Revision - Edit Gallery content and ensure user is able to Delete Revisions', { tag: '@revision' }, async ({ galleryHelper, revisionHelper, testSetUpData }) =>
   {
     await galleryHelper.createGallery({
       preview: true,
@@ -534,7 +534,7 @@ test.describe('Gallery Supervisor Tests', () =>
     });
   });
 
-  test('Gallery-Super-TC07 - Revert Revision - Edit Gallery content and ensure user is able to Revert Revisions', { tag: "@regression" }, async ({ galleryHelper, revisionHelper, testSetUpData }) =>
+  test('Gallery-Super-TC07 - Revert Revision - Edit Gallery content and ensure user is able to Revert Revisions', { tag: '@revision' }, async ({ galleryHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await galleryHelper.createGallery({
@@ -563,7 +563,7 @@ test.describe('Gallery Supervisor Tests', () =>
     });
   });
 
-  test('Gallery-Super-TC09 - Workbench -  Create Gallery content as an "Supervisor", and use Workbench to complete all moderation states', { tag: "@regression" }, async ({ galleryHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
+  test('Gallery-Super-TC09 - Workbench -  Create Gallery content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ galleryHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
   {
     // creating gallery as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');

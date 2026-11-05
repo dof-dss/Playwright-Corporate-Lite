@@ -2,7 +2,7 @@ import { TestSteps } from '@poms/base-pages/TestSteps';
 import { test } from '@fixtures/MyFixtures';
 import { ModerationSideBar } from '@poms/base-pages/ModerationSideBar';
 
-test.describe('Publication Author Tests', () =>
+test.describe('Publication Author Tests', { tag: ['@regression', '@publication', '@author'] }, () =>
 {
   // Pass the fixture for Publication Authors into the beforeEach hook
   test.beforeEach(async ({ loginHelper, testSetUpData, testData }, testInfo) =>
@@ -23,7 +23,7 @@ test.describe('Publication Author Tests', () =>
     await loginHelper.loginWithValidUser();
   });
 
-  test('Publication-Auth-TC01 - Create - Create Publication content as an "Author", perform mandatory field check and preview content', { tag: "@regression" },
+  test('Publication-Auth-TC01 - Create - Create Publication content as an "Author", perform mandatory field check and preview content', { tag: '@create' },
     async ({ loginHelper, publicationHelper, anonymousHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
     {
       await publicationHelper.createPublication({
@@ -51,7 +51,7 @@ test.describe('Publication Author Tests', () =>
 
     });
 
-  test('Publication-Auth-TC02 - Edit - Edit Publication as an "Author" and ensure it is not published', { tag: "@regression" },
+  test('Publication-Auth-TC02 - Edit - Edit Publication as an "Author" and ensure it is not published', { tag: '@edit' },
     async ({ publicationHelper, anonymousHelper }) =>
     {
       await publicationHelper.createPublication({
@@ -69,7 +69,7 @@ test.describe('Publication Author Tests', () =>
 
     });
 
-  test('Publication-Auth-TC03 - Delete - Delete Publication as an "Author"', { tag: "@regression" },
+  test('Publication-Auth-TC03 - Delete - Delete Publication as an "Author"', { tag: '@delete' },
     async ({ publicationHelper, navigateToCreatedContentHelper, anonymousHelper, loginHelper }) =>
     {
       await publicationHelper.createPublication({
@@ -102,7 +102,7 @@ test.describe('Publication Author Tests', () =>
 
     });
 
-  test('Publication-Auth-TC04 - Delete - Cannot delete Publication created by "Supervisor" as an "Author"', { tag: "@regression" },
+  test('Publication-Auth-TC04 - Delete - Cannot delete Publication created by "Supervisor" as an "Author"', { tag: '@delete' },
     async ({ publicationHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper, page, testSetUpData, testData }) =>
     {
       const permissionCheck = new ModerationSideBar(page, testSetUpData, testData);
@@ -152,7 +152,7 @@ test.describe('Publication Author Tests', () =>
       await anonymousHelper.searchAsAnon({ edited: false });
     });
 
-  test('Publication-Auth-TC05 - Compare Revision - Edit Publication content and ensure user is able to compare Revisions ', { tag: "@regression" }, async ({ publicationHelper, revisionHelper, testSetUpData }) =>
+  test('Publication-Auth-TC05 - Compare Revision - Edit Publication content and ensure user is able to compare Revisions ', { tag: '@revision' }, async ({ publicationHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await publicationHelper.createPublication({
@@ -172,7 +172,7 @@ test.describe('Publication Author Tests', () =>
     await revisionHelper.compareRevisions();
   });
 
-  test('Publication-Auth-TC06 - Delete Revision - Edit Publication content and ensure user is able to Delete Revisions', { tag: "@regression" }, async ({ publicationHelper, revisionHelper, testSetUpData }) =>
+  test('Publication-Auth-TC06 - Delete Revision - Edit Publication content and ensure user is able to Delete Revisions', { tag: '@revision' }, async ({ publicationHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await publicationHelper.createPublication({
@@ -201,7 +201,7 @@ test.describe('Publication Author Tests', () =>
     });
   });
 
-  test('Publication-Auth-TC07 - Revert Revision - Edit Publication content and ensure user is able to Revert Revisions', { tag: "@regression" }, async ({ publicationHelper, revisionHelper, testSetUpData }) =>
+  test('Publication-Auth-TC07 - Revert Revision - Edit Publication content and ensure user is able to Revert Revisions', { tag: '@revision' }, async ({ publicationHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await publicationHelper.createPublication({
@@ -230,7 +230,7 @@ test.describe('Publication Author Tests', () =>
     });
   });
 
-  test('Publication-Auth-TC09 - Workbench -  Create Publication content as an "Author", and use Workbench to complete all moderation states available', { tag: "@regression" }, async ({ publicationHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
+  test('Publication-Auth-TC09 - Workbench -  Create Publication content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ publicationHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
   {
 
     // creating publication as a draft and performing mandatory field check
@@ -296,7 +296,7 @@ test.describe('Publication Author Tests', () =>
     });
   });
 
-  test('Publication-Auth-TC10 - Create - Create Publication content as an "Author", to test external publications', { tag: "@regression" }, async ({ publicationHelper, anonymousHelper }) =>
+  test('Publication-Auth-TC10 - Create - Create Publication content as an "Author", to test external publications', { tag: '@create' }, async ({ publicationHelper, anonymousHelper }) =>
   {
 
     // create pub with external link
@@ -307,7 +307,7 @@ test.describe('Publication Author Tests', () =>
 
   });
 
-  test('Publication-Auth-TC11 - Edit - Edit Publication as an "Author" and ensure external publication can be edited', { tag: "@regression" }, async ({ publicationHelper, anonymousHelper }) =>
+  test('Publication-Auth-TC11 - Edit - Edit Publication as an "Author" and ensure external publication can be edited', { tag: '@edit' }, async ({ publicationHelper, anonymousHelper }) =>
   {
 
     // create publication
@@ -323,7 +323,7 @@ test.describe('Publication Author Tests', () =>
 
 });
 
-test.describe('Publication Supervisor Tests', () =>
+test.describe('Publication Supervisor Tests', { tag: ['@regression', '@publication', '@supervisor'] }, () =>
 {
   // Pass the fixture for Publication Authors into the beforeEach hook
   test.beforeEach(async ({ loginHelper, testSetUpData, testData }, testInfo) =>
@@ -344,7 +344,7 @@ test.describe('Publication Supervisor Tests', () =>
     await loginHelper.loginWithValidUser();
   });
 
-  test('Publication-Super-TC01 - Create - Create Publication content as an "Supervisor", perform mandatory field check and preview content', { tag: "@regression" }, async ({ publicationHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData }) =>
+  test('Publication-Super-TC01 - Create - Create Publication content as an "Supervisor", perform mandatory field check and preview content', { tag: '@create' }, async ({ publicationHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData }) =>
   {
 
     // creating publication as a draft and performing mandatory field check
@@ -410,7 +410,7 @@ test.describe('Publication Supervisor Tests', () =>
     await anonymousHelper.searchAsAnon({ edited: false });
   });
 
-  test('Publication-Super-TC02 - Edit - Edit Published Publication content and ensure edit is published as a "Supervisor" ', { tag: "@regression" }, async ({ publicationHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
+  test('Publication-Super-TC02 - Edit - Edit Published Publication content and ensure edit is published as a "Supervisor" ', { tag: '@edit' }, async ({ publicationHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
   {
 
     // creating content
@@ -442,7 +442,7 @@ test.describe('Publication Supervisor Tests', () =>
     await anonymousHelper.searchAsAnon({ edited: true });
   });
 
-  test('Publication-Super-TC03 - Delete - Delete Published Publication as "Supervisor" and confirm it isnt viewable as an anon user', { tag: "@regression" }, async ({ publicationHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
+  test('Publication-Super-TC03 - Delete - Delete Published Publication as "Supervisor" and confirm it isnt viewable as an anon user', { tag: '@delete' }, async ({ publicationHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
   {
 
     // creating content
@@ -490,7 +490,7 @@ test.describe('Publication Supervisor Tests', () =>
     await anonymousHelper.searchAsAnon({ edited: false });
   });
 
-  test('Publication-Super-TC04 - Delete - Can delete Publication created by "Author" as an "Supervisor"', { tag: "@regression" }, async ({ publicationHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper, testSetUpData }) =>
+  test('Publication-Super-TC04 - Delete - Can delete Publication created by "Author" as an "Supervisor"', { tag: '@delete' }, async ({ publicationHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper, testSetUpData }) =>
   {
 
     // Logging out as Before each will log in as an Author.
@@ -542,7 +542,7 @@ test.describe('Publication Supervisor Tests', () =>
     });
   });
 
-  test('Publication-Super-TC05 - Compare Revision - Edit Publication content and ensure user is able to compare Revisions ', { tag: "@regression" }, async ({ publicationHelper, revisionHelper, testSetUpData }) =>
+  test('Publication-Super-TC05 - Compare Revision - Edit Publication content and ensure user is able to compare Revisions ', { tag: '@revision' }, async ({ publicationHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await publicationHelper.createPublication({
@@ -563,7 +563,7 @@ test.describe('Publication Supervisor Tests', () =>
 
   });
 
-  test('Publication-Super-TC06 - Delete Revision - Edit Publication content and ensure user is able to Delete Revisions', { tag: "@regression" }, async ({ publicationHelper, revisionHelper, testSetUpData }) =>
+  test('Publication-Super-TC06 - Delete Revision - Edit Publication content and ensure user is able to Delete Revisions', { tag: '@revision' }, async ({ publicationHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await publicationHelper.createPublication({
@@ -592,7 +592,7 @@ test.describe('Publication Supervisor Tests', () =>
     });
   });
 
-  test('Publication-Super-TC07 - Revert Revision - Edit Publication content and ensure user is able to Revert Revisions', { tag: "@regression" }, async ({ publicationHelper, revisionHelper, testSetUpData }) =>
+  test('Publication-Super-TC07 - Revert Revision - Edit Publication content and ensure user is able to Revert Revisions', { tag: '@revision' }, async ({ publicationHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await publicationHelper.createPublication({
@@ -621,7 +621,7 @@ test.describe('Publication Supervisor Tests', () =>
     });
   });
 
-  test('Publication-Super-TC09 - Workbench -  Create Publication content as an "Supervisor", and use Workbench to complete all moderation states', { tag: "@regression" }, async ({ publicationHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
+  test('Publication-Super-TC09 - Workbench -  Create Publication content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ publicationHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
   {
 
 
@@ -667,7 +667,7 @@ test.describe('Publication Supervisor Tests', () =>
 
   });
 
-  test('Publication-Super-TC10 - Create - Create Publication content as an "Super", to test external publications', { tag: "@regression" }, async ({ publicationHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData }) =>
+  test('Publication-Super-TC10 - Create - Create Publication content as an "Super", to test external publications', { tag: '@create' }, async ({ publicationHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData }) =>
   {
 
     await publicationHelper.createExternalLinkPublication();
@@ -687,7 +687,7 @@ test.describe('Publication Supervisor Tests', () =>
 
   });
 
-  test('Publication-Super-TC11 - Edit - Edit Publication as an "Super" and ensure external publication can be edited', { tag: "@regression" }, async ({ publicationHelper, anonymousHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData }) =>
+  test('Publication-Super-TC11 - Edit - Edit Publication as an "Super" and ensure external publication can be edited', { tag: '@edit' }, async ({ publicationHelper, anonymousHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData }) =>
   {
 
     await publicationHelper.createExternalLinkPublication();
