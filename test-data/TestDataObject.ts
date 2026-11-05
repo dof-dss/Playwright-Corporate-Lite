@@ -486,6 +486,8 @@ export const TestData = {
     lastUpdatedTimeEdited: '00:00:00',
     publicationType: 'Circulars',
     publicationTypeEdited: 'Agendas and minutes',
+    publicationSeries: '- None -',
+    publicationSeriesEdited: '- None -',
     summary: 'This is new Publication summary',
     summaryEdited: 'This is edited Publication summary',
     body: 'This is new news body field',
@@ -494,8 +496,35 @@ export const TestData = {
     linkTextPubllication: 'NI Direct',
     externalPublicationEdited: 'https://www.bbc.co.uk',
     linkTextPubllicationEdited: 'BBC News',
-    verifyDatePublished: verifyStartDateFormated,
+    verifyDatePublished: verifyStartDate.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    }),
     verifyLastUpdatedDate: verifyStartDateFormated,
+    
+    series: "",
+    seriesEdited: "", 
+    
+    statistics: [
+      'People and communities',
+      'Census',
+      'Census 2031',
+      'Census 2031 outline strategy'
+    ],
+    statisticsEdited: [
+      'Health and social care'
+    ],
+
+    research: [
+      'Geography'
+    ],
+    researchEdited: [
+      'Research Support',
+      'Administrative Data Research Northern Ireland (ADR NI) themed datasets',
+      'Business Data for Research (BDR)'
+    ]
+    
   },
 
   MediaLibrary: {

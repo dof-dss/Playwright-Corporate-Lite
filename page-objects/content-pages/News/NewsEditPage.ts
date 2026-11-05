@@ -172,8 +172,8 @@ export class NewsEditPage
     await this.editNewsPageURLCheck();
     await this.editNewsTitle(data.newsTitle);
     await this.createPages.enterRevisionLogMessage(data.revisionLogMessage);
-    await this.editNewsType(data.newsType);
     await this.editNewsTopics(data.topics);
+    await this.editNewsType(data.newsType);
     await this.editNewsIntroParagraph(data.newsIntoParagraph);
     await this.editPublicationDate(data.pubDate);
     await this.editNewsTeaser(data.newsteaser);

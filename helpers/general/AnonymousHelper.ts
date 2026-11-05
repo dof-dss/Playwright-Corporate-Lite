@@ -173,6 +173,12 @@ export class AnonymousHelper
         {
             await this.VerifyNewsAsAnon({ edited });
         }
+
+        if (this.testSetUpData.contentTypeforTest.contentType === this.testSetUpData.validContentTypeList.publication)
+            
+        {
+            await this.VerifyPublicationAsAnon({ edited });
+        }
     }
 
     // this method is used for the searchFacetsAsAnon method above as it is reused multiple times is accepts the edited param to determine what content to seek
@@ -245,7 +251,7 @@ export class AnonymousHelper
     }
 
 
-
+    // Unique Article verification for anonymous users
     async VerifyArticleAsAnon({ edited }: ContentEdited)
     {
         const article = this.testData.Article;
@@ -369,6 +375,7 @@ export class AnonymousHelper
             await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
         }
     }
+
     async VerifyArticleCorrectDisplays()
     {
         const areaOfExpertiseLinks = [
@@ -440,6 +447,7 @@ export class AnonymousHelper
         }
     }
 
+    // Unique Consultation verification for anonymous users
     async searchConsultationFacetsAsAnon(edited: boolean)
     {
         // nav back to homepage
@@ -529,6 +537,7 @@ export class AnonymousHelper
 
     }
 
+    // Unique News verification for anonymous users
     async VerifyNewsAsAnon({ edited }: ContentEdited)
     {
         await this.page.locator('#nav-main-menu').getByRole('link', { name: 'Home', exact: true }).click();
@@ -583,6 +592,7 @@ export class AnonymousHelper
         await this.verifyContent(edited);
     }
 
+    // Unique Contact verification for anonymous users
     async VerifyContactAsAnon({ edited }: ContentEdited)
     {
         await this.testSteps.LogInfo('----- Verifying Contact Topics -----');
@@ -698,301 +708,109 @@ export class AnonymousHelper
         await verifyContactTopicListing();
     }
 
+    // Unique Publication verification for anonymous users
+    async VerifyPublicationAsAnon({ edited }: ContentEdited)
+    {
+        await this.testSteps.LogInfo('----- Verifying Publication Topics -----');
+        const publication = this.testData.Publication;
+        const title = edited ? publication.titleEdited : publication.title;
+        const statistics = edited ? publication.statisticsEdited : publication.statistics;
+        const research = edited ? publication.researchEdited : publication.research;
+        const isPublished = this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published;
+        const openLinkContaining = async (text: string, exact = false) =>
+        {
+            const link = exact
+                ? this.page.getByRole('link', { name: text, exact: true })
+                : this.page.getByRole('link').filter({ hasText: text }).first();
 
+            await this.testSteps.LogInfo(`Opening link containing text: "${text}"`);
 
+            await expect(link).toBeVisible();
+            await link.click();
+        };
+        const verifyPublicationTopicListing = async () =>
+        {
+            const publicationLink = this.page.getByRole('link').filter({ hasText: title }).first();
+            if (isPublished)
+            {
+                await this.testSteps.LogInfo(`Verifying published publication "${title}" is visible`);
+                try
+                {
+                    await expect(publicationLink).toBeVisible();
+                }
+                catch
+                {
+                    const seeAllPublicationsLink = this.page.getByRole('link', {
+                        name: 'See all publications in this topic',
+                        exact: true
+                    });
+                    if (await seeAllPublicationsLink.isVisible())
+                    {
+                        await seeAllPublicationsLink.click();
+                    }
+                    await expect(publicationLink).toBeVisible();
+                }
+                await publicationLink.click();
+                await this.verificationHelper.verifyChosenContent({ edited });
+            }
+            else
+            {
+                await this.testSteps.LogInfo(`Verifying unpublished publication "${title}" is not visible`);
+                try
+                {
+                    await expect(publicationLink).toBeHidden();
+                }
+                catch
+                {
+                    await this.page.reload();
+                    await expect(publicationLink).toBeHidden();
+                }
+            }
+        };
 
+        if (statistics.length > 0 && statistics[0] !== '- None -')
+        {
+            await this.testSteps.LogInfo('----- Verifying Publication via Statistics -----');
+            await this.homePage.navigateToHome();
+            if (edited)
+            {
+                await openLinkContaining('Statistics and Research');
+                for (const statistic of statistics)
+                {
+                    await openLinkContaining(statistic);
+                }
+            }
+            else
+            {
+                await openLinkContaining(`${statistics[0]} ${statistics[1]}`);
+                await openLinkContaining('Census Information');
+                await openLinkContaining(`${statistics[2]} Find information`);
+                for (const statistic of statistics.slice(3))
+                {
+                    await openLinkContaining(statistic);
+                }
+            }
+            await verifyPublicationTopicListing();
+        }
 
+        if (research.length > 0 && research[0] !== '- None -')
+        {
+            await this.testSteps.LogInfo('----- Verifying Publication via Research and support -----');
+            await this.homePage.navigateToHome();
+            await this.homePage.enterContentTitleInSearch(research[0]);
+            await this.homePage.clickSearchButton();
+            const researchLink = this.page.getByRole('link').filter({
+                has: this.page.getByRole('heading', { name: research[0], exact: true })
+            });
+            await expect(researchLink).toBeVisible();
+            await researchLink.click();
+            for (const researchTopic of research.slice(1))
+            {
+                await openLinkContaining(researchTopic);
+            }
+            await verifyPublicationTopicListing();
+        }
+    }
 
-    // async searchFacetsAsAnon(edited: boolean)
-    // {
-    //     // switch statement for content types 
-    //     switch (this.testSetUpData.contentTypeforTest.contentType)
-    //     {
-    //         case this.testSetUpData.validContentTypeList.consultation: {
-    //             // nav back to homepage
-    //             await this.page.getByRole('link', { name: 'Home', exact: true }).click();
-    //             await this.homePage.homePageURLCheck();
-    //             // clicking more news link on the homepage
-    //             await this.homePage.clickConsultationNavLink();
-    //             await this.consultationFacetPage.consultationPageURLCheck();
-
-    //             if (!edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
-    //             {
-
-    //                 await this.consultationFacetPage.enterContentTitleInSearch(this.testData.Consultation.title);
-    //                 await this.consultationFacetPage.clickConsultationFacetSearchButton();
-
-    //                 try
-    //                 {
-    //                     await this.testSteps.LogInfo('Published content has appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
-    //                     await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.title}")]`)).toBeVisible();
-    //                 }
-    //                 catch
-    //                 {
-    //                     await this.testSteps.LogInfo('Published content has NOT appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
-    //                     // wait 5 seconds and refresh page
-    //                     await this.testSteps.LogInfo('Wating 5 seconds');
-    //                     await this.page.waitForTimeout(5000);
-    //                     await this.testSteps.LogInfo('Reloading page');
-    //                     await this.page.reload();
-
-    //                     // remove last char from title
-    //                     const updatedTitle = this.testData.Consultation.title.slice(0, -1);
-    //                     // seatch again with new title
-    //                     await this.testSteps.LogInfo('Performing second search having removed final character from title to refresh solar cache - "' + updatedTitle + '"');
-    //                     await this.consultationFacetPage.enterContentTitleInSearch(updatedTitle);
-    //                     await this.consultationFacetPage.clickConsultationFacetSearchButton();
-    //                 }
-
-    //                 // verify
-    //                 await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.title}")]`)).toBeVisible();
-
-    //                 // add filters
-    //                 await this.consultationFacetPage.selectFacetFilterConsultationTopic();
-    //                 await this.consultationFacetPage.clickFacetFilterConsultationPublishedDateSpan();
-    //                 await this.consultationFacetPage.clickFacetFilterPubDateFilter();
-
-    //                 // full verification of content edited param is passed along through methods steming from test itself
-    //                 await this.verifyContent(edited);
-    //             }
-
-    //             if (!edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
-    //             {
-    //                 await this.consultationFacetPage.enterContentTitleInSearch(this.testData.Consultation.title);
-    //                 await this.consultationFacetPage.clickConsultationFacetSearchButton();
-    //                 await this.consultationFacetPage.selectFacetFilterConsultationTopic();
-    //                 // verify            
-    //                 await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.title}")]`)).toBeHidden();
-    //             }
-
-    //             if (edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
-    //             {
-    //                 await this.consultationFacetPage.enterContentTitleInSearch(this.testData.Consultation.titleEdited);
-    //                 await this.consultationFacetPage.clickConsultationFacetSearchButton();
-    //                 // add filters
-    //                 await this.consultationFacetPage.clickFacetFilterConsultationPublishedDateSpan();
-    //                 await this.consultationFacetPage.clickFacetFilterPubDateEditedFilter();
-    //                 await this.consultationFacetPage.selectFacetFilterConsultationTopic(true);
-    //                 // verify            
-    //                 await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.titleEdited}")]`)).toBeVisible();
-    //                 // full verification of content edited param is passed along through methods steming from test itself
-    //                 await this.verifyContent(edited);
-    //             }
-
-    //             if (edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
-    //             {
-    //                 await this.consultationFacetPage.enterContentTitleInSearch(this.testData.Consultation.titleEdited);
-    //                 await this.consultationFacetPage.clickConsultationFacetSearchButton();
-    //                 await this.consultationFacetPage.selectFacetFilterConsultationTopic(true);
-    //                 // verify            
-    //                 await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Consultation.titleEdited}")]`)).toBeHidden();
-    //             }
-    //             break;
-    //         }
-    //         case this.testSetUpData.validContentTypeList.news: {
-    //             // nav back to homepage
-    //             await this.page.getByRole('link', { name: 'Home', exact: true }).click();
-    //             await this.homePage.homePageURLCheck();
-    //             // clicking more news link on the homepage
-    //             await this.homePage.clickMoreNewsLink();
-    //             await this.newsFacetPage.newsPageURLCheck();
-
-    //             if (!edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
-    //             {
-    //                 await this.newsFacetPage.enterContentTitleInSearch(this.testData.News.title);
-    //                 await this.newsFacetPage.clickNewsFacetSearchButton();
-
-    //                 try
-    //                 {
-    //                     await this.testSteps.LogInfo('Published content has appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
-    //                     await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.title}")]`)).toBeVisible();
-    //                 }
-    //                 catch
-    //                 {
-    //                     await this.testSteps.LogInfo('Published content has NOT appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
-    //                     // wait 5 seconds and refresh page
-    //                     await this.testSteps.LogInfo('Wating 5 seconds');
-    //                     await this.page.waitForTimeout(5000);
-    //                     await this.testSteps.LogInfo('Reloading page');
-    //                     await this.page.reload();
-
-    //                     // remove last char from title
-    //                     const updatedTitle = this.testData.News.title.slice(0, -1);
-    //                     // seatch again with new title
-    //                     await this.testSteps.LogInfo('Performing second search having removed final character from title to refresh solar cache - "' + updatedTitle + '"');
-    //                     await this.newsFacetPage.enterContentTitleInSearch(updatedTitle);
-    //                     await this.newsFacetPage.clickNewsFacetSearchButton();
-    //                 }
-
-    //                 // verify
-    //                 await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.title}")]`)).toBeVisible();
-    //                 // add filters
-    //                 await this.newsFacetPage.clickFacetFilterPubDateSpan();
-    //                 await this.newsFacetPage.clickFacetFilterPubDateFilter();
-    //                 // verify            
-    //                 await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.title}")]`)).toBeVisible();
-    //                 // full verification of content edited param is passed along through methods steming from test itself
-    //                 await this.verifyContent(edited);
-    //             }
-
-    //             if (!edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
-    //             {
-    //                 await this.newsFacetPage.enterContentTitleInSearch(this.testData.News.title);
-    //                 await this.newsFacetPage.clickNewsFacetSearchButton();
-    //                 // verify            
-    //                 await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.title}")]`)).toBeHidden();
-    //             }
-
-    //             if (edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
-    //             {
-    //                 await this.newsFacetPage.enterContentTitleInSearch(this.testData.News.titleEdited);
-    //                 await this.newsFacetPage.clickNewsFacetSearchButton();
-    //                 // add filters
-    //                 await this.newsFacetPage.clickFacetFilterPubDateSpan();
-    //                 await this.newsFacetPage.clickFacetFilterPubDateEditedFilter();
-    //                 // verify            
-    //                 await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.titleEdited}")]`)).toBeVisible();
-    //                 // full verification of content edited param is passed along through methods steming from test itself
-    //                 await this.verifyContent(edited);
-    //             }
-
-    //             if (edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
-    //             {
-    //                 await this.newsFacetPage.enterContentTitleInSearch(this.testData.News.titleEdited);
-    //                 await this.newsFacetPage.clickNewsFacetSearchButton();
-    //                 // verify
-    //                 await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.titleEdited}")]`)).toBeHidden();
-    //                 // add filters
-    //                 await this.newsFacetPage.clickFacetFilterPubDateSpan();
-    //                 await this.newsFacetPage.clickFacetFilterPubDateEditedFilter();
-    //                 // verify            
-    //                 await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.News.titleEdited}")]`)).toBeHidden();
-    //             }
-    //             break;
-    //         }
-    //         case this.testSetUpData.validContentTypeList.publication: {
-    //             // nav back to homepage
-    //             await this.page.getByRole('link', { name: 'Home', exact: true }).click();
-    //             await this.homePage.homePageURLCheck();
-    //             // clicking more news link on the homepage
-    //             await this.homePage.clickPublicationNavLink();
-    //             await this.publicationFacetPage.publicationPageURLCheck();
-
-    //             if (!edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
-    //             {
-    //                 await this.publicationFacetPage.enterContentTitleInSearch(this.testData.Publication.title);
-    //                 await this.publicationFacetPage.clickPublicationFacetSearchButton();
-
-    //                 try
-    //                 {
-    //                     await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.title}")]`)).toBeVisible();
-    //                 }
-    //                 catch
-    //                 {
-    //                     // wait 2 seconds and refresh page
-    //                     await this.page.waitForTimeout(2000);
-    //                     // remove last char from title
-    //                     const updatedTitle = this.testSetUpData.contentTitleforTest.contentTitle.slice(0, -1);
-    //                     // seatch again with new title
-    //                     await this.publicationFacetPage.enterContentTitleInSearch(updatedTitle);
-    //                     await this.publicationFacetPage.clickPublicationFacetSearchButton();
-    //                     await expect(this.page.locator('//a/h3[contains(text(), "' + this.testData.Publication.title + '")]')).toBeVisible();
-    //                 }
-
-    //                 // add filters
-    //                 await this.publicationFacetPage.clickFacetFilterTypeSpan();
-    //                 await this.publicationFacetPage.clickFacetFilterTypeFilter();
-    //                 // verify
-    //                 await expect(this.page.locator('//a/h3[contains(text(), "' + this.testData.Publication.title + '")]')).toBeVisible();
-    //                 // add filters
-    //                 await this.publicationFacetPage.clickFacetFilterPubDateSpan();
-    //                 await this.publicationFacetPage.clickFacetFilterPubDateFilter();
-    //                 // verify            
-    //                 await expect(this.page.locator('//a/h3[contains(text(), "' + this.testData.Publication.title + '")]')).toBeVisible();
-    //                 // full verification of content edited param is passed along through methods steming from test itself
-    //                 await this.verifyContent(edited);
-    //             }
-
-    //             if (!edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
-    //             {
-    //                 await this.publicationFacetPage.enterContentTitleInSearch(this.testData.Publication.title);
-    //                 await this.publicationFacetPage.clickPublicationFacetSearchButton();
-    //                 try
-    //                 {
-    //                     // verify
-    //                     await expect(this.page.locator('//a/h3[contains(text(), "' + this.testData.Publication.title + '")]')).toBeHidden();
-    //                 }
-    //                 catch
-    //                 {
-    //                     // wait 5 seconds and refresh page
-    //                     await this.page.waitForTimeout(2000);
-    //                     // remove last char from title
-    //                     const updatedTitle = this.testSetUpData.contentTitleforTest.contentTitle.slice(0, -1);
-    //                     // seatch again with new title
-    //                     await this.publicationFacetPage.enterContentTitleInSearch(updatedTitle);
-    //                     await this.publicationFacetPage.clickPublicationFacetSearchButton();
-    //                     await expect(this.page.locator('//a/h3[contains(text(), "' + this.testData.Publication.title + '")]')).toBeHidden();
-    //                 }
-    //             }
-
-    //             if (edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
-    //             {
-    //                 await this.publicationFacetPage.enterContentTitleInSearch(this.testData.Publication.titleEdited);
-    //                 await this.publicationFacetPage.clickPublicationFacetSearchButton();
-
-    //                 try
-    //                 {
-    //                     await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.title}")]`)).toBeVisible();
-    //                 }
-    //                 catch
-    //                 {
-    //                     // wait 5 seconds and refresh page
-    //                     await this.page.waitForTimeout(2000);
-    //                     // remove last char from title
-    //                     const updatedTitle = this.testSetUpData.contentTitleforTest.contentTitle.slice(0, -1);
-    //                     // seatch again with new title
-    //                     await this.publicationFacetPage.enterContentTitleInSearch(updatedTitle);
-    //                     await this.publicationFacetPage.clickPublicationFacetSearchButton();
-    //                     await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.titleEdited}")]`)).toBeVisible();
-    //                 }
-
-    //                 // add filters
-    //                 await this.publicationFacetPage.clickFacetFilterTypeSpan();
-    //                 await this.publicationFacetPage.clickFacetFilterTypeEditedFilter();
-    //                 // add filters
-    //                 await this.publicationFacetPage.clickFacetFilterPubDateSpan();
-    //                 await this.publicationFacetPage.clickFacetFilterPubDateEditedFilter();
-    //                 // verify            
-    //                 await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.titleEdited}")]`)).toBeVisible();
-    //                 // full verification of content edited param is passed along through methods steming from test itself
-    //                 await this.verifyContent(edited);
-    //             }
-
-    //             if (edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
-    //             {
-    //                 await this.publicationFacetPage.enterContentTitleInSearch(this.testData.Publication.titleEdited);
-    //                 await this.publicationFacetPage.clickPublicationFacetSearchButton();
-    //                 try
-    //                 {
-    //                     // verify
-    //                     await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.titleEdited}")]`)).toBeHidden();
-    //                 }
-    //                 catch
-    //                 {
-    //                     // wait 5 seconds and refresh page
-    //                     await this.page.waitForTimeout(2000);
-    //                     // remove last char from title
-    //                     const updatedTitle = this.testSetUpData.contentTitleforTest.contentTitle.slice(0, -1);
-    //                     // seatch again with new title
-    //                     await this.publicationFacetPage.enterContentTitleInSearch(updatedTitle);
-    //                     await this.publicationFacetPage.clickPublicationFacetSearchButton();
-    //                     await expect(this.page.locator(`//a/h3[contains(text(), "${this.testData.Publication.titleEdited}")]`)).toBeHidden();
-    //                 }
-    //             }
-    //             break;
-    //         }
-    //     }
-
-    // }
 }
 

@@ -137,7 +137,7 @@ export class GalleryNodePage
     {
         // verify title
         await this.testSteps.LogInfo(`Verifying title "${this.testData.Gallery.titleEdited}" is visible`);
-        //await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.Gallery.titleEdited);
+        await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.Gallery.titleEdited);
 
         // verify summary
         await this.testSteps.LogInfo(`Verifying Summary "${this.testData.Gallery.summaryEdited}" is visible`);

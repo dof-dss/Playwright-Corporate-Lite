@@ -59,7 +59,7 @@ export class ModerationSideBar
         this.deletebutton = page.getByRole('link', { name: 'Delete content' });
         this.discardbutton = page.getByRole('button', { name: 'Discard draft', exact: true });
         this.showrevisions = page.locator('//a[contains(text(),"Revisions")]');
-        this.outlinebutton = page.getByRole('link', { name: 'Outline' });
+        this.outlinebutton = page.getByRole('link', { name: 'Outline' , exact: true });
         this.scheduledtransitionsbutton = page.getByRole('link', { name: 'Scheduled transitions' });
         this.whatlinksherebutton = page.locator('//a[contains(text(),"What links here")]');
 

@@ -162,28 +162,14 @@ export class UploadMedia
     async clickAddMediaAttachmentButton()
     {
         await this.testSteps.LogInfo('Clicking Add media attachment Button');
-        if (this.testSetUpData.contentTypeforTest.contentType === this.testSetUpData.validContentTypeList.publication)
-        {
-            await this.addMediaAttachmentPublicationButton.click();
-        }
-        else
-        {
-            await this.addMediaAttachmentButton.click();
-        }
+        await this.addMediaAttachmentButton.click();
     }
 
     // click Add media button for attachments
     async clickEditPageAddMediaAttachmentButton()
     {
         await this.testSteps.LogInfo('Clicking Add media attachment Button while editing');
-        if (this.testSetUpData.contentTypeforTest.contentType === this.testSetUpData.validContentTypeList.publication)
-        {
-            await this.editPageAddMediaAttachmentPublicationButton.click();
-        }
-        else
-        {
-            await this.editPageAddMediaAttachmentButton.click();
-        }
+        await this.editPageAddMediaAttachmentButton.click();
     }
 
     // click Add secure media button for attachments
@@ -500,16 +486,8 @@ export class UploadMedia
         await this.testSteps.LogInfo('Verifying Attachement is uploaded');
 
         // looking for 'x' button to remove to ensure it has been properly uploaded
-        if (this.testSetUpData.contentTypeforTest.contentType === this.testSetUpData.validContentTypeList.publication)
-        {
-            await expect(this.page.locator('//input[contains(@id,"edit-field-publication-files-selection-0-remove-button")]')).toBeVisible();
-            await expect(this.page.locator('//input[contains(@id,"edit-field-publication-files-selection-0-remove-button")]')).toBeEnabled();
-        }
-        else
-        {
-            await expect(this.page.locator('//input[contains(@id,"edit-field-attachment-selection-0-remove-button")]')).toBeVisible();
-            await expect(this.page.locator('//input[contains(@id,"edit-field-attachment-selection-0-remove-button")]')).toBeEnabled();
-        }
+        await expect(this.page.locator('//input[contains(@id,"edit-field-attachment-selection-0-remove-button")]')).toBeVisible();
+        await expect(this.page.locator('//input[contains(@id,"edit-field-attachment-selection-0-remove-button")]')).toBeEnabled();
     }
 
     //verify Secure Attachment is uploaded 
