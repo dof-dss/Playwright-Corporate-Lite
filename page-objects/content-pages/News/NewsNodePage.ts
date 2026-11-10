@@ -69,9 +69,9 @@ export class NewsNodePage
         await this.testSteps.LogInfo(`Verifying introductory Paragraph "${this.testData.News.introductoryParagraph}" is visible`);
         await expect(this.page.getByText(this.testData.News.introductoryParagraph)).toBeVisible();
 
-        // verify image is uploaded and displayed (does not verify if it is correct image just that it is on page)
-        // await this.testSteps.LogInfo('Verifying image is visible');
-        // await expect(this.page.locator('//figure/img')).toBeVisible();
+        //verify image is uploaded and displayed (does not verify if it is correct image just that it is on page)
+        await this.testSteps.LogInfo('Verifying image is visible');
+        await expect(this.page.locator('//figure/img')).toBeVisible();
 
         // verify body field
         await this.testSteps.LogInfo(`Verifying Body "${this.testData.News.body}" is visible`);
@@ -93,27 +93,27 @@ export class NewsNodePage
         });
 
         // verify title
-        // await this.testSteps.LogInfo(`Verifying title "${this.testData.News.titleEdited}" is visible`);
-        // await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.News.titleEdited);
+        await this.testSteps.LogInfo(`Verifying title "${this.testData.News.titleEdited}" is visible`);
+        await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.News.titleEdited);
 
         // verify publication date
         await this.testSteps.LogInfo(`Verifying Date published "${publishedDate}" is visible`);
         await expect(this.page.locator('//span[contains(text(),"Date published: ")]//following-sibling::span/time'))
             .toHaveText(publishedDate);
 
-        // // verify selected topics
-        // await expect(this.page.getByText('Topics:', { exact: true })).toBeVisible();
-        // for (const topic of this.testData.News.topicsEdited)
-        // {
-        //     await this.testSteps.LogInfo(`Verifying topic "${topic}" is visible`);
-        //     await expect(this.page.getByRole('link', { name: topic, exact: true })).toBeVisible();
-        // }
+        // verify selected topics
+        await expect(this.page.getByText('Topics:', { exact: true })).toBeVisible();
+        for (const topic of this.testData.News.topicsEdited)
+        {
+            await this.testSteps.LogInfo(`Verifying topic "${topic}" is visible`);
+            await expect(this.page.getByRole('link', { name: topic, exact: true })).toBeVisible();
+        }
 
         await this.testSteps.LogInfo(`Verifying introductory Paragraph "${this.testData.News.introductoryParagraphEdited}" is visible`);
         await expect(this.page.getByText(this.testData.News.introductoryParagraphEdited)).toBeVisible();
 
-        // await this.testSteps.LogInfo('Verifying image is visible');
-        // await expect(this.page.locator('//figure/img')).toBeVisible();
+        await this.testSteps.LogInfo('Verifying image is visible');
+        await expect(this.page.locator('//div/img')).toBeVisible();
 
         await this.testSteps.LogInfo(`Verifying Body "${this.testData.News.bodyEdited}" is visible`);
         await expect(this.page.getByText(this.testData.News.bodyEdited)).toBeVisible();

@@ -175,7 +175,6 @@ export class AnonymousHelper
         }
 
         if (this.testSetUpData.contentTypeforTest.contentType === this.testSetUpData.validContentTypeList.publication)
-            
         {
             await this.VerifyPublicationAsAnon({ edited });
         }
@@ -557,17 +556,27 @@ export class AnonymousHelper
         {
             try
             {
+                await this.testSteps.LogInfo('Published content has appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
                 await expect(searchResult).toBeVisible();
             }
             catch
             {
-                await this.testSteps.LogInfo(`Published News "${newsTitle}" has not appeared; refreshing and searching again`);
-                await this.page.waitForTimeout(5000);
+                await this.testSteps.LogInfo('Published content has NOT appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
+                // wait 5 seconds and refresh page
+                await this.testSteps.LogInfo('Wating 5 seconds');
+                await this.page.waitForTimeout(8000);
+                await this.testSteps.LogInfo('Reloading page');
                 await this.page.reload();
-                await this.newsFacetPage.enterContentTitleInSearch(newsTitle);
+
+                // Search again using the first 8 characters of the title as sorts by Date publsihed using relevance search
+                const updatedTitle = this.testSetUpData.contentTitleforTest.contentTitle.slice(0, 8);
+                await this.testSteps.LogInfo('Performing second search using the first 8 characters of the title - "' + updatedTitle + '"');
+                await this.newsFacetPage.enterContentTitleInSearch(updatedTitle);
                 await this.newsFacetPage.clickNewsFacetSearchButton();
+                await this.testSteps.LogInfo('Published content has NOW appeared in search results after searching with the first 8 characters - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
                 await expect(searchResult).toBeVisible();
             }
+
         }
 
         await this.newsFacetPage.selectFacetFilterNewsType(edited);

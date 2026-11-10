@@ -101,13 +101,13 @@ export class ConsultationComparePage
         await expect(consultationSummary.locator('ins')).toHaveText('edited');
 
         //-------------------- DOCUMENTS --------------------
-        // const oldAttachment = this.page.locator(`//del/a[text()[normalize-space(.)="${this.testData.Media.attachmentName}"]]`);
-        // const newAttachment = this.page.locator(`//ins/a[text()[normalize-space(.)="${this.testData.Media.attachmentNameEdited}"]]`);
-        // await this.testSteps.LogInfo(`Verifying "${this.testData.Media.attachmentName}" has been removed from the date`);
-        // await expect(oldAttachment).toHaveText(this.testData.Media.attachmentName);
+        const oldAttachment = this.page.locator(`//del/a[text()[normalize-space(.)="${this.testData.Media.attachmentName}"]]`);
+        const newAttachment = this.page.locator(`//ins/a[text()[normalize-space(.)="${this.testData.Media.attachmentNameEdited}"]]`);
+        await this.testSteps.LogInfo(`Verifying "${this.testData.Media.attachmentName}" has been removed from the date`);
+        await expect(oldAttachment).toHaveText(this.testData.Media.attachmentName);
 
-        // await this.testSteps.LogInfo(`Verifying "${this.testData.Media.attachmentNameEdited}" has been added to the date`);
-        // await expect(newAttachment).toHaveText(this.testData.Media.attachmentNameEdited);
+        await this.testSteps.LogInfo(`Verifying "${this.testData.Media.attachmentNameEdited}" has been added to the date`);
+        await expect(newAttachment).toHaveText(this.testData.Media.attachmentNameEdited);
 
         //-------------------- RESPOND ONLINE --------------------
         const oldRespondOnlinePath = '/publications/competent-authority-guidance-heavy-fuel-oil-hfo';

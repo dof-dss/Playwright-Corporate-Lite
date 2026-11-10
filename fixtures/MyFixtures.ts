@@ -156,6 +156,10 @@ export const test = base.extend<MyFixtures>({
     {
         await use(new GalleryHelper(page, testSetUpData, testData));
     },
+    profileHelper: async ({ page, testSetUpData, testData }, use) =>
+    {
+        await use(new ProfileHelper(page, testSetUpData, testData));
+    },
     contentNodePageRouter: async ({ page, testSetUpData, testData }, use) =>
     {
         await use(new ContentNodePageRouter(page, testSetUpData, testData));

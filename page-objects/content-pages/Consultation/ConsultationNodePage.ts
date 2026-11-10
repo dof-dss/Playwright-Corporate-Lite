@@ -60,7 +60,17 @@ export class ConsultationNodePage
         await expect(this.page.getByText('Consultation Open', { exact: true })).toBeVisible();
         // verify consultation closes date time
         await this.testSteps.LogInfo(`Verifying consultation opened "${this.testData.Consultation.verifyStartDateAndTime}" and closes "${this.testData.Consultation.verifyEndDateAndTime}"`);
-        await expect(this.page.getByText(`Consultation opened ${this.testData.Consultation.verifyStartDateAndTime.replace('.', ':')} and closes ${this.testData.Consultation.verifyEndDateAndTime.replace('.', ':')}.`, { exact: true })).toBeVisible();
+        const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const dateTimePattern = (value: string) =>
+        {
+            const [day, ...dateAndTime] = value.split(' ');
+            const dayPattern = Number(day) < 10 ? `0?${Number(day)}` : day;
+            return `${dayPattern} ${escapeRegex(dateAndTime.join(' '))}`;
+        };
+        const openedDateTime = this.testData.Consultation.verifyStartDateAndTime.replace('.', ':');
+        const closedDateTime = this.testData.Consultation.verifyEndDateAndTime.replace('.', ':');
+        const consultationDateTime = new RegExp(`^Consultation opened ${dateTimePattern(openedDateTime)} and closes ${dateTimePattern(closedDateTime)}\\.$`);
+        await expect(this.page.getByText(consultationDateTime)).toBeVisible();
 
         // verify summary
         await this.testSteps.LogInfo(`Verifying Summary "${this.testData.Consultation.summary}" is visible`);

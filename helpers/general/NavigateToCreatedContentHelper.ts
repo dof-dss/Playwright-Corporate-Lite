@@ -51,7 +51,8 @@ export class NavigateToCreatedContentHelper
 
             // Consultation title is different as it has a span to indicate the state e.g OPEN CONSULTATION -
             // so we check both the contains and normalised-space conditions in one xpath
-            await expect(this.page.locator(`//h1[contains(text(), "${this.testSetUpData.contentTitleforTest.contentTitle}") or text()[normalize-space(.)="${this.testSetUpData.contentTitleforTest.contentTitle}"]]`)).toBeVisible();
+            await expect(this.page.getByRole('heading', { level: 1 }))
+                .toContainText(this.testSetUpData.contentTitleforTest.contentTitle);
         }
 
         if (options.deleted)

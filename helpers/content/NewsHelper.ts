@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { BasePage } from '@poms/base-pages/BasePage';
 import { NewsCreatePage } from '@poms/content-pages/News/NewsCreatePage';
 import { NewsEditPage } from '@poms/content-pages/News/NewsEditPage';
@@ -17,6 +17,7 @@ export interface SaveOptions
     preview: boolean;
     mandatoryFieldCheck: boolean;
     existingRemoteVideoName?: string;
+    duplicateTitle?: boolean;
 };
 
 export interface EditSaveOptions
@@ -104,6 +105,16 @@ export class NewsHelper
 
         //Selecting the save as type
         await this.createPage.chooseSaveAsType();
+
+        const duplicateTitleError = this.page.locator('#edit-title-0-value--errormessage').filter({
+            hasText: 'already exists'
+        });
+        if (options.duplicateTitle)
+        {
+            await this.createPage.clickSaveButton();
+            await expect(duplicateTitleError).toBeVisible();
+            return;
+        }
 
         // if options.preview is set to true, perform preview news method actions
         if (options.preview)

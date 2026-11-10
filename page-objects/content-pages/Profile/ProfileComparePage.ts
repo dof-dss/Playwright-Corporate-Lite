@@ -27,29 +27,40 @@ export class ProfileComparePage
 
   async verifyCompareProfile()
   {
-    await this.testSteps.LogInfo('Verifying "New" text has been removed from the title');
-    await expect(this.page.locator('//h1[contains(text(),"Automated Test - ")]/del[text()="New"]')).toBeVisible();
-    await this.testSteps.LogInfo('Verifying "Edited" text has been added to the title');
-    await expect(this.page.locator('//h1[contains(text(),"Automated Test - ")]/ins[text()="Edited"]')).toBeVisible();
+    //-------------------- TITLE --------------------
+    const title = this.page.locator('//h2/a/span[contains(text(),"Automated Test - ")]');
+    await this.testSteps.LogInfo('Verifying old title text was removed');
+    await expect(title.locator('del')).toHaveText('New');
+    await this.testSteps.LogInfo('Verifying edited title text was added');
+    await expect(title.locator('ins')).toHaveText('Edited');
 
-    // await this.testSteps.LogInfo('Verifying department changes are visible');
-    // await expect(this.page.locator('//div[text()="Department"]/following-sibling::div//del[text()="new"]')).toBeVisible();
-    // await expect(this.page.locator('//div[text()="Department"]/following-sibling::div//ins[text()="edited"]')).toBeVisible();
+    //-------------------- PHOTO --------------------
+    const photo = this.page.locator('del.diffmod.diffimg.diffsrc');
+    await this.testSteps.LogInfo('Verifying original profile photo is visible');
+    await expect(photo.locator('img')).toBeVisible();
+    await this.testSteps.LogInfo('Verifying replacement profile photo is visible');
+    await expect(this.page.locator('ins.diffmod.diffimg.diffsrc img')).toBeVisible();
 
-    await this.testSteps.LogInfo('Verifying "New" text has been removed from the profile summary');
-    await expect(this.page.locator('//div[@class="page-summary"]//del[text()="new"]')).toBeVisible();
-    await this.testSteps.LogInfo('Verifying "Edited" text has been added to the profile summary');
-    await expect(this.page.locator('//div[@class="page-summary"]//ins[text()="edited"]')).toBeVisible();
+    //-------------------- SUMMARY --------------------
+    const summary = this.page.locator('p').filter({ hasText: 'Profile summary' });
+    await this.testSteps.LogInfo('Verifying old summary text was removed');
+    await expect(summary.locator('del')).toHaveText('new');
+    await this.testSteps.LogInfo('Verifying edited summary text was added');
+    await expect(summary.locator('ins')).toHaveText('edited');
 
-    await this.testSteps.LogInfo('Verifying "New" text has been removed from the Body');
-    await expect(this.page.locator('//div[@class="page-summary"]//del[text()="new"]')).toBeVisible();
-    await this.testSteps.LogInfo('Verifying "Edited" text has been added to the Body');
-    await expect(this.page.locator('//div[@class="page-summary"]//ins[text()="edited"]')).toBeVisible();
+    //-------------------- BODY FIELD --------------------
+    const body = this.page.locator('p').filter({ hasText: 'Profile body content' });
+    await this.testSteps.LogInfo('Verifying old body text was removed');
+    await expect(body.locator('del')).toHaveText('new');
+    await this.testSteps.LogInfo('Verifying edited body text was added');
+    await expect(body.locator('ins')).toHaveText('edited');
 
-    await this.testSteps.LogInfo('Verifying image is shown in the del column');
-    await expect(this.page.locator('//del[@class="diffmod diffimg diffsrc"]/img')).toBeVisible();
-    await this.testSteps.LogInfo('Verifying  image is shown in the ins column');
-    await expect(this.page.locator('//ins[@class="diffmod diffimg diffsrc"]/img')).toBeVisible();
+    //-------------------- DEPARTMENT --------------------
+    const department = this.page.locator('//div[normalize-space(.)="Department"]/following-sibling::div');
+    await this.testSteps.LogInfo('Verifying old department text was removed');
+    await expect(department.locator('del')).toHaveText('new');
+    await this.testSteps.LogInfo('Verifying edited department text was added');
+    await expect(department.locator('ins')).toHaveText('edited');
   }
 
 }

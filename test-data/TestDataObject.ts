@@ -136,7 +136,7 @@ const formattedFutureStartDate = futureStartDate.toISOString().split('T')[0];
 
 const verifyStartDate = new Date();
 const verifyStartDateFormated = verifyStartDate.toLocaleDateString('en-GB', {
-  day: 'numeric',
+  day: '2-digit',
   month: 'long',
   year: 'numeric'
 });
@@ -144,7 +144,7 @@ const verifyStartDateFormated = verifyStartDate.toLocaleDateString('en-GB', {
 const verifyEndDate = new Date();
 verifyEndDate.setDate(verifyEndDate.getDate() + 7);
 const verifyEndDateFormated = verifyEndDate.toLocaleDateString('en-GB', {
-  day: 'numeric',
+  day: '2-digit',
   month: 'long',
   year: 'numeric'
 });
@@ -448,6 +448,7 @@ export const TestData = {
     ],
     topicsEdited: [
       'Service Unavailable',
+      'Education and skills',
       'Education and skills'
     ],
     publicationDate: '2026-11-02',
@@ -502,10 +503,10 @@ export const TestData = {
       year: 'numeric'
     }),
     verifyLastUpdatedDate: verifyStartDateFormated,
-    
+
     series: "",
-    seriesEdited: "", 
-    
+    seriesEdited: "",
+
     statistics: [
       'People and communities',
       'Census',
@@ -524,7 +525,7 @@ export const TestData = {
       'Administrative Data Research Northern Ireland (ADR NI) themed datasets',
       'Business Data for Research (BDR)'
     ]
-    
+
   },
 
   MediaLibrary: {
@@ -560,7 +561,7 @@ export const TestData = {
   },
 
   duplicated: {
-    title: 'Automated Test - New sample Duplication title',
+    title: 'Automated Test - New sample Duplication title' + ' - ' + Math.floor(100000 + Math.random() * 900000).toString(),
   }
 };
 
