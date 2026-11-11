@@ -465,6 +465,15 @@ export const TestData = {
     notesToEditorEdited: 'This is a edited notes to editor'
   },
 
+    Page: {
+    title: 'Automated Test - New sample Page title' + ' - ' + getTimestamp(),
+    titleEdited: 'Automated Test - Edited sample Page title' + ' - ' + getTimestamp(),
+    revisionlog: 'This is an automated revision log message',
+    revisionlogEdited: 'This is an edited automated revision log message',
+    body: 'This is a new page body content',
+    bodyEdited: 'This is an edited page body content',
+  },
+
   Profile: {
     title: 'Automated Test - New sample Profile title' + ' - ' + getTimestamp(),
     titleEdited: 'Automated Test - Edited sample Profile title' + ' - ' + getTimestamp(),
@@ -476,8 +485,7 @@ export const TestData = {
     bodyEdited: 'This is a edited Profile body content',
     summary: 'This is a new Profile summary',
     summaryEdited: 'This is a edited Profile summary',
-
-  },
+   },
 
   Publication: {
     title: 'Automated Test - New sample Publication title' + ' - ' + getTimestamp(),

@@ -10,6 +10,7 @@ import { ProfileNodePage } from '@poms/content-pages/Profile/ProfileNodePage';
 import { ContentNodePageRouter } from '@helpers/general/ContentNodePageRouter';
 import { ContactNodePage } from '@poms/content-pages/Contact/ContactNodePage';
 import { LinkNodePage } from '@poms/content-pages/Link/LinkNodePage';
+import { PageNodePage } from '@poms/content-pages/Page/PageNodePage';
 
 export interface ContentEdited
 {
@@ -28,6 +29,7 @@ export class VerificationHelper
     private readonly publicationNodePage: PublicationNodePage;
     private readonly profileNodePage: ProfileNodePage;
     private readonly linkNodePage: LinkNodePage;
+    private readonly pageNodePage: PageNodePage;
     private readonly contentRouter: ContentNodePageRouter;
 
     constructor(
@@ -47,6 +49,7 @@ export class VerificationHelper
         this.profileNodePage = new ProfileNodePage(this.page, this.testSetUpData, this.testData);
         this.contactNodePage = new ContactNodePage(this.page, this.testSetUpData, this.testData);
         this.linkNodePage = new LinkNodePage(this.page, this.testSetUpData, this.testData);
+        this.pageNodePage = new PageNodePage(this.page, this.testSetUpData, this.testData);
         this.contentRouter = new ContentNodePageRouter(this.page, this.testSetUpData, this.testData);
 
     }
@@ -124,6 +127,17 @@ export class VerificationHelper
                 {
                     await this.contactNodePage.verifyEditedContact({
                     });
+                }
+                break;
+            }
+            case this.testSetUpData.validContentTypeList.page: {
+                if (edited === false)
+                {
+                    await this.pageNodePage.verifyPage();
+                }
+                else
+                {
+                    await this.pageNodePage.verifyEditedPage();
                 }
                 break;
             }

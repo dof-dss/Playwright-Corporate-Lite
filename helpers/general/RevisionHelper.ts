@@ -14,6 +14,7 @@ import { DeleteRevisionsPage } from '@poms/base-pages/DeleteRevisionsPage';
 import { RevertRevisionsPage } from '@poms/base-pages/RevertRevisionsPage';
 import { VerificationHelper } from './VerificationHelper';
 import { LinkComparePage } from '@poms/content-pages/Link/LinkComparePage';
+import { PageComparePage } from '@poms/content-pages/Page/PageComparePage';
 
 export interface DeleteRevisionsOptions
 {
@@ -43,6 +44,7 @@ export class RevisionHelper
     readonly newsComparePage: NewsComparePage;
     readonly publicationComparePage: PublicationComparePage;
     readonly profileComparePage: ProfileComparePage;
+    readonly pageComparePage: PageComparePage;
     readonly deleteRevisionsPage: DeleteRevisionsPage;
     readonly revertRevisionsPage: RevertRevisionsPage;
 
@@ -66,6 +68,7 @@ export class RevisionHelper
         this.newsComparePage = new NewsComparePage(page, this.testSetUpData, this.testdata);
         this.publicationComparePage = new PublicationComparePage(page, this.testSetUpData, this.testdata);
         this.profileComparePage = new ProfileComparePage(page, this.testSetUpData, this.testdata);
+        this.pageComparePage = new PageComparePage(page, this.testSetUpData, this.testdata);
         this.deleteRevisionsPage = new DeleteRevisionsPage(page);
         this.revertRevisionsPage = new RevertRevisionsPage(page);
     }
@@ -117,6 +120,10 @@ export class RevisionHelper
             }
             case this.testSetUpData.validContentTypeList.profile: {
                 await this.profileComparePage.verifyCompareProfile();
+                break;
+            }
+            case this.testSetUpData.validContentTypeList.page: {
+                await this.pageComparePage.verifyComparePage();
                 break;
             }
         }
@@ -249,6 +256,10 @@ export class RevisionHelper
                     break;
                 case this.testSetUpData.validContentTypeList.profile: {
                     this.testSetUpData.contentTitleforTest.contentTitle = this.testdata.Profile.title;
+                }
+                    break;
+                case this.testSetUpData.validContentTypeList.page: {
+                    this.testSetUpData.contentTitleforTest.contentTitle = this.testdata.Page.title;
                 }
                     break;
             }

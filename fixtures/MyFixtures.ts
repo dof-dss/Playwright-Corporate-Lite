@@ -2,6 +2,7 @@ import { test as base } from '@playwright/test';
 import { TestSetUpData, TestData } from '@tdata/TestDataObject';
 import { LoginHelper } from '@helpers/general/LoginHelper';
 import { ApplicationHelper } from '@helpers/content/ApplicationHelper';
+import { PageHelper } from '@helpers/content/PageHelper';
 import { ArticleHelper } from '@helpers/content/ArticleHelper';
 import { ConsultationHelper } from '@helpers/content/ConsultationHelper';
 import { ContactHelper } from '@helpers/content/ContactHelper';
@@ -27,6 +28,7 @@ type MyFixtures = {
     testData: typeof TestData;
     loginHelper: LoginHelper;
     applicationHelper: ApplicationHelper;
+    pageHelper: PageHelper;
     articleHelper: ArticleHelper;
     consultationHelper: ConsultationHelper;
     newsHelper: NewsHelper;
@@ -81,6 +83,8 @@ export const test = base.extend<MyFixtures>({
         // inject the unique ID into the title
         freshDataForContent.Application.title = freshDataForContent.Application.title + ' - ' + uniqueId;
         freshDataForContent.Application.titleEdited = freshDataForContent.Application.titleEdited + ' - ' + uniqueId;
+        freshDataForContent.Page.title = freshDataForContent.Page.title + ' - ' + uniqueId;
+        freshDataForContent.Page.titleEdited = freshDataForContent.Page.titleEdited + ' - ' + uniqueId;
         freshDataForContent.Article.title = freshDataForContent.Article.title + ' - ' + uniqueId;
         freshDataForContent.Article.titleEdited = freshDataForContent.Article.titleEdited + ' - ' + uniqueId;
         freshDataForContent.Contact.title = freshDataForContent.Contact.title + ' - ' + uniqueId;
@@ -107,6 +111,10 @@ export const test = base.extend<MyFixtures>({
     applicationHelper: async ({ page, testSetUpData, testData }, use) =>
     {
         await use(new ApplicationHelper(page, testSetUpData, testData));
+    },
+    pageHelper: async ({ page, testSetUpData, testData }, use) =>
+    {
+        await use(new PageHelper(page, testSetUpData, testData));
     },
     revisionHelper: async ({ page, testSetUpData, testData }, use) =>
     {
