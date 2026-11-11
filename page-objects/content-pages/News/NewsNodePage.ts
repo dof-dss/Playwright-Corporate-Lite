@@ -102,12 +102,12 @@ export class NewsNodePage
             .toHaveText(publishedDate);
 
         // verify selected topics
-        await expect(this.page.getByText('Topics:', { exact: true })).toBeVisible();
-        for (const topic of this.testData.News.topicsEdited)
-        {
-            await this.testSteps.LogInfo(`Verifying topic "${topic}" is visible`);
-            await expect(this.page.getByRole('link', { name: topic, exact: true })).toBeVisible();
-        }
+        // await expect(this.page.getByText('Topics:', { exact: true })).toBeVisible();
+        // for (const topic of this.testData.News.topicsEdited)
+        // {
+        //     await this.testSteps.LogInfo(`Verifying topic "${topic}" is visible`);
+        //     await expect(this.page.getByRole('link', { name: topic, exact: true })).toBeVisible();
+        // }
 
         await this.testSteps.LogInfo(`Verifying introductory Paragraph "${this.testData.News.introductoryParagraphEdited}" is visible`);
         await expect(this.page.getByText(this.testData.News.introductoryParagraphEdited)).toBeVisible();

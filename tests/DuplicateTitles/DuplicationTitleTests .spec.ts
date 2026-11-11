@@ -82,7 +82,7 @@ test.describe('Duplicate Title Author Tests', () =>
                 mandatoryFieldCheck: false,
             });
 
-             testSetUpData.urlForTest.url = testSetUpData.validTestURLList.etni_url;
+             testSetUpData.urlForTest.url = testSetUpData.validTestURLList.etini_url;
             testSetUpData.contentTypeforTest.contentType = testSetUpData.validContentTypeList.profile;
             // automatically logins based on above test data for each test
             await loginHelper.loginWithValidUser();
@@ -168,7 +168,7 @@ test.describe('Duplicate Title Supervisor Tests', () =>
                 mandatoryFieldCheck: false,
             });
 
-            testSetUpData.urlForTest.url = testSetUpData.validTestURLList.etni_url;
+            testSetUpData.urlForTest.url = testSetUpData.validTestURLList.etini_url;
             testSetUpData.contentTypeforTest.contentType = testSetUpData.validContentTypeList.profile;
             // automatically logins based on above test data for each test
             await loginHelper.loginWithValidUser();

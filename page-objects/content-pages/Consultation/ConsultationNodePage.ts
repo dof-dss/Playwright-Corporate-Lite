@@ -196,11 +196,11 @@ export class ConsultationNodePage
 
         // verify consultation Opens box
         await this.testSteps.LogInfo('Verifying "Consultation Open" is visible');
-        await expect(this.page.getByText('Consultation Open', { exact: true })).toBeVisible();
+        await expect(this.page.getByText('Consultation Opens', { exact: true })).toBeVisible();
 
         // verify consultation opens date time
-        await this.testSteps.LogInfo(`Verifying consultation opened "${this.testData.Consultation.verifyFutureStartDate}" and closes "${this.testData.Consultation.verifyEndDateAndTime}"`);
-        await expect(this.page.getByText(`Consultation opened ${this.testData.Consultation.verifyFutureStartDate.replace('.', ':')} and closes ${this.testData.Consultation.verifyEndDateAndTime.replace('.', ':')}.`, { exact: true })).toBeVisible();
+        await this.testSteps.LogInfo(`Verifying consultation opens ${this.testData.Consultation.verifyFutureStartDate}"`);
+        await expect(this.page.getByText(`Consultation opens ${this.testData.Consultation.verifyFutureStartDate.replace('.', ':')}.`, { exact: true })).toBeVisible();
 
         // verify summary
         await this.testSteps.LogInfo(`Verifying Summary "${this.testData.Consultation.summary}" is visible`);
@@ -218,9 +218,10 @@ export class ConsultationNodePage
         await this.testSteps.LogInfo('Verifying Help viewing documents link is visible');
         await expect(this.page.getByRole('link', { name: 'Help viewing documents', exact: true })).toBeVisible();
 
-        // verify ways to respond section is hidden as consultation is closed
-        await this.testSteps.LogInfo('Verifying Ways to Respond and Respond Online are hidden');
-        await expect(this.page.getByRole('heading', { name: 'Ways to Respond', exact: true })).toBeHidden();
+        // verify ways to respond section is text is visbible but Respond Online button is hidden as consultation is not open
+        await this.testSteps.LogInfo('Verifying Ways to Respond is visible');
+        await expect(this.page.getByRole('heading', { name: 'Ways to respond', exact: true })).toBeVisible();
+        await this.testSteps.LogInfo('Verifying Respond online button is hidden');
         await expect(this.page.locator('.respond-online a.btn').filter({ hasText: 'Respond Online' })).toBeHidden();
 
         await this.testSteps.LogInfo(`Verifying edited email address "${this.testData.Consultation.emailAddressEdited}" is hidden`);
@@ -230,5 +231,15 @@ export class ConsultationNodePage
         await this.testSteps.LogInfo(`Verifying edited postal address "${this.testData.Consultation.postalAddressEdited}" is hidden`);
         await expect(this.page.getByText('Write to:', { exact: true })).toBeHidden();
         await expect(this.page.getByText(this.testData.Consultation.postalAddressEdited, { exact: true })).toBeHidden();
+
+        // verify consultation pending notice is visible
+        await this.testSteps.LogInfo('Verifying Consultation Pending Notice with Important information is displayed');
+        await expect(this.page.getByRole('heading', { name: 'Ways to respond', exact: true })).toBeVisible();
+        const infoNotice = this.page.locator('[class*="info-notice"]');
+        await expect(infoNotice).toBeVisible();
+        const importantText = this.page.locator('strong', { hasText: 'Important information' });
+        await expect(importantText).toBeVisible();
+        const pendingMessage = this.page.getByText(/Consultation pending.*details on ways to respond will be provided when the consultation has opened/);
+        await expect(pendingMessage).toBeVisible();
     }
 }
