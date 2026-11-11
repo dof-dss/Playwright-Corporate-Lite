@@ -101,13 +101,16 @@ export class NewsNodePage
         await expect(this.page.locator('//span[contains(text(),"Date published: ")]//following-sibling::span/time'))
             .toHaveText(publishedDate);
 
-        // verify selected topics
-        // await expect(this.page.getByText('Topics:', { exact: true })).toBeVisible();
-        // for (const topic of this.testData.News.topicsEdited)
-        // {
-        //     await this.testSteps.LogInfo(`Verifying topic "${topic}" is visible`);
-        //     await expect(this.page.getByRole('link', { name: topic, exact: true })).toBeVisible();
-        // }
+        //verify selected topics
+        await expect(this.page.getByText('Topics:', { exact: true })).toBeVisible();
+        const uniqueTopics = new Set(this.testData.News.topicsEdited);
+        for (const topic of uniqueTopics)
+        {
+            await this.testSteps.LogInfo(`Verifying topic "${topic}" is visible`);
+            const topicLink = this.page.getByRole('link', { name: topic, exact: true });
+            await expect(topicLink).toHaveCount(1);
+            await expect(topicLink).toBeVisible();
+        }
 
         await this.testSteps.LogInfo(`Verifying introductory Paragraph "${this.testData.News.introductoryParagraphEdited}" is visible`);
         await expect(this.page.getByText(this.testData.News.introductoryParagraphEdited)).toBeVisible();

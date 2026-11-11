@@ -115,15 +115,15 @@ export class NewsEditPage
   // edit top-level news topics
   async editNewsTopics(topics: string[])
   {
+    for (let index = 1; index < topics.length; index++)
+    {
+      await this.testSteps.LogInfo('Clicking Add another item for Topics');
+      await this.page.locator('.js-form-item-field-site-topics')
+        .getByText('Add another item', { exact: true }).click();
+    }
+
     for (const [index, topic] of topics.entries())
     {
-      if (index > 0)
-      {
-        await this.testSteps.LogInfo('Clicking Add another item for Topics');
-        await this.page.locator('.js-form-item-field-site-topics')
-          .getByText('Add another item', { exact: true }).click();
-      }
-
       const topicField = index === 0
         ? this.newsTopicField
         : this.page.locator(`#edit-field-site-topics-shs-${index}-0`);
