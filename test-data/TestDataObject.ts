@@ -19,7 +19,7 @@ export const TestSetUpData = {
   // valid urls 
   validTestURLList: {
     afbi_url: process.env.AFBI_URL!,
-    etni_url: process.env.ETNI_URL!,
+    etini_url: process.env.ETINI_URL!,
     hse_url: process.env.HSE_URL!,
     nmsc_url: process.env.NMSC_URL!,
     nisra_url: process.env.NISRA_URL!
@@ -51,6 +51,7 @@ export const TestSetUpData = {
     application: 'Application',
     article: 'Article',
     articleCKEditorFull: 'Article CKEditor Full',
+    chart: 'Chart',
     consultation: 'Consultation',
     consultationFutureDate: 'Consultation Future Date',
     contact: 'Contact',
@@ -64,9 +65,10 @@ export const TestSetUpData = {
     profile: 'Profile',
     publication: 'Publication',
     publicationExternalLink: 'Publication External Link',
-    researcherProfile: 'Researcher Profile',
-    secureStats: 'Secure Stats',
-    secureMarket: 'Secure Market',
+    researcherProfile: 'Researcher profile',
+    secureStats: 'Secure statistics',
+    secureMarket: 'Secure - market sensitive statistics',
+    webform: 'Webform'
   },
 
   // valid save as option list
