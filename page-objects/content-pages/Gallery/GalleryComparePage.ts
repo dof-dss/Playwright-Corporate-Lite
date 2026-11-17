@@ -45,13 +45,6 @@ export class GalleryComparePage
         await this.testSteps.LogInfo('Verifying "Edited" text has been added to the title');
         await expect(this.page.locator('//h2/a/span[contains(text(),"Automated Test - ")]/ins[text()="Edited"]')).toBeVisible();
 
-        //-------------------- AREA OF EXPERTISE --------------------
-        ///
-        //
-        // ------------------ ADD AREA OF EXPERTISE WHEN FIXED - CURRENTLY A BUG  ------------------
-        //
-        ///
-
         //-------------------- SUMMARY --------------------
         await this.testSteps.LogInfo('Verifying "new" text has been removed from the summary');
         await expect(this.page.locator('//p[@class="field-summary"]//del[text()="new"]')).toBeVisible();
