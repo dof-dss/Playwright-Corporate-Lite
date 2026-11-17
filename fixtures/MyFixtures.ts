@@ -156,6 +156,14 @@ export const test = base.extend<MyFixtures>({
     {
         await use(new ContactHelper(page, testSetUpData, testData));
     },
+    linkHelper: async ({ page, testSetUpData, testData }, use) =>
+    {
+        await use(new LinkHelper(page, testSetUpData, testData));
+    },
+    homePage: async ({ page, testSetUpData, testData }, use) =>
+    {
+        await use(new HomePage(page, testData, testSetUpData));
+    },
     newsHelper: async ({ page, testSetUpData, testData }, use) =>
     {
         await use(new NewsHelper(page, testSetUpData, testData));

@@ -48,11 +48,15 @@ export class ContactNodePage
         await this.testSteps.LogInfo(`Verifying title "${this.testData.Contact.title}" is visible`);
         await expect(this.page.getByRole('heading', { level: 1 })).toHaveText(this.testData.Contact.title);
 
-        // 
-        // Leave for adding of Statsistics to node page
-        //         
-        // Leave for addnig of Research and support to node page
-        //
+        await this.testSteps.LogInfo('Verifying Statistics links');
+        await expect(this.page.getByText('Statistics:', { exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Contact.statisticslevel3, exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Contact.statistics2, exact: true })).toBeVisible();
+
+        await this.testSteps.LogInfo('Verifying Research and support links');
+        await expect(this.page.getByText('Research and support:', { exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Contact.researchAndSupportlevel2, exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Contact.researchAndSupport2, exact: true })).toBeVisible();
 
         await this.testSteps.LogInfo(`Verifying Contact Body Field topic  "${this.testData.Contact.body}" IS visible`);
         await expect(this.page.getByText(this.testData.Contact.body)).toBeVisible();
@@ -77,11 +81,12 @@ export class ContactNodePage
         await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.Contact.titleEdited);
 
 
-        // 
-        // Leave for adding of Statsistics to node page
-        //         
-        // Leave for addnig of Research and support to node page
-        //
+        await this.testSteps.LogInfo(`Verifying Statistics "${this.testData.Contact.statisticsEdited}"`);
+        await expect(this.page.getByText('Statistics:', { exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: this.testData.Contact.statisticsEdited, exact: true })).toBeVisible();
+
+        await this.testSteps.LogInfo('Verifying Research and support is not visible');
+        await expect(this.page.getByText('Research and support:', { exact: true })).toBeHidden();
 
         await this.testSteps.LogInfo(`Verifying Contact Body Field topic  "${this.testData.Contact.bodyEdited}" IS visible`);
         await expect(this.page.getByText(this.testData.Contact.bodyEdited)).toBeVisible();
