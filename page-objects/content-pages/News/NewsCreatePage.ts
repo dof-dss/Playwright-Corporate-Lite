@@ -39,7 +39,6 @@ export class NewsCreatePage
   // locators
   private readonly newsTitleField: Locator;
   private readonly newsTypeField: Locator;
-  private readonly newsTopicField: Locator;
   private readonly newsPublicationDate: Locator;
   private readonly newsIntroParagraphField: Locator;
   private readonly newsTeaserField: Locator;
@@ -71,7 +70,6 @@ export class NewsCreatePage
     // locators
     this.newsTitleField = page.locator('#edit-title-0-value');
     this.newsTypeField = page.locator('#edit-field-news-type');
-    this.newsTopicField = page.locator('#edit-field-site-topics-shs-0-0');
     this.newsPublicationDate = page.locator('#edit-field-published-date-0-value-date');
     this.newsIntroParagraphField = page.locator('#edit-field-summary-0-value');
     this.newsTeaserField = page.locator('#edit-field-teaser-0-value');
@@ -118,14 +116,7 @@ export class NewsCreatePage
   // select news topic
   async selectNewsTopic(topics: string[])
   {
-    for (const [level, topic] of topics.entries())
-    {
-      const topicField = level === 0
-        ? this.newsTopicField
-        : this.page.locator(`#edit-field-site-topics-shs-0-${level}`);
-      await this.testSteps.LogInfo(`Selecting topic "${topic}" at Topics level ${level + 1}`);
-      await topicField.selectOption({ label: topic });
-    }
+    await this.createPages.selectTopics(topics);
   }
 
   // enter publication date
