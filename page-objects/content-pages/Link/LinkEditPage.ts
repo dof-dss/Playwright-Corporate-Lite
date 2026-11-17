@@ -4,8 +4,6 @@ import { expect } from '@playwright/test';
 import { UserPage } from '../../base-pages/UserPage';
 import { CreatePages } from '../../base-pages/CreatePages';
 import { TestSetUpData, TestData } from '../../../test-data/TestDataObject';
-import { PreviewPage } from '@poms/base-pages/PreviewPage';
-import { LinkNodePage } from './LinkNodePage';
 
 export interface LinkEditData
 {
@@ -13,8 +11,17 @@ export interface LinkEditData
   revisionLogMessage: string;
   linkURL: string;
   linkType: string;
-  linkLanguage: string;
+  topics: string[];
 }
+
+export const LINK_TYPES = [
+  //'Corporate link',
+  //'Data tools / Popular links',
+  //'Neighbourhood Statistics',
+  'Popular statistics',
+  //'Quick link',
+  //'Useful link',
+] as const;
 
 export class LinkEditPage
 {
@@ -24,37 +31,31 @@ export class LinkEditPage
   // pages
   private readonly userPage: UserPage;
   private readonly createPages: CreatePages;
-  private readonly previewPage: PreviewPage;
-  private readonly linkNodePage: LinkNodePage;
 
   // locators - using ARIA roles first, then unique IDs, then XPaths
   private readonly linkTitleField: Locator;
   private readonly linkURLField: Locator;
   private readonly linkTypeSelect: Locator;
-  private readonly linkLanguageSelect: Locator;
 
   // constructor
   constructor(
     private readonly page: Page,
-    // isolated instances of test data 
-    private testSetUpData: typeof TestSetUpData,
-    private testData: typeof TestData
+    // isolated instances of test data
+    private readonly testSetUpData: typeof TestSetUpData,
+    private readonly testData: typeof TestData
   )
   {
     // logging isolated instance
     this.testSteps = new TestSteps();
 
     // imported pages
-    this.userPage = new UserPage(page, this.testSetUpData);
-    this.createPages = new CreatePages(page, this.testSetUpData, this.testData);
-    this.previewPage = new PreviewPage(page);
-    this.linkNodePage = new LinkNodePage(page, this.testSetUpData, this.testData);
+    this.userPage = new UserPage(page, testSetUpData);
+    this.createPages = new CreatePages(page, testSetUpData, this.testData);
 
     // locators - prioritizing ARIA roles, then unique IDs, then XPaths
     this.linkTitleField = page.locator('#edit-title-0-value');
     this.linkURLField = page.locator('#edit-field-link-url-0-uri');
     this.linkTypeSelect = page.locator('#edit-field-link-type');
-    this.linkLanguageSelect = page.locator('#edit-field-file-language');
   }
 
   // check url on edit link page
@@ -92,14 +93,20 @@ export class LinkEditPage
     await this.linkTypeSelect.selectOption({ label: linkType });
   }
 
-  // select link language
-  async selectLinkLanguage(linkLanguage: string)
+  // select the other link type (toggles between the two available options)
+  async selectAlternativeLinkType()
   {
-    await this.testSteps.LogInfo(`Selecting "${linkLanguage}" from Link Language dropdown`);
-    await this.linkLanguageSelect.selectOption({ label: linkLanguage });
+    const currentLabel = await this.linkTypeSelect.evaluate((select: HTMLSelectElement) => {
+      const selectedIndex = select.selectedIndex;
+      return select.options[selectedIndex]?.text || '';
+    });
+    const randomType = LINK_TYPES[Math.floor(Math.random() * LINK_TYPES.length)];
+    
+    await this.testSteps.LogInfo(`Switching link type from "${currentLabel}" to "${randomType}"`);
+    await this.selectLinkType(randomType);
   }
 
-  // edit link form elements - title URL type language etc
+  // edit link form fields
   async editLinkForm(data: LinkEditData)
   {
     await this.editLinkPageURLCheck();
@@ -107,6 +114,6 @@ export class LinkEditPage
     await this.createPages.enterRevisionLogMessage(data.revisionLogMessage);
     await this.enterLinkURL(data.linkURL);
     await this.selectLinkType(data.linkType);
-    await this.selectLinkLanguage(data.linkLanguage);
+    await this.createPages.editTopics(data.topics);
   }
 }

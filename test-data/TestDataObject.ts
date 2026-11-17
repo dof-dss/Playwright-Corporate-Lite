@@ -1,4 +1,5 @@
 import { GalleryImageValues } from "@poms/base-pages/UploadMedia";
+import { LINK_TYPES } from '@poms/content-pages/Link/LinkCreatePage';
 
 export const TestSetUpData = {
   // QA Accounts Managment
@@ -427,12 +428,21 @@ export const TestData = {
     titleEdited: 'Automated Test - Edited Sample Link title' + ' - ' + getTimestamp(),
     revisionlog: 'This is an automated revision log message',
     revisionlogEdited: 'This is an edited automated revision log message',
-    linkURL: 'Murphy welcomes Fiscal Commission report',
+    linkURL: 'Measuring tourism locally - minutes',
     linkURLEdited: 'https://www.nidirect.gov.uk',
-    linkType: 'Quick link',
-    linkTypeEdited: 'Corporate link',
-    linkLanguage: 'English',
-    linkLanguageEdited: 'Irish',
+    linkType: LINK_TYPES[0] as typeof LINK_TYPES[number],
+    linkTypeEdited: LINK_TYPES[1] as typeof LINK_TYPES[number],
+    topics: [
+      'Work, pay and benefits',
+      'NI Civil Service Human Resources',
+      'Statistics Charter',
+      'WSA Data Governance and Confidentiality Statement'
+    ],
+    topicsEdited: [
+      'Service Unavailable',
+      'Education and skills',
+      'Education and skills'
+    ],
   },
 
   News: {

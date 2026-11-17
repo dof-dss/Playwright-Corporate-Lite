@@ -34,11 +34,14 @@ export class LinkNodePage
         // white space it will just remove surrounding white space and converts all characters to lower case.
         const escapeRegex = (value: string) => value.trim().replace(/\s*-\s*/g, '-').replace(/\s+/g, '-').toLowerCase();
 
-        await this.testSteps.LogInfo(`Verifying URL path is /links/${escapeRegex(this.testSetUpData.contentTitleforTest.contentTitle)} with optional -suffix and optional trailing path, or is /node/.+`);
+        await this.testSteps.LogInfo(`Verifying URL path is /link/${escapeRegex(this.testSetUpData.contentTitleforTest.contentTitle)} with optional -suffix and optional trailing path, or is /node/.+`);
         await expect(this.page).toHaveURL(
-            new RegExp(`(?:${this.testSetUpData.urlForTest.url}/links/${escapeRegex(this.testSetUpData.contentTitleforTest.contentTitle)}(?:-[^/]+)?(?:/.*)?$)|(?:/node/.+)`)
+            new RegExp(`(?:${this.testSetUpData.urlForTest.url}/link/${escapeRegex(this.testSetUpData.contentTitleforTest.contentTitle)}(?:-[^/]+)?(?:/.*)?$)|(?:/node/.+)`)
         );
     }
+
+
+
 
     // -------------------- Verify Link methods --------------------
 
@@ -49,39 +52,36 @@ export class LinkNodePage
         await this.testSteps.LogInfo(`Verifying title "${this.testData.Link.title}" is visible`);
         await expect(this.page.getByRole('heading', { level: 1 })).toHaveText(this.testData.Link.title);
 
-        // verify link URL using ARIA role
         await this.testSteps.LogInfo(`Verifying Link URL "${this.testData.Link.linkURL}" is visible`);
-        const normalizedLinkURLPath = this.testData.Link.linkURL
-            .replace(/^https?:\/\/[^/]+/i, '')
-            .trim()
-            .toLowerCase()
-            .replace(/\s+/g, '-')
-            .replace(/^\/+/, '');
-        await expect(this.page.locator(`//h2[normalize-space()="Link URL"]/following-sibling::div/a[contains(normalize-space(), "${normalizedLinkURLPath}")]`)).toBeVisible();
+        const content = this.page.getByRole('main');
+        await expect(content.getByText('Link URL', { exact: true })).toBeVisible();
+
+        
+        // Normalize the LinkURL: convert to lowercase, replace spaces with hyphens, and collapse multiple hyphens
+        const normalizedLinkURLForDisplay = this.testData.Link.linkURL.toLowerCase().replace(/\s+/g, '-').replace(/-+/g, '-');
+        await expect(content.getByText(normalizedLinkURLForDisplay)).toBeVisible();
+
+
+
+        await this.testSteps.LogInfo(`Verifying Link Type "${this.testData.Link.linkType}" is visible`);
+        await expect(content.getByText('Link type', { exact: true })).toBeVisible();
+        await expect(content.getByText(this.testData.Link.linkType, { exact: true })).toBeVisible();
+
+        const selectedTopic = this.testData.Link.topics[this.testData.Link.topics.length - 1];
+        await this.testSteps.LogInfo(`Verifying topic "${selectedTopic}" is visible`);
+        await expect(content.getByText('Topics:', { exact: true })).toBeVisible();
+        await expect(content.getByText(selectedTopic, { exact: true })).toBeVisible();
 
         if (!preview)
         {
-            // Only clicking on Link when content has been saved as unable to click to naviagte to it when in preview
-            // click application link text
             await this.testSteps.LogInfo(`Clicking Link text "${this.testData.Link.linkURL}"`);
-            //await this.page.getByRole('link', { name: this.testData.Link.linkURL }).click();
-            await this.page.locator(`//h2[normalize-space()="Link URL"]/following-sibling::div/a[contains(normalize-space(), "${normalizedLinkURLPath}")]`).click();
-            // verify link by checking title (link url is page title for internal link edit test will be external)
+            const linkURL = this.page.getByText(normalizedLinkURLForDisplay);
+            await linkURL.click();
             await this.testSteps.LogInfo(`Verifying title of content on new page "${this.testData.Link.linkURL}" is visible`);
             await expect(this.page.getByRole('heading', { level: 1 })).toHaveText(this.testData.Link.linkURL);
-            // navigate back to previous page 
             await this.testSteps.LogInfo('Navigating back to previous page');
             await this.page.goBack();
         }
-
-
-        // verify link type using ARIA role
-        await this.testSteps.LogInfo(`Verifying Link Type "${this.testData.Link.linkType}" is visible`);
-        await expect(this.page.locator(`//h2[normalize-space()="Link type"]/following-sibling::div[text()="${this.testData.Link.linkType}"]`)).toBeVisible();
-
-        // verify link language using ARIA role
-        await this.testSteps.LogInfo(`Verifying Link Language "${this.testData.Link.linkLanguage}" is visible`);
-        await expect(this.page.locator(`//h2[normalize-space()="Link language"]/following-sibling::div[text()="${this.testData.Link.linkLanguage}"]`)).toBeVisible();
     }
 
     //verify edited link method
@@ -91,34 +91,26 @@ export class LinkNodePage
         await this.testSteps.LogInfo(`Verifying Edited title "${this.testSetUpData.contentTitleforTest.contentTitle}" is visible`);
         await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.Link.titleEdited);
 
-        // verify link URL using ARIA role
         await this.testSteps.LogInfo(`Verifying Edited Link URL "${this.testData.Link.linkURLEdited}" is visible`);
-        await expect(this.page.locator(`//h2[normalize-space()="Link URL"]/following-sibling::div/a[contains(normalize-space(), "${this.testData.Link.linkURLEdited}")]`)).toBeVisible();
+        const content = this.page.getByRole('main');
+        await expect(content.getByText('Link URL', { exact: true })).toBeVisible();
+        await expect(content.getByText(this.testData.Link.linkURLEdited)).toBeVisible();
+
+        await this.testSteps.LogInfo(`Verifying Edited Link Type "${this.testData.Link.linkTypeEdited}" is visible`);
+        await expect(content.getByText('Link type', { exact: true })).toBeVisible();
+        await expect(content.getByText(this.testData.Link.linkTypeEdited, { exact: true })).toBeVisible();
 
         if (!preview)
         {
-            // Only clicking on Link when content has been saved as unable to click to navigate to it when in preview
-            // Start waiting for the new tab before the click
-            const pagePromise = this.page.context().waitForEvent('page');
-            // click application link text
             await this.testSteps.LogInfo(`Clicking On Link text "${this.testData.Link.linkURLEdited}"`);
-            await this.page.getByRole('link', { name: this.testData.Link.linkURLEdited }).click();
-            // Wait for the new page object to be ready
-            const newTab = await pagePromise;
-            // verify link by checking url of new page 
-            await this.testSteps.LogInfo(`Verifying Link URL "${this.testData.Application.LinkURLEdited}"`);
-            await expect(newTab).toHaveURL(this.testData.Application.LinkURLEdited);
-            // close new tab
+            const [newTab] = await Promise.all([
+                this.page.waitForEvent('popup'),
+                content.getByRole('link', { name: this.testData.Link.linkURLEdited }).click(),
+            ]);
+            await this.testSteps.LogInfo(`Verifying Link URL "${this.testData.Link.linkURLEdited}"`);
+            await expect(newTab).toHaveURL(new URL(this.testData.Link.linkURLEdited).href);
             await this.testSteps.LogInfo('Closing New tab');
             await newTab.close();
         }
-
-        // verify link type using ARIA role
-        await this.testSteps.LogInfo(`Verifying Edited Link Type "${this.testData.Link.linkTypeEdited}" is visible`);
-        await expect(this.page.locator(`//h2[normalize-space()="Link type"]/following-sibling::div[text()="${this.testData.Link.linkTypeEdited}"]`)).toBeVisible();
-
-        // verify link language using ARIA role
-        await this.testSteps.LogInfo(`Verifying Edited Link Language "${this.testData.Link.linkLanguageEdited}" is visible`);
-        await expect(this.page.locator(`//h2[normalize-space()="Link language"]/following-sibling::div[text()="${this.testData.Link.linkLanguageEdited}"]`)).toBeVisible();
     }
 }

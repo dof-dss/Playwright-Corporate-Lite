@@ -27,6 +27,39 @@ export class CreatePages
 
     //#region content creation
 
+    async selectTopics(topics: string[])
+    {
+        for (const [level, topic] of topics.entries())
+        {
+            await this.testSteps.LogInfo(`Selecting topic "${topic}" at Topics level ${level + 1}`);
+            await this.page.locator(`#edit-field-site-topics-shs-0-${level}`).selectOption({ label: topic });
+        }
+    }
+
+    async editTopics(topics: string[])
+    {
+        const topicFields = this.page.locator('select[id^="edit-field-site-topics-shs-"][id$="-0"]');
+        const existingCount = await topicFields.count();
+        for (let index = existingCount; index < topics.length; index++)
+        {
+            await this.testSteps.LogInfo('Clicking Add another item for Topics');
+            await this.page.locator('.js-form-item-field-site-topics')
+                .getByText('Add another item', { exact: true }).click();
+        }
+
+        for (const [index, topic] of topics.entries())
+        {
+            await this.testSteps.LogInfo(`Selecting top-level topic "${topic}"`);
+            await this.page.locator(`#edit-field-site-topics-shs-${index}-0`).selectOption({ label: topic });
+        }
+
+        for (let index = topics.length; index < existingCount; index++)
+        {
+            await this.testSteps.LogInfo(`Clearing Topics item ${index + 1}`);
+            await this.page.locator(`#edit-field-site-topics-shs-${index}-0`).selectOption({ label: '- None -' });
+        }
+    }
+
     // choose save as type from dropdown
     async enterRevisionLogMessage(revisionLogMessage: string)
     {
