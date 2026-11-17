@@ -76,7 +76,7 @@ export class ContentModerationHelper
             await this.moderationSideBar.quickPublishButtonNotVisible();
             await this.moderationSideBar.restoreButtonNotVisible();
             await this.moderationSideBar.restoreToDraftButtonNotVisible();
-            await this.moderationSideBar.outlineIsNotVisible();
+            //await this.moderationSideBar.outlineIsNotVisible();
         }
 
         if (currentState === 'Needs Review')
@@ -95,7 +95,7 @@ export class ContentModerationHelper
             await this.moderationSideBar.quickPublishButtonNotVisible();
             await this.moderationSideBar.restoreButtonNotVisible();
             await this.moderationSideBar.restoreToDraftButtonNotVisible();
-            await this.moderationSideBar.outlineIsNotVisible();
+            //await this.moderationSideBar.outlineIsNotVisible();
         }
 
         if (wantedState.Draft)

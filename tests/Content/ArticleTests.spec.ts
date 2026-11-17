@@ -305,6 +305,38 @@ test.describe('Article Author Tests', { tag: ['@regression', '@article', '@autho
 
     });
 
+  test('ART-Auth-TC10 - Revision - Confirm revision number increase', { tag: '@Revision' },
+    async ({ articleHelper, anonymousHelper, contentModerationHelper, revisionHelper }) =>
+    {
+      await articleHelper.createArticle({
+        preview: false,
+        mandatoryFieldCheck: false,
+        addSecondAreaOfExpertise: true,
+        addSecondService: true,
+      });
+
+      // moderating to needs review
+      await contentModerationHelper.authorModerateContent({
+        NeedsReview: true,
+      });
+
+      // edit article
+      await articleHelper.editArticle({
+        preview: true,
+        addSecondAreaOfExpertise: true,
+        addSecondService: true,
+      });
+
+      // moderating to needs review
+      await contentModerationHelper.authorModerateContent({
+        NeedsReview: true,
+      });
+
+      // comparing and verifying Revisions
+      await revisionHelper.verifyRevisionsDisplayed();
+
+    });
+
 });
 
 test.describe('Article Supervisor Tests', { tag: ['@regression', '@article', '@supervisor'] }, () =>
@@ -646,5 +678,58 @@ test.describe('Article Supervisor Tests', { tag: ['@regression', '@article', '@s
     });
 
   });
+
+  test('ART-Super-TC10 - Revision - Confirm revision number increase', { tag: '@Revision' },
+    async ({ articleHelper, anonymousHelper, contentModerationHelper, revisionHelper }) =>
+    {
+      await articleHelper.createArticle({
+        preview: false,
+        mandatoryFieldCheck: false,
+        addSecondAreaOfExpertise: true,
+        addSecondService: true,
+      });
+
+      // moderating to needs review
+      await contentModerationHelper.supervisorModerateContent({
+        NeedsReview: true,
+        Published: false,
+        Archive: false
+      });
+
+      // moderating to Published
+      await contentModerationHelper.supervisorModerateContent({
+        NeedsReview: false,
+        Published: true,
+        Archive: false
+      });
+
+
+      // edit article
+      await articleHelper.editArticle({
+        preview: true,
+        addSecondAreaOfExpertise: true,
+        addSecondService: true,
+      });
+
+
+      // moderating to needs review
+      await contentModerationHelper.supervisorModerateContent({
+        NeedsReview: true,
+        Published: false,
+        Archive: false
+      });
+
+      // moderating to Published
+      await contentModerationHelper.supervisorModerateContent({
+        NeedsReview: false,
+        Published: true,
+        Archive: false
+      });
+
+
+      // comparing and verifying Revisions
+      await revisionHelper.verifyRevisionsDisplayed();
+
+    });
 
 });

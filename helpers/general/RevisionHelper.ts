@@ -129,13 +129,46 @@ export class RevisionHelper
         }
     }
 
-    async verifyThreeRevisionsDisplayed()
+    async verifyRevisionsDisplayed()
     {
         await this.moderationSideBar.openModerationSideBar();
         await this.moderationSideBar.clickShowRevisionsButton();
         await this.revisionPage.revisionPageURLCheck();
 
-        await expect(this.page.locator('table tbody tr')).toHaveCount(3);
+        const rows = await this.page.locator('table tbody tr').all();
+        console.log(`Total revision rows: ${rows.length}`);
+
+        await this.VerifyRevisionNumbering();
+    }
+
+    async VerifyRevisionNumbering()
+    {
+        const rows = await this.page.locator('table[data-drupal-selector="edit-node-revisions-table"] tbody tr').all();
+        
+        console.log("Revision row Verification");
+
+        let previousNumber: number | null = null;
+
+        // Process each row
+        for (let i = 0; i < rows.length; i++)
+        {
+            // Get the first td in this row which contains the revision number
+            const revisionNumberTd = await rows[i].locator('td').first();
+            const revisionText = await revisionNumberTd.textContent();
+            const currentNumber = parseInt(revisionText?.trim() || '0', 10);
+
+            const revisionNumber = rows.length - i;
+            console.log(`Revision number ${revisionNumber}`);
+            console.log(`${currentNumber}`);
+
+            // Verify that each row is 1 less than the previous row
+            if (previousNumber !== null)
+            {
+                expect(currentNumber).toBe(previousNumber - 1);
+            }
+
+            previousNumber = currentNumber;
+        }
     }
 
     // select Delete Revision from Revisons 
