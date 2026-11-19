@@ -19,6 +19,7 @@ import { LinkHelper } from '@helpers/content/LinkHelper';
 import { ProfileHelper } from '@helpers/content/ProfileHelper';
 import { HomePage } from '@poms/anon-pages/HomePage';
 import { MediaHelper } from '@helpers/general/MediaHelper';
+import { FeatureHelper } from '@helpers/content/FeatureHelper';
 
 // setting my fixtures
 import { ContentNodePageRouter } from '@helpers/general/ContentNodePageRouter';
@@ -36,6 +37,7 @@ type MyFixtures = {
     galleryHelper: GalleryHelper;
     contactHelper: ContactHelper;
     linkHelper: LinkHelper;
+    featureHelper: FeatureHelper;
     contentModerationHelper: ContentModerationHelper;
     anonymousHelper: AnonymousHelper;
     navigateToCreatedContentHelper: NavigateToCreatedContentHelper;
@@ -99,6 +101,8 @@ export const test = base.extend<MyFixtures>({
         freshDataForContent.News.titleEdited = freshDataForContent.News.titleEdited + ' - ' + uniqueId;
         freshDataForContent.Publication.title = freshDataForContent.Publication.title + ' - ' + uniqueId;
         freshDataForContent.Publication.titleEdited = freshDataForContent.Publication.titleEdited + ' - ' + uniqueId;
+        freshDataForContent.Feature.title = freshDataForContent.Feature.title + ' - ' + uniqueId;
+        freshDataForContent.Feature.titleEdited = freshDataForContent.Feature.titleEdited + ' - ' + uniqueId;
 
         await use(freshDataForContent);
     },
@@ -159,6 +163,10 @@ export const test = base.extend<MyFixtures>({
     linkHelper: async ({ page, testSetUpData, testData }, use) =>
     {
         await use(new LinkHelper(page, testSetUpData, testData));
+    },
+    featureHelper: async ({ page, testSetUpData, testData }, use) =>
+    {
+        await use(new FeatureHelper(page, testSetUpData, testData));
     },
     homePage: async ({ page, testSetUpData, testData }, use) =>
     {

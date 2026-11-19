@@ -59,7 +59,6 @@ export class NavigateToCreatedContentHelper
         {
             await this.contentPage.confirmContentDoesNotExist(this.testSetUpData.contentTitleforTest.contentTitle);
         }
-
     }
 
     async navigateToCreatedBook(options: ContentState, bookOptions: BooksHelper)
@@ -103,5 +102,32 @@ export class NavigateToCreatedContentHelper
             }
 
         }
+    }
+
+    // navigation method
+    async navigateToFeatureContentCampaigns()
+    {
+        // try catch as sometimes the toolbar burger button needs clicked to display the content link
+        try
+        {
+            await this.testSteps.LogInfo('Attempting to hover over content link');
+            // constant poll for 2 seconds to check for link
+            await this.basePage.contentLink.waitFor({ state: 'visible', timeout: 2000 });
+            // click link
+            await this.basePage.contentLink.hover();
+        }
+        catch
+        {
+            await this.testSteps.LogInfo('Clicking admin tool bar link to change nav view');
+            // if timeout fails above click on toolbar burger button
+            await this.basePage.adminToolbar.click();
+            // then click content link
+            await this.testSteps.LogInfo('Clicking content link');
+            await this.basePage.contentLink.hover();
+        }
+
+        await this.page.getByRole('link', { name: 'Featured Content Campaigns' }).first().click();
+
+        await this.page.getByRole('link', { name: 'Latest version' }).first().click();
     }
 }

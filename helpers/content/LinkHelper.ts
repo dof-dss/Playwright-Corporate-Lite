@@ -255,4 +255,60 @@ export class LinkHelper
         }
     }
 
+      async AddFeatureToHomePage(edited: boolean)
+    {
+        await this.page.getByRole('link', { name: 'Content', exact: true }).hover();
+        await this.page.getByRole('link', { name: 'Featured Content Campaigns' }).click();
+        
+        // Determine the link section based on linkType
+        const linkTypeToSectionMap: Record<string, string> = {
+            'Data tools / Popular links': 'Links - data tools / popular links',
+            'Popular statistics': 'Links - popular statistics',
+        };
+        
+
+        const targetTitle = [edited ? this.testData.Feature.titleEdited : this.testSetUpData.contentTitleforTest.contentTitle || this.testData.Feature.title];
+        const sourceHandle = this.page.locator(
+            `//tr[contains(@class,'draggable')]//td[@headers='view-title-table-column']//div[normalize-space(.) = "${targetTitle}"]/a[@title="Change order"]`
+        ).first();
+        const topHandle = this.page.locator(`//tr[contains(@class,'draggable')]//a[@title="Change order"][1]`).first();
+
+
+
+        await expect(sourceHandle).toBeVisible();
+        await expect(topHandle).toBeVisible();
+
+        // Drupal tabledrag can be flaky with HTML5 drag-and-drop, so keep a mouse fallback.
+        const dragSucceeded = await sourceHandle.dragTo(topHandle).then(() => true).catch(() => false);
+
+        if (!dragSucceeded)
+        {
+            const sourceBox = await sourceHandle.boundingBox();
+            const targetBox = await topHandle.boundingBox();
+
+            if (!sourceBox || !targetBox)
+            {
+                throw new Error('Unable to calculate drag coordinates for link reorder');
+            }
+
+            await this.page.mouse.move(sourceBox.x + sourceBox.width / 2, sourceBox.y + sourceBox.height / 2);
+            await this.page.mouse.down();
+            await this.page.mouse.move(targetBox.x + targetBox.width / 2, targetBox.y + 4, { steps: 20 });
+            await this.page.mouse.up();
+        }
+
+        const firstRowTitle = this.page.locator(
+            "//tr[contains(@class,'draggable')]"
+        ).first();
+        await expect(firstRowTitle).toContainText(targetTitle);
+
+        const saveButton = this.page.getByRole('button', { name: 'Save' });
+        if (await saveButton.isVisible())
+        {
+            await saveButton.click();
+        }
+    }
+
+    // here
+
 }

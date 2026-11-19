@@ -143,8 +143,23 @@ export class RevisionHelper
 
     async VerifyRevisionNumbering()
     {
-        const rows = await this.page.locator('table[data-drupal-selector="edit-node-revisions-table"] tbody tr').all();
-        
+        const revisionRows = this.page.locator('table[data-drupal-selector="edit-node-revisions-table"] tbody tr');
+        const revisionsLabelPattern = /^Revisions\s*\(\s*(\d+)\s*\)$/;
+        const revisionsLabel = this.page.getByText(revisionsLabelPattern);
+        await expect(revisionsLabel).toBeVisible();
+
+        const labelText = (await revisionsLabel.innerText()).trim();
+        const countMatch = labelText.match(revisionsLabelPattern);
+        if (!countMatch)
+        {
+            throw new Error(`Could not read the revision count from "${labelText}"`);
+        }
+
+        const navRevisionCount = Number(countMatch[1]);
+        await expect(revisionRows, `Revision row count should match "${labelText}" in the navigation`).toHaveCount(navRevisionCount);
+        const rows = await revisionRows.all();
+        console.log(`Revision number in nav bar is (${navRevisionCount}) and rows is (${rows.length})`);
+
         console.log("Revision row Verification");
 
         let previousNumber: number | null = null;

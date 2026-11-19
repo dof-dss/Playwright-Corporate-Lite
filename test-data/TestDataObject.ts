@@ -423,6 +423,17 @@ export const TestData = {
     favourite: false,
   },
 
+  Feature: {
+    title: 'Automated Test - New sample Feature title' + ' - ' + getTimestamp(),
+    titleEdited: 'Automated Test - Edited sample Feature title' + ' - ' + getTimestamp(),
+    revisionlog: 'This is an automated revision log message',
+    revisionlogEdited: 'This is an edited automated revision log message',
+    linkURL: 'Latest News - Don’t let farming take your breath away',
+    linkURLEdited: 'https://www.nidirect.gov.uk',
+    teaser: 'This is a new Feature teaser content.',
+    teaserEdited: 'This is an edited Feature teaser content.',
+  },
+
   Link: {
     title: 'Automated Test - New Sample Link title' + ' - ' + getTimestamp(),
     titleEdited: 'Automated Test - Edited Sample Link title' + ' - ' + getTimestamp(),

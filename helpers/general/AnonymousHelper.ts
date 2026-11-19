@@ -249,7 +249,6 @@ export class AnonymousHelper
         // await this.verificationHelper.verifyChosenContent({ edited });
     }
 
-
     // Unique Article verification for anonymous users
     async VerifyArticleAsAnon({ edited }: ContentEdited)
     {
@@ -820,6 +819,54 @@ export class AnonymousHelper
             await verifyPublicationTopicListing();
         }
     }
+
+    // Unique Feature verification for anonymous users
+    async VerifyfeatureAsAnon({ edited }: ContentEdited)
+    {
+        await this.basePage.logOut();
+        await this.homePage.homePageURLCheck();
+
+        const feature = this.testData.Feature;
+        const title = edited ? feature.titleEdited : feature.title;
+        const isPublished = this.testSetUpData.moderationStateForTest.moderationState ===
+            this.testSetUpData.validModerationStates.published;
+
+        // await this.testSteps.LogInfo('Verifying feature as anonymous user');
+        // await this.homePage.navigateToHome();
+
+        const campaignsHeading = this.page.getByRole('heading', { level: 2, name: 'HSENI Campaigns', exact: true });
+        await this.testSteps.LogInfo('Verifying "HSENI Campaigns" heading is visible');
+        await expect(campaignsHeading).toBeVisible();
+
+        const cardDeck = this.page.locator(`//h2[normalize-space(.)='HSENI Campaigns']/following-sibling::div[contains(@class,'card-deck')][1]`);
+
+        const cardTitle = cardDeck.locator('h3.card__title > span').filter({ hasText: title });
+
+        if (isPublished)
+        {
+            await this.testSteps.LogInfo(`Verifying feature "${title}" is published and visible`);
+            await this.testSteps.LogInfo(`Verifying feature title "${title}" is visible in an h3 span`);
+            await expect(cardTitle).toBeVisible();
+
+            const teaser = edited ? feature.teaserEdited : feature.teaser;
+            const card = cardDeck.locator('a.card').filter({
+                has: this.page.locator('h3.card__title > span').filter({ hasText: title })
+            });
+
+            await this.testSteps.LogInfo('Verifying an image is visible in HSENI Campaigns');
+            await expect(cardDeck.locator('img').first()).toBeVisible();
+
+            await this.testSteps.LogInfo(`Verifying feature teaser "${teaser}" is visible`);
+            await expect(card.locator('div.card__body p', { hasText: teaser })).toBeVisible();
+        }
+        else
+        {
+            await this.testSteps.LogInfo(`Verifying feature "${title}" is unpublished and NOT visible`);
+            await expect(cardTitle).toBeHidden();
+        }
+
+    }
+
 
 }
 
