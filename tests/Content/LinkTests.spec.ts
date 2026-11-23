@@ -367,7 +367,7 @@ test.describe('Link Author Tests', { tag: ['@regression', '@link', '@author'] },
   });
 });
 
-test.describe('Link Supervisor Tests', () =>
+test.describe('Link Supervisor Tests', { tag: ['@regression', '@link', '@supervisor'] }, () =>
 {
   // Pass the fixture for Link Supervisors into the beforeEach hook
   test.beforeEach(async ({ loginHelper, testSetUpData, testData }, testInfo) =>
@@ -393,7 +393,7 @@ test.describe('Link Supervisor Tests', () =>
   tc01LinkTypes.forEach((linkType, index) =>
   {
     const caseNumber = String(index + 1).padStart(2, '0');
-    test(`Link-Super-TC${caseNumber} - Create - Create Link (${linkType}) content as an "HomePage Supervisor", perform mandatory field check and preview content`, { tag: "@regression" },
+    test(`Link-Super-TC${caseNumber} - Create - Create Link (${linkType}) content as an "HomePage Supervisor", perform mandatory field check and preview content`, { tag: '@create' },
       async ({ linkHelper, applicationHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData, testData, basePage, homePage }) =>
       {
         // creating link as a draft and performing mandatory field check
@@ -492,7 +492,7 @@ test.describe('Link Supervisor Tests', () =>
   tc01LinkTypes.forEach((linkType, index) =>
   {
     const caseNumber = String(index + 3).padStart(2, '0');
-    test(`Link-Super-TC${caseNumber} - Edit - Edit Published Link (${linkType}) content and ensure edit is published as a "Supervisor"`, { tag: "@regression" },
+    test(`Link-Super-TC${caseNumber} - Edit - Edit Published Link (${linkType}) content and ensure edit is published as a "Supervisor"`, { tag: '@edit' },
       async ({ linkHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData, testData, basePage, homePage }) =>
       {
         console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -572,7 +572,7 @@ test.describe('Link Supervisor Tests', () =>
   tc01LinkTypes.forEach((linkType, index) =>
   {
     const caseNumber = String(index + 5).padStart(2, '0');
-    test(`Link-Super-TC${caseNumber} - Delete - Delete Published Link (${linkType}) as a "Supervisor" and confirm it isnt viewable as an anon user`, { tag: "@regression" },
+    test(`Link-Super-TC${caseNumber} - Delete - Delete Published Link (${linkType}) as a "Supervisor" and confirm it isnt viewable as an anon user`, { tag: '@delete' },
       async ({ linkHelper, anonymousHelper, loginHelper, applicationHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData, testData, basePage, homePage }) =>
       {
         // creating link as a draft and performing mandatory field check
@@ -651,7 +651,7 @@ test.describe('Link Supervisor Tests', () =>
   });
 
 
-  test('Link-Super-TC07 - Compare Revision - Edit Link content and ensure user is able to compare Revisions ', { tag: "@regression" },
+  test('Link-Super-TC07 - Compare Revision - Edit Link content and ensure user is able to compare Revisions ', { tag: '@revision' },
     async ({ linkHelper, revisionHelper, testSetUpData }) =>
     {
       // creating content
@@ -672,7 +672,7 @@ test.describe('Link Supervisor Tests', () =>
       await revisionHelper.compareRevisions();
     });
 
-  test('Link-Super-TC08 - Delete Revision - Edit Link content and ensure user is able to Delete Revisions', { tag: "@regression" },
+  test('Link-Super-TC08 - Delete Revision - Edit Link content and ensure user is able to Delete Revisions', { tag: '@revision' },
     async ({ linkHelper, revisionHelper, testSetUpData }) =>
     {
       // creating content
@@ -702,7 +702,7 @@ test.describe('Link Supervisor Tests', () =>
       });
     });
 
-  test('Link-Super-TC09 - Revert Revision - Edit Link content and ensure user is able to Revert Revisions', { tag: "@regression" },
+  test('Link-Super-TC09 - Revert Revision - Edit Link content and ensure user is able to Revert Revisions', { tag: '@revision' },
     async ({ linkHelper, revisionHelper, testSetUpData }) =>
     {
       // creating content
@@ -732,7 +732,7 @@ test.describe('Link Supervisor Tests', () =>
       });
     });
 
-  test('Link-Super-TC10 - Workbench -  Create Link content as an "Supervisor", and use Workbench to complete all moderation states', { tag: "@regression" },
+  test('Link-Super-TC10 - Workbench -  Create Link content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' },
     async ({ linkHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
     {
       // creating link as a draft and performing mandatory field check
@@ -781,7 +781,7 @@ test.describe('Link Supervisor Tests', () =>
   tc01LinkTypes.forEach((linkType, index) =>
   {
     const caseNumber = String(index + 11).padStart(2, '0');
-    test(`Link-Super-TC${caseNumber} - Value Checker - Create and Publish link (${linkType}), ensure no more than 8 links are displayed in the matching section`, { tag: "@regression" },
+    test(`Link-Super-TC${caseNumber} - Value Checker - Create and Publish link (${linkType}), ensure no more than 8 links are displayed in the matching section`, { tag: '@regression' },
       async ({ linkHelper, anonymousHelper, contentModerationHelper, testSetUpData, testData, homePage, basePage, loginHelper }) =>
     {
       // creating link as a draft and performing mandatory field check

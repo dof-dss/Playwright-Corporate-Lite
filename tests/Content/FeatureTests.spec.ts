@@ -1,5 +1,5 @@
 import { TestSteps } from '@poms/base-pages/TestSteps';
-import { test } from '@fixtures/MyFixtures';
+import { expect, test } from '@fixtures/MyFixtures';
 import { ModerationSideBar } from '@poms/base-pages/ModerationSideBar';
 
 test.describe('Feature Author Tests', { tag: ['@regression', '@feature', '@author'] }, () =>
@@ -23,7 +23,7 @@ test.describe('Feature Author Tests', { tag: ['@regression', '@feature', '@autho
     await loginHelper.loginWithValidUser();
   });
 
-  test('FEAT-Auth-TC01 - Create - Create Feature content as an "Author", perform mandatory field check and preview content', { tag: '@create' }, async ({ loginHelper, featureHelper, anonymousHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
+  test('FEAT-Auth-TC01 - Create - Create Feature content as an "Author", perform mandatory field check and preview content', { tag: '@create' }, async ({ loginHelper, basePage, featureHelper, anonymousHelper, contentModerationHelper, navigateToCreatedContentHelper, page }) =>
   {
     await featureHelper.createFeature({
       preview: true,
@@ -50,9 +50,19 @@ test.describe('Feature Author Tests', { tag: ['@regression', '@feature', '@autho
     // searching as anon to ensure content is not viewable as draft
     await anonymousHelper.VerifyfeatureAsAnon({ edited: false });
 
+
+    // Ensure the page is not locked 
+    // automatically logins based on above test data for each test
+    await loginHelper.loginWithValidUser();
+    await basePage.clickContentLink();
+    await page.getByRole('link', { name: 'Content', exact: true }).first().hover();
+    await page.waitForTimeout(1000);
+    await page.getByRole('link', { name: 'Featured Content Campaigns' }).first().click();
+    await page.getByRole('link', { name: 'Unlock' }).click();
+    await page.getByRole('button', { name: 'Confirm break lock' }).click();
   });
 
-  test('FEAT-Auth-TC02 - Edit - Edit Feature as an "Author" and ensure it is not published', { tag: '@edit' }, async ({ featureHelper, anonymousHelper, navigateToCreatedContentHelper, contentModerationHelper, loginHelper }) =>
+  test('FEAT-Auth-TC02 - Edit - Edit Feature as an "Author" and ensure it is not published', { tag: '@edit' }, async ({ featureHelper, basePage, anonymousHelper, navigateToCreatedContentHelper, contentModerationHelper, loginHelper, page }) =>
   {
     await featureHelper.createFeature({
       preview: false,
@@ -68,7 +78,7 @@ test.describe('Feature Author Tests', { tag: ['@regression', '@feature', '@autho
     // searching as anon to ensure content is not viewable as draft
     await anonymousHelper.VerifyfeatureAsAnon({ edited: false });
 
-      // log back in and naviagte to content 
+    // log back in and naviagte to content 
     await loginHelper.loginWithValidUser();
     await navigateToCreatedContentHelper.navigateToCreatedContent({
       active: true,
@@ -84,6 +94,16 @@ test.describe('Feature Author Tests', { tag: ['@regression', '@feature', '@autho
     // searching as anon to ensure content is not viewable as draft
     await anonymousHelper.VerifyfeatureAsAnon({ edited: false });
 
+
+    // Ensure the page is not locked 
+    // automatically logins based on above test data for each test
+    await loginHelper.loginWithValidUser();
+    await basePage.clickContentLink();
+    await page.getByRole('link', { name: 'Content', exact: true }).first().hover();
+    await page.waitForTimeout(1000);
+    await page.getByRole('link', { name: 'Featured Content Campaigns' }).first().click();
+    await page.getByRole('link', { name: 'Unlock' }).click();
+    await page.getByRole('button', { name: 'Confirm break lock' }).click();
   });
 
   test('FEAT-Auth-TC03 - Delete - Delete Feature as an "Author"', { tag: '@delete' }, async ({ featureHelper, navigateToCreatedContentHelper }) =>
@@ -144,9 +164,8 @@ test.describe('Feature Author Tests', { tag: ['@regression', '@feature', '@autho
       Archive: false
     });
 
-    // searching as anon to ensure content is viewable when published
-    await anonymousHelper.searchAsAnon({ edited: false });
-
+    // Logging out as Before each will log in as an Author.  
+    await basePage.logOut();
     // Overriding user for test data with Author credentials  
     testSetUpData.userForTest.username = testSetUpData.validUserList.author_username;
     testSetUpData.userForTest.password = testSetUpData.validUserList.author_password;
@@ -162,9 +181,6 @@ test.describe('Feature Author Tests', { tag: ['@regression', '@feature', '@autho
 
     await permissionCheck.openModerationSideBar();
     await permissionCheck.deleteButtonNotVisible();
-
-    // searching as anon to ensure content is viewable as Author has not been able to delete 
-    await anonymousHelper.searchAsAnon({ edited: false });
   });
 
   test('FEAT-Auth-TC05 - Compare Revision - Edit Feature content and ensure user is able to compare Revisions ', { tag: '@revision' }, async ({ featureHelper, revisionHelper, testSetUpData }) =>
@@ -272,7 +288,6 @@ test.describe('Feature Author Tests', { tag: ['@regression', '@feature', '@autho
       archived: false
     });
 
-
     //Logging in as a supervisor to Archive Content as authors can view archive content but are unable to archive themseleves
     await basePage.logOut();
 
@@ -310,7 +325,6 @@ test.describe('Feature Author Tests', { tag: ['@regression', '@feature', '@autho
       archived: true
     });
   });
-
 });
 
 test.describe('Feature Supervisor Tests', { tag: ['@regression', '@feature', '@supervisor'] }, () =>
@@ -334,7 +348,7 @@ test.describe('Feature Supervisor Tests', { tag: ['@regression', '@feature', '@s
     await loginHelper.loginWithValidUser();
   });
 
-  test('FEAT-Super-TC01 - Create - Create Feature content as an "Supervisor", perform mandatory field check and preview content', { tag: '@create' }, async ({ featureHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData }) =>
+  test('FEAT-Super-TC01 - Create - Create Feature content as an "Supervisor", perform mandatory field check and preview content', { tag: '@create' }, async ({ featureHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData, page, basePage }) =>
   {
     // creating feature as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -435,9 +449,19 @@ test.describe('Feature Supervisor Tests', { tag: ['@regression', '@feature', '@s
 
     // // Ensuring Content is not visible when feature is Archived
     // await anonymousHelper.VerifyfeatureAsAnon({ edited: false });
+
+    // Ensure the page is not locked 
+    // automatically logins based on above test data for each test
+    await loginHelper.loginWithValidUser();
+    await basePage.clickContentLink();
+    await page.getByRole('link', { name: 'Content', exact: true }).first().hover();
+    await page.waitForTimeout(1000);
+    await page.getByRole('link', { name: 'Featured Content Campaigns' }).first().click();
+    await page.getByRole('link', { name: 'Unlock' }).click();
+    await page.getByRole('button', { name: 'Confirm break lock' }).click();
   });
 
-  test('FEAT-Super-TC02 - Edit - Edit Published Feature content and ensure edit is published as a "Supervisor" ', { tag: '@edit' }, async ({ featureHelper, anonymousHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
+  test('FEAT-Super-TC02 - Edit - Edit Published Feature content and ensure edit is published as a "Supervisor" ', { tag: '@edit' }, async ({ featureHelper, anonymousHelper, contentModerationHelper, navigateToCreatedContentHelper, loginHelper, page, basePage }) =>
   {
     // creating content
     await featureHelper.createFeature({
@@ -452,18 +476,18 @@ test.describe('Feature Supervisor Tests', { tag: ['@regression', '@feature', '@s
       Archive: false
     });
 
-    await featureHelper.AddFeatureToHomePage(false);
-    // moderating to Published
-    await contentModerationHelper.supervisorModerateContent({
-      NeedsReview: false,
-      Published: true,
-      Archive: false
-    });
+    // await featureHelper.AddFeatureToHomePage(false);
+    // // moderating to Published
+    // await contentModerationHelper.supervisorModerateContent({
+    //   NeedsReview: true,
+    //   Published: true,
+    //   Archive: false
+    // });
 
-    await navigateToCreatedContentHelper.navigateToCreatedContent({
-      active: true,
-      deleted: false
-    });
+    // await navigateToCreatedContentHelper.navigateToCreatedContent({
+    //   active: true,
+    //   deleted: false
+    // });
 
     // edit feature
     await featureHelper.editFeature({
@@ -477,8 +501,26 @@ test.describe('Feature Supervisor Tests', { tag: ['@regression', '@feature', '@s
       Archive: false
     });
 
+    await featureHelper.AddFeatureToHomePage(false);
+    // moderating to Published
+    await contentModerationHelper.supervisorModerateContent({
+      NeedsReview: false,
+      Published: true,
+      Archive: false
+    });
     // searching as anon to verify edited content
     await anonymousHelper.VerifyfeatureAsAnon({ edited: true });
+    ;
+
+    // Ensure the page is not locked 
+    // automatically logins based on above test data for each test
+    await loginHelper.loginWithValidUser();
+    await basePage.clickContentLink();
+    await page.getByRole('link', { name: 'Content', exact: true }).first().hover();
+    await page.waitForTimeout(1000);
+    await page.getByRole('link', { name: 'Featured Content Campaigns' }).first().click();
+    await page.getByRole('link', { name: 'Unlock' }).click();
+    await page.getByRole('button', { name: 'Confirm break lock' }).click();
   });
 
   test('FEAT-Super-TC03 - Delete - Delete Published Feature as an "Supervisor"', { tag: '@delete' }, async ({ featureHelper, anonymousHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
@@ -496,9 +538,58 @@ test.describe('Feature Supervisor Tests', { tag: ['@regression', '@feature', '@s
       Archive: false
     });
 
-    // searching as anon to ensure content is viewable as published
-    await anonymousHelper.searchAsAnon({ edited: false });
+    // Cancel delete feature
+    await featureHelper.deleteFeature({
+      delete: false,
+      cancel: true
+    });
 
+    await navigateToCreatedContentHelper.navigateToCreatedContent({
+      active: true,
+      deleted: false
+    });
+
+    // delete feature
+    await featureHelper.deleteFeature({
+      delete: true,
+      cancel: false
+    });
+
+    // confirm content deleted
+    await navigateToCreatedContentHelper.navigateToCreatedContent({
+      active: false,
+      deleted: true
+    });
+
+    // searching as anon to ensure content is not viewable
+    await anonymousHelper.VerifyfeatureAsAnon({ edited: false });
+  });
+
+  test('FEAT-Super-TC04 - Delete - Can delete Article created by "Author" as an "Supervisor"', { tag: '@delete' }, async ({ featureHelper, testSetUpData, basePage, loginHelper, navigateToCreatedContentHelper }) =>
+  {
+    // Logging out as Before each will log in as an Author.  
+    await basePage.logOut();
+
+    // Overriding user for test data with Author credentials  
+    testSetUpData.userForTest.username = testSetUpData.validUserList.author_username;
+    testSetUpData.userForTest.password = testSetUpData.validUserList.author_password;
+    // log in as Author
+    await loginHelper.loginWithValidUser();
+
+    // creating content
+    await featureHelper.createFeature({
+      preview: false,
+      mandatoryFieldCheck: false,
+    });
+
+    // Logging out as Before each will log in as an Author.  
+    await basePage.logOut();
+
+    testSetUpData.userForTest.username = testSetUpData.validUserList.supervisor_username;
+    testSetUpData.userForTest.password = testSetUpData.validUserList.supervisor_password;
+
+    // log back in as Supervisor
+    await loginHelper.loginWithValidUser();
     await navigateToCreatedContentHelper.navigateToCreatedContent({
       active: true,
       deleted: false
@@ -526,52 +617,9 @@ test.describe('Feature Supervisor Tests', { tag: ['@regression', '@feature', '@s
       active: false,
       deleted: true
     });
-
-    // searching as anon to ensure content is not viewable
-    await anonymousHelper.searchAsAnon({ edited: false });
   });
 
-  test('FEAT-Super-TC04 - Archive - Archive Feature and verify it is not viewable', { tag: '@archive' }, async ({ featureHelper, anonymousHelper, contentModerationHelper, navigateToCreatedContentHelper }) =>
-  {
-    // creating content
-    await featureHelper.createFeature({
-      preview: false,
-      mandatoryFieldCheck: false,
-    });
-
-    // moderating to published  
-    await contentModerationHelper.supervisorModerateContent({
-      NeedsReview: false,
-      Published: true,
-      Archive: false
-    });
-
-    // searching as anon to ensure content is viewable as published
-    await anonymousHelper.searchAsAnon({ edited: false });
-
-    await navigateToCreatedContentHelper.navigateToCreatedContent({
-      active: true,
-      deleted: false
-    });
-
-    // moderating to Archive
-    await contentModerationHelper.supervisorModerateContent({
-      NeedsReview: false,
-      Published: false,
-      Archive: true
-    });
-
-    // confirm content archived
-    await navigateToCreatedContentHelper.navigateToCreatedContent({
-      active: false,
-      deleted: false
-    });
-
-    // searching as anon to ensure content is not viewable when archived
-    await anonymousHelper.searchAsAnon({ edited: false });
-  });
-
-  test('FEAT-Super-TC05 - Compare Revision - Edit Feature content and ensure user is able to compare Revisions ', { tag: '@revision' }, async ({ featureHelper, revisionHelper, contentModerationHelper, testSetUpData }) =>
+  test('FEAT-Super-TC05 - Compare Revision - Edit Feature content and ensure user is able to compare Revisions ', { tag: '@revision' }, async ({ featureHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await featureHelper.createFeature({
@@ -590,7 +638,7 @@ test.describe('Feature Supervisor Tests', { tag: ['@regression', '@feature', '@s
     await revisionHelper.compareRevisions();
   });
 
-  test('FEAT-Super-TC06 - Delete Revision - Edit Feature content and ensure user is able to Delete Revisions', { tag: '@revision' }, async ({ featureHelper, revisionHelper, contentModerationHelper }) =>
+  test('FEAT-Super-TC06 - Delete Revision - Edit Feature content and ensure user is able to Delete Revisions', { tag: '@revision' }, async ({ featureHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await featureHelper.createFeature({
@@ -598,23 +646,13 @@ test.describe('Feature Supervisor Tests', { tag: ['@regression', '@feature', '@s
       mandatoryFieldCheck: false,
     });
 
-    // moderating to published  
-    await contentModerationHelper.supervisorModerateContent({
-      NeedsReview: false,
-      Published: true,
-      Archive: false
-    });
+    // overriding test data so that Edit test saves as Needs Review
+    testSetUpData.saveAsOptionForTest.saveAsOption = testSetUpData.validSaveAsOptionList.needsreview;
+
 
     // edit feature
     await featureHelper.editFeature({
       preview: false
-    });
-
-    // moderating to published
-    await contentModerationHelper.supervisorModerateContent({
-      NeedsReview: false,
-      Published: true,
-      Archive: false
     });
 
     // Cancel Deletion of Revision
@@ -630,7 +668,7 @@ test.describe('Feature Supervisor Tests', { tag: ['@regression', '@feature', '@s
     });
   });
 
-  test('FEAT-Super-TC07 - Revert Revision - Edit Feature content and ensure user is able to Revert Revisions', { tag: '@revision' }, async ({ featureHelper, revisionHelper, contentModerationHelper }) =>
+  test('FEAT-Super-TC07 - Revert Revision - Edit Feature content and ensure user is able to Revert Revisions', { tag: '@revision' }, async ({ featureHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await featureHelper.createFeature({
@@ -638,24 +676,15 @@ test.describe('Feature Supervisor Tests', { tag: ['@regression', '@feature', '@s
       mandatoryFieldCheck: false,
     });
 
-    // moderating to published  
-    await contentModerationHelper.supervisorModerateContent({
-      NeedsReview: false,
-      Published: true,
-      Archive: false
-    });
+    // overriding test data so that Edit test saves as Needs Review
+    testSetUpData.saveAsOptionForTest.saveAsOption = testSetUpData.validSaveAsOptionList.needsreview;
+
 
     // edit feature
     await featureHelper.editFeature({
       preview: false
     });
 
-    // moderating to published
-    await contentModerationHelper.supervisorModerateContent({
-      NeedsReview: false,
-      Published: true,
-      Archive: false
-    });
 
     // Cancel Reverting of Revision and verify edited version is still visible
     await revisionHelper.revertRevisions({

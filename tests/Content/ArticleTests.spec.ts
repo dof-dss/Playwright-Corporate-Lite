@@ -305,7 +305,7 @@ test.describe('Article Author Tests', { tag: ['@regression', '@article', '@autho
 
     });
 
-  test('ART-Auth-TC10 - Revision - Confirm revision number increase', { tag: '@Revision' },
+  test('ART-Auth-TC10 - Revision - Confirm revision number increase', { tag: '@revision' },
     async ({ articleHelper, anonymousHelper, contentModerationHelper, revisionHelper }) =>
     {
       await articleHelper.createArticle({
@@ -679,7 +679,7 @@ test.describe('Article Supervisor Tests', { tag: ['@regression', '@article', '@s
 
   });
 
-  test('ART-Super-TC10 - Revision - Confirm revision number increase', { tag: '@Revision' },
+  test('ART-Super-TC10 - Revision - Confirm revision number increase', { tag: '@revision' },
     async ({ articleHelper, anonymousHelper, contentModerationHelper, revisionHelper }) =>
     {
       await articleHelper.createArticle({

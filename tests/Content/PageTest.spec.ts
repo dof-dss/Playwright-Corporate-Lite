@@ -297,7 +297,7 @@ test.describe('Page Author Tests', { tag: ['@regression', '@page', '@author'] },
 
 });
 
-test.describe('Page Supervisor Tests', { tag: ['@regression', '@Page', '@supervisor'] }, () =>
+test.describe('Page Supervisor Tests', { tag: ['@regression', '@page', '@supervisor'] }, () =>
 {
   // Pass the fixture for Page Authors into the beforeEach hook
   test.beforeEach(async ({ loginHelper, testSetUpData, testData }, testInfo) =>

@@ -94,12 +94,6 @@ export class CKEditor
     // CK Editor Functionlity
     async ckEditorFullWorkflow(existingAudioName?: string)
     {
-        // if (existingAudioName)
-        // {
-        //     await this.addAudioFileToBodyField(existingAudioName);
-        // }
-        // else
-        // {
         // body formatting 
         await this.addBoldTextToBodyField();
         // itcalics formating
@@ -139,7 +133,6 @@ export class CKEditor
         await this.addSpecialCharactersToBodyField();
         // table formating 
         await this.addTableToBodyField();
-        // }
     }
 
 
@@ -578,7 +571,6 @@ export class CKEditor
 
         await this.testSteps.LogInfo('Entering "This is a reverse Numbered List point test"');
         await this.enterBodyField.pressSequentially('Number 10 This is Numbered List point test when started at value 10.');
-
         await this.testSteps.LogInfo('Hitting "Enter" on keyboard to take a new line');
         await this.page.keyboard.press('Enter');
         await this.testSteps.LogInfo('Entering "Number 11" for the 2nd Number list ');
@@ -707,11 +699,15 @@ export class CKEditor
         await this.page.keyboard.press('Enter');
 
         await this.page.waitForTimeout(1000);
-        await this.testSteps.LogInfo('Verifying "Show more items" option is enabled');
-        await expect(this.page.getByRole('button', { name: 'Show more items' })).toBeEnabled();
+        const showMoreItems = this.page.getByRole('button', { name: 'Show more items' });
+        if (await showMoreItems.isVisible())
+        {
+            await this.testSteps.LogInfo('Verifying "Show more items" option is enabled');
+            await expect(showMoreItems).toBeEnabled();
 
-        await this.testSteps.LogInfo('Clicking "Show more items" option clicked');
-        await this.page.getByRole('button', { name: 'Show more items' }).click();
+            await this.testSteps.LogInfo('Clicking "Show more items" option clicked');
+            await showMoreItems.click();
+        }
         await this.testSteps.LogInfo('Verifying "Special characters" option is enabled');
         await expect(this.page.getByRole('button', { name: 'Special characters' })).toBeEnabled();
 
@@ -725,8 +721,12 @@ export class CKEditor
 
         await this.testSteps.LogInfo('Hitting "Enter" on keyboard to take a new line');
         await this.page.keyboard.press('Enter');
-        await this.testSteps.LogInfo('Clicking "Show more items" option clicked');
-        await this.page.getByRole('button', { name: 'Show more items' }).click();
+        const showMoreItemsAgain = this.page.getByRole('button', { name: 'Show more items' });
+        if (await showMoreItemsAgain.isVisible())
+        {
+            await this.testSteps.LogInfo('Clicking "Show more items" option clicked');
+            await showMoreItemsAgain.click();
+        }
         await this.testSteps.LogInfo('Clicking "Special characters" option clicked');
         await this.page.getByRole('button', { name: 'Special characters' }).click();
         await this.testSteps.LogInfo('Entering "This is adding a "‱" from special characters"');

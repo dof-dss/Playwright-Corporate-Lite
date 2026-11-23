@@ -2,7 +2,7 @@ import { TestSteps } from '@poms/base-pages/TestSteps';
 import { test } from '@fixtures/MyFixtures';
 import { ModerationSideBar } from '@poms/base-pages/ModerationSideBar';
 
-test.describe('Profile Author Tests', () =>
+test.describe('Profile Author Tests', { tag: ['@regression', '@profile', '@author'] }, () =>
 {
   test.beforeEach(async ({ loginHelper, testSetUpData, testData }, testInfo) =>
   {
@@ -20,7 +20,7 @@ test.describe('Profile Author Tests', () =>
     await loginHelper.loginWithValidUser();
   });
 
-  test('PRF-Auth-TC01 - Create - Create Profile content as an "Author", perform mandatory field check and preview content', { tag: "@regression" },
+  test('PRF-Auth-TC01 - Create - Create Profile content as an "Author", perform mandatory field check and preview content', { tag: '@create' },
     async ({ loginHelper, profileHelper, anonymousHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData, testData }) =>
     {
       await profileHelper.createProfile({
@@ -48,7 +48,7 @@ test.describe('Profile Author Tests', () =>
 
     });
 
-  test('PRF-Auth-TC02 - Edit - Edit Profile as an "Author" and ensure it is not published', { tag: '@regression' },
+  test('PRF-Auth-TC02 - Edit - Edit Profile as an "Author" and ensure it is not published', { tag: '@edit' },
     async ({ profileHelper, anonymousHelper }) =>
     {
       await profileHelper.createProfile({
@@ -63,7 +63,7 @@ test.describe('Profile Author Tests', () =>
       await anonymousHelper.searchAsAnon({ edited: true });
     });
 
-  test('PRF-Auth-TC03 - Delete - Delete Profile as an "Author"', { tag: '@regression' }, async ({ profileHelper, navigateToCreatedContentHelper }) =>
+  test('PRF-Auth-TC03 - Delete - Delete Profile as an "Author"', { tag: '@delete' }, async ({ profileHelper, navigateToCreatedContentHelper }) =>
   {
     await profileHelper.createProfile({
       preview: false,
@@ -91,7 +91,7 @@ test.describe('Profile Author Tests', () =>
     });
   });
 
-  test('PRF-Auth-TC04 - Delete - Cannot delete Profile created by "Supervisor" as an "Author"', { tag: '@regression' }, async ({ page, testSetUpData, testData, profileHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper }) =>
+  test('PRF-Auth-TC04 - Delete - Cannot delete Profile created by "Supervisor" as an "Author"', { tag: '@delete' }, async ({ page, testSetUpData, testData, profileHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper }) =>
   {
     const permissionCheck = new ModerationSideBar(page, testSetUpData, testData);
 
@@ -139,7 +139,7 @@ test.describe('Profile Author Tests', () =>
     });
   });
 
-  test('PRF-Auth-TC05 - Compare Revision - Edit Profile content and ensure user is able to compare Revisions', { tag: "@regression" },
+  test('PRF-Auth-TC05 - Compare Revision - Edit Profile content and ensure user is able to compare Revisions', { tag: '@revision' },
     async ({ profileHelper, revisionHelper, testSetUpData }) =>
     {
       await profileHelper.createProfile({
@@ -156,7 +156,7 @@ test.describe('Profile Author Tests', () =>
       await revisionHelper.compareRevisions();
     });
 
-  test('PRF-Auth-TC06 - Delete Revision - Edit Profile content and ensure user is able to Delete Revisions', { tag: "@regression" },
+  test('PRF-Auth-TC06 - Delete Revision - Edit Profile content and ensure user is able to Delete Revisions', { tag: '@revision' },
     async ({ profileHelper, revisionHelper, testSetUpData }) =>
     {
       await profileHelper.createProfile({
@@ -181,7 +181,7 @@ test.describe('Profile Author Tests', () =>
       });
     });
 
-  test('PRF-Auth-TC07 - Revert Revision - Edit Profile content and ensure user is able to Revert Revisions', { tag: '@regression' }, async ({ profileHelper, revisionHelper, testSetUpData }) =>
+  test('PRF-Auth-TC07 - Revert Revision - Edit Profile content and ensure user is able to Revert Revisions', { tag: '@revision' }, async ({ profileHelper, revisionHelper, testSetUpData }) =>
   {
     await profileHelper.createProfile({
       preview: false,
@@ -205,7 +205,7 @@ test.describe('Profile Author Tests', () =>
     });
   });
 
-  test('PRF-Auth-TC08 - Workbench -  Create Profile content as an "Author", and use Workbench to complete all moderation states available', { tag: "@regression" },
+  test('PRF-Auth-TC08 - Workbench -  Create Profile content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' },
     async ({ profileHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
     {
       // creating profile as a draft and performing mandatory field check
@@ -273,7 +273,7 @@ test.describe('Profile Author Tests', () =>
     });
 });
 
-test.describe('Profile Supervisor Tests', () =>
+test.describe('Profile Supervisor Tests', { tag: ['@regression', '@profile', '@supervisor'] }, () =>
 {
   test.beforeEach(async ({ loginHelper, testSetUpData, testData }, testInfo) =>
   {
@@ -291,7 +291,7 @@ test.describe('Profile Supervisor Tests', () =>
     await loginHelper.loginWithValidUser();
   });
 
-  test('PRF-Super-TC01 - Create - Create Profile content as a "Supervisor", perform mandatory field check and preview content', { tag: "@regression" }, async ({ profileHelper, anonymousHelper, contentModerationHelper, loginHelper, navigateToCreatedContentHelper, testSetUpData, testData }) =>
+  test('PRF-Super-TC01 - Create - Create Profile content as a "Supervisor", perform mandatory field check and preview content', { tag: '@create' }, async ({ profileHelper, anonymousHelper, contentModerationHelper, loginHelper, navigateToCreatedContentHelper, testSetUpData, testData }) =>
   {
     // creating profile as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -365,7 +365,7 @@ test.describe('Profile Supervisor Tests', () =>
 
   });
 
-  test('PRF-Super-TC02 - Edit - Edit Published Profile content and ensure edit is published as a "Supervisor" ', { tag: "@regression" }, async ({ profileHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData, testData }) =>
+  test('PRF-Super-TC02 - Edit - Edit Published Profile content and ensure edit is published as a "Supervisor" ', { tag: '@edit' }, async ({ profileHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData, testData }) =>
   {
     // creating content
     await profileHelper.createProfile({
@@ -398,7 +398,7 @@ test.describe('Profile Supervisor Tests', () =>
     });
   });
 
-  test('PRF-Super-TC03 - Delete - Delete Published Article as "Supervisor" and confirm it isnt viewable as an anon user', { tag: "@regression" }, async ({ profileHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData, testData }) =>
+  test('PRF-Super-TC03 - Delete - Delete Published Article as "Supervisor" and confirm it isnt viewable as an anon user', { tag: '@delete' }, async ({ profileHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData, testData }) =>
   {
     // creating content
     await profileHelper.createProfile({
@@ -449,7 +449,7 @@ test.describe('Profile Supervisor Tests', () =>
     });
   });
 
-  test('PRF-Super-TC04 - Delete - Can delete Profile created by "Author" as an "Supervisor"', { tag: "@regression" }, async ({ profileHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper, testSetUpData }) =>
+  test('PRF-Super-TC04 - Delete - Can delete Profile created by "Author" as an "Supervisor"', { tag: '@delete' }, async ({ profileHelper, navigateToCreatedContentHelper, basePage, loginHelper, contentModerationHelper, anonymousHelper, testSetUpData }) =>
   {
     // Logging out as Before each will log in as a Supervisor.
     await basePage.logOut();
@@ -500,7 +500,7 @@ test.describe('Profile Supervisor Tests', () =>
     });
   });
 
-  test('PRF-Super-TC05 - Compare Revision - Edit Profile content and ensure user is able to compare Revisions ', { tag: "@regression" }, async ({ profileHelper, revisionHelper, testSetUpData }) =>
+  test('PRF-Super-TC05 - Compare Revision - Edit Profile content and ensure user is able to compare Revisions ', { tag: '@revision' }, async ({ profileHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await profileHelper.createProfile({
@@ -521,7 +521,7 @@ test.describe('Profile Supervisor Tests', () =>
 
   });
 
-  test('PRF-Super-TC06 - Delete Revision - Edit Profile content and ensure user is able to Delete Revisions', { tag: "@regression" }, async ({ profileHelper, revisionHelper, testSetUpData }) =>
+  test('PRF-Super-TC06 - Delete Revision - Edit Profile content and ensure user is able to Delete Revisions', { tag: '@revision' }, async ({ profileHelper, revisionHelper, testSetUpData }) =>
   {
     // creating content
     await profileHelper.createProfile({
@@ -550,7 +550,7 @@ test.describe('Profile Supervisor Tests', () =>
     });
   });
 
-  test('PRF-Super-TC07 - Revert Revision - Edit Profile content and ensure user is able to Revert Revisions', { tag: '@regression' }, async ({ profileHelper, revisionHelper, testSetUpData }) =>
+  test('PRF-Super-TC07 - Revert Revision - Edit Profile content and ensure user is able to Revert Revisions', { tag: '@revision' }, async ({ profileHelper, revisionHelper, testSetUpData }) =>
   {
     await profileHelper.createProfile({
       preview: false,
@@ -573,7 +573,7 @@ test.describe('Profile Supervisor Tests', () =>
     });
   });
 
-  test('PRF-Super-TC08 - Workbench -  Create Profile content as a "Supervisor", and use Workbench to complete all moderation states', { tag: "@regression" }, async ({ profileHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
+  test('PRF-Super-TC08 - Workbench -  Create Profile content as a "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ profileHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
   {
     // creating profile as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');

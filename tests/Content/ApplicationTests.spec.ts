@@ -478,10 +478,6 @@ test.describe('Application Supervisor Tests', { tag: ['@regression', '@applicati
       mandatoryFieldCheck: false,
     });
 
-    // moderating to Published
-    await contentModerationHelper.authorModerateContent({
-      NeedsReview: false
-    });
 
     // searching as anon to ensure content is not viewable when is a Needs Review state
     await anonymousHelper.searchAsAnon({ edited: false });

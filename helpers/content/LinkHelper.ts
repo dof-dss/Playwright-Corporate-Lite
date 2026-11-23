@@ -201,15 +201,16 @@ export class LinkHelper
     // create Link method
     async reorderLink(edited: boolean)
     {
-        await this.page.getByRole('link', { name: 'Content', exact: true }).hover();
+        await this.page.getByRole('link', { name: 'Content', exact: true }).first().hover();
+        await expect(this.page.getByRole('link', { name: 'Links' })).toBeVisible();
         await this.page.getByRole('link', { name: 'Links' }).hover();
-        
+
         // Determine the link section based on linkType
         const linkTypeToSectionMap: Record<string, string> = {
             'Data tools / Popular links': 'Links - data tools / popular links',
             'Popular statistics': 'Links - popular statistics',
         };
-        
+
         const linkSection = linkTypeToSectionMap[edited ? this.testData.Link.linkTypeEdited : this.testData.Link.linkType];
         await this.page.getByRole('link', { name: linkSection }).click();
 
@@ -255,17 +256,17 @@ export class LinkHelper
         }
     }
 
-      async AddFeatureToHomePage(edited: boolean)
+    async AddFeatureToHomePage(edited: boolean)
     {
         await this.page.getByRole('link', { name: 'Content', exact: true }).hover();
         await this.page.getByRole('link', { name: 'Featured Content Campaigns' }).click();
-        
+
         // Determine the link section based on linkType
         const linkTypeToSectionMap: Record<string, string> = {
             'Data tools / Popular links': 'Links - data tools / popular links',
             'Popular statistics': 'Links - popular statistics',
         };
-        
+
 
         const targetTitle = [edited ? this.testData.Feature.titleEdited : this.testSetUpData.contentTitleforTest.contentTitle || this.testData.Feature.title];
         const sourceHandle = this.page.locator(

@@ -55,22 +55,16 @@ export class ConsultationNodePage
         await expect(this.page.getByRole('link', { name: this.testData.Consultation.consultationSiteTopic, exact: true })).toBeVisible();
         await expect(this.page.getByRole('link', { name: this.testData.Consultation.consultationSiteTopic2, exact: true })).toBeVisible();
 
-        // verify consultation Opens box
-        await this.testSteps.LogInfo('Verifying "Consultation Open" is visible');
-        await expect(this.page.getByText('Consultation Open', { exact: true })).toBeVisible();
+        // verify consultation closes box
+        await this.testSteps.LogInfo('Verifying "Consultation closes" is visible');
+        await expect(this.page.getByText('Consultation closes', { exact: true })).toBeVisible();
         // verify consultation closes date time
-        await this.testSteps.LogInfo(`Verifying consultation opened "${this.testData.Consultation.verifyStartDateAndTime}" and closes "${this.testData.Consultation.verifyEndDateAndTime}"`);
+        await this.testSteps.LogInfo(`Verifying consultation closes "${this.testData.Consultation.verifyEndDateAndTime}"`);
         const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const dateTimePattern = (value: string) =>
-        {
-            const [day, ...dateAndTime] = value.split(' ');
-            const dayPattern = Number(day) < 10 ? `0?${Number(day)}` : day;
-            return `${dayPattern} ${escapeRegex(dateAndTime.join(' '))}`;
-        };
-        const openedDateTime = this.testData.Consultation.verifyStartDateAndTime.replace('.', ':');
-        const closedDateTime = this.testData.Consultation.verifyEndDateAndTime.replace('.', ':');
-        const consultationDateTime = new RegExp(`^Consultation opened ${dateTimePattern(openedDateTime)} and closes ${dateTimePattern(closedDateTime)}\\.$`);
-        await expect(this.page.getByText(consultationDateTime)).toBeVisible();
+        const [closeDay, ...closeDateAndTime] = this.testData.Consultation.verifyEndDateAndTime.replace('.', ':').split(' ');
+        const closeDayPattern = Number(closeDay) < 10 ? `0?${Number(closeDay)}` : closeDay;
+        const closesDateTime = new RegExp(`${closeDayPattern}\\s+${escapeRegex(closeDateAndTime.join(' ')).replace(/ /g, '\\s+')}`);
+                await expect(this.page.getByText(closesDateTime).first()).toBeVisible();
 
         // verify summary
         await this.testSteps.LogInfo(`Verifying Summary "${this.testData.Consultation.summary}" is visible`);

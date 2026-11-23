@@ -49,48 +49,27 @@ export class ConsultationComparePage
         await expect(consultationTitle.locator('ins')).toHaveText('Edited');
 
         //-------------------- DATE --------------------
-        const oldConsultationStatus = this.page.locator('//del[normalize-space(.)="Open"]');
-        const newConsultationStatus = this.page.locator('//ins[normalize-space(.)="Closed"]');
-        await this.testSteps.LogInfo('Verifying "Open" has been removed from the consultation status');
-        await expect(oldConsultationStatus).toHaveText('Open');
-        await this.testSteps.LogInfo('Verifying "Closed" has been added to the consultation status');
-        await expect(newConsultationStatus).toHaveText('Closed');
+        await this.testSteps.LogInfo('Verifying "closes" has been removed and "Closed" has been added to the consultation status');
+        await expect(this.page.locator('//del[normalize-space(.)="closes"]')).toHaveText('closes');
+        await expect(this.page.locator('//ins[normalize-space(.)="Closed"]')).toHaveText('Closed');
 
-        const getDateTimeParts = (dateTime: string) =>
-        {
-            const [date, time] = dateTime.split(', ');
-            const [hour, minute] = time.split(' ')[0].split('.');
-            return { date, hour, minute };
-        };
-        const oldStart = getDateTimeParts(this.testData.Consultation.verifyStartDateAndTime);
-        const oldEnd = getDateTimeParts(this.testData.Consultation.verifyEndDateAndTime);
-        const newStart = getDateTimeParts(this.testData.Consultation.verifyEditedStartDateAndTime);
-        const newEnd = getDateTimeParts(this.testData.Consultation.verifyEditedEndDateAndTime);
+        const [oldEndDate, oldEndTime] = this.testData.Consultation.verifyEndDateAndTime.split(', ');
+        const [oldHour, oldMinute] = oldEndTime.split(' ')[0].split('.');
+        const [newStartDate, newStartTime] = this.testData.Consultation.verifyEditedStartDateAndTime.split(', ');
+        const newHour = newStartTime.split('.')[0];
+        const [newEndDate, newEndTime] = this.testData.Consultation.verifyEditedEndDateAndTime.split(', ');
         const dateParagraph = this.page.locator('.consultation_dates p').nth(1);
-        const removedDateParts = dateParagraph.locator('del');
-        const addedDateParts = dateParagraph.locator('ins');
+        const removed = dateParagraph.locator('del');
+        const added = dateParagraph.locator('ins');
 
-        await this.testSteps.LogInfo(`Verifying old start date "${oldStart.date}" has been removed`);
-        await expect(removedDateParts.nth(0)).toHaveText(oldStart.date);
-        await this.testSteps.LogInfo(`Verifying new start date "${newStart.date}" has been added`);
-        await expect(addedDateParts.nth(0)).toHaveText(newStart.date);
-        await this.testSteps.LogInfo(`Verifying old start hour "${oldStart.hour}" has been removed`);
-        await expect(removedDateParts.nth(1)).toHaveText(oldStart.hour);
-        await this.testSteps.LogInfo(`Verifying new start hour "${newStart.hour}" has been added`);
-        await expect(addedDateParts.nth(1)).toHaveText(newStart.hour);
-
-        await this.testSteps.LogInfo(`Verifying "closes ${oldEnd.date}" has been removed from the consultation date`);
-        await expect(removedDateParts.nth(2)).toHaveText(`closes ${oldEnd.date}`);
-        await this.testSteps.LogInfo(`Verifying "closed ${newEnd.date}" has been added to the consultation date`);
-        await expect(addedDateParts.nth(2)).toHaveText(`closed ${newEnd.date}`);
-        await this.testSteps.LogInfo(`Verifying old end hour "${oldEnd.hour}" has been removed`);
-        await expect(removedDateParts.nth(3)).toHaveText(oldEnd.hour);
-        await this.testSteps.LogInfo(`Verifying new end hour "${newEnd.hour}" has been added`);
-        await expect(addedDateParts.nth(3)).toHaveText(newEnd.hour);
-        await this.testSteps.LogInfo(`Verifying old end minute "${oldEnd.minute}" has been removed`);
-        await expect(removedDateParts.nth(4)).toHaveText(oldEnd.minute);
-        await this.testSteps.LogInfo(`Verifying new end minute "${newEnd.minute}" has been added`);
-        await expect(addedDateParts.nth(4)).toHaveText(newEnd.minute);
+        await this.testSteps.LogInfo('Verifying the consultation date changes');
+        await expect(removed.nth(0)).toHaveText(oldEndDate);
+        await expect(added.nth(0)).toHaveText(`Consultation opened ${newStartDate}`);
+        await expect(removed.nth(1)).toHaveText(oldHour);
+        await expect(added.nth(1)).toHaveText(newHour);
+        await expect(removed.nth(2)).toHaveText(oldMinute);
+        await expect(added.nth(2)).toHaveText(`00 am and closed ${newEndDate}, ${newEndTime.replace('.', ':').split(' ')[0]}`);
+        await expect(dateParagraph).toContainText('pm.');
 
         //-------------------- SUMMARY --------------------
         const consultationSummary = this.page.locator('//p[contains(normalize-space(.), "consultation summary")]');

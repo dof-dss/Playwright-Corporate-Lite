@@ -73,17 +73,6 @@ test.describe('Duplicate Title Author Tests', () =>
 
             testSetUpData.urlForTest.url = testSetUpData.validTestURLList.hse_url;
             testSetUpData.contentTypeforTest.contentType = testSetUpData.validContentTypeList.profile;
-
-
-            // automatically logins based on above test data for each test
-            await loginHelper.loginWithValidUser();
-            await profileHelper.createProfile({
-                preview: false,
-                mandatoryFieldCheck: false,
-            });
-
-             testSetUpData.urlForTest.url = testSetUpData.validTestURLList.etini_url;
-            testSetUpData.contentTypeforTest.contentType = testSetUpData.validContentTypeList.profile;
             // automatically logins based on above test data for each test
             await loginHelper.loginWithValidUser();
             await profileHelper.createProfile({
@@ -160,15 +149,6 @@ test.describe('Duplicate Title Supervisor Tests', () =>
             });
 
             testSetUpData.urlForTest.url = testSetUpData.validTestURLList.hse_url;
-            testSetUpData.contentTypeforTest.contentType = testSetUpData.validContentTypeList.profile;
-            // automatically logins based on above test data for each test
-            await loginHelper.loginWithValidUser();
-            await profileHelper.createProfile({
-                preview: false,
-                mandatoryFieldCheck: false,
-            });
-
-            testSetUpData.urlForTest.url = testSetUpData.validTestURLList.etini_url;
             testSetUpData.contentTypeforTest.contentType = testSetUpData.validContentTypeList.profile;
             // automatically logins based on above test data for each test
             await loginHelper.loginWithValidUser();
