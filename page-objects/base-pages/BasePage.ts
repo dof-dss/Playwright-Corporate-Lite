@@ -8,8 +8,8 @@ export class BasePage
     private readonly testSteps: TestSteps;
 
     // locator 
-    private readonly contentLink: Locator;
-    private readonly adminToolbar: Locator;
+    readonly contentLink: Locator;
+    readonly adminToolbar: Locator;
 
     // constructor 
     constructor(

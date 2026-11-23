@@ -35,7 +35,7 @@ export class HomePage
         this.siteSearchField = page.locator('#edit-query');
         this.siteSearchButton = page.locator('#edit-submit-search');
         this.conultationNavBarLink = this.page.getByRole('link', { name: 'Latest Consultations' });
-        this.moreNewsLink = this.page.getByRole('link', { name: 'More news...', exact: true });
+        this.moreNewsLink = this.page.getByRole('link', { name: 'News', exact: true });
         this.publicationNavBarLink = this.page.getByRole('link', { name: 'Publications', exact: true });
     }
 
@@ -92,9 +92,9 @@ export class HomePage
     }
 
     // click more news link 
-    async clickMoreNewsLink()
+    async clickNewsLink()
     {
-        await this.testSteps.LogInfo('Clicking More news... link');
+        await this.testSteps.LogInfo('Clicking News nav bar link');
         await this.moreNewsLink.click();
     }
 
@@ -105,24 +105,23 @@ export class HomePage
         await this.publicationNavBarLink.click();
     }
 
-    // verify only 9 items can be on the quick links section of the home page, if more than 9 items are present, test will fail
-    async verifyQuickLinksMaxItems(maxItems: number = 9)
+    // verify only 8 items can be on the Links section of the home page, if more than 8 items are present, test will fail
+    async verifyLinksMaxItems(maxItems: number = 8)
     {
-        const quickLinksSection = this.page.locator('//section[contains(@class,"section-front--quick-links")]');
-        const quickLinksHeading = quickLinksSection.locator('//h2[normalize-space()="Quick links"]');
-        const quickLinksItems = quickLinksSection.locator('//h2[normalize-space()="Quick links"]/following-sibling::div[1]//ul[contains(@class,"list--hyphen-bullet")][1]/li');
+        const section = this.testData.Link.linkType;
+        const sectionHeading = this.page.getByRole('heading', { name: section, exact: true });
+        const sectionItems = this.page.locator(`//h2[normalize-space()="${section}"]/following-sibling::*//ul[contains(@class,"list--hyphen-bullet")][1]/li`);
 
-        await expect(quickLinksSection).toBeVisible();
-        await expect(quickLinksHeading).toBeVisible();
+        await expect(sectionHeading).toBeVisible();
 
-        const quickLinksCount = await quickLinksItems.count();
-        await this.testSteps.LogInfo(`Quick links contains ${quickLinksCount} item(s). Maximum allowed is ${maxItems}.`);
-        expect(quickLinksCount).toBeLessThanOrEqual(maxItems);
+        const sectionCount = await sectionItems.count();
+        await this.testSteps.LogInfo(`${section} contains ${sectionCount} item(s). Maximum allowed is ${maxItems}.`);
+        expect(sectionCount).toBeLessThanOrEqual(maxItems);
     }
 
     private getLinkLocator(sectionHeading: string, title: string): Locator
     {
-        return this.page.locator(`//h2[text()="${sectionHeading}"]/following-sibling::div//li/a[text()="${title}"]`);
+        return this.page.locator(`//h2[normalize-space()="${sectionHeading}"]/following-sibling::*//li/a[text()="${title}"]`);
     }
 
     async verifyLink({ edited }: ContentEdited)
@@ -130,43 +129,38 @@ export class HomePage
         const title = edited ? this.testData.Link.titleEdited : this.testData.Link.title;
         const linkType = edited ? this.testData.Link.linkTypeEdited : this.testData.Link.linkType;
         const sectionByLinkType: Record<string, string> = {
-            'Quick link': 'Quick links',
-            'Agency link': 'We work with these bodies',
-            'Corporate link': 'Corporate information',
+            'Data tools / Popular links': 'Data tools / Popular links',
+            'Popular statistics': 'Popular statistics',
         };
         const allSections = Object.values(sectionByLinkType);
         const expectedSection = sectionByLinkType[linkType];
         const moderationState = this.testSetUpData.moderationStateForTest.moderationState;
         const isPublished = moderationState === this.testSetUpData.validModerationStates.published;
-
-        expect(expectedSection, `Unsupported link type: ${linkType}`).toBeDefined();
+        const publishedLink = this.page.getByRole('link', { name: title });
 
         if (!isPublished)
         {
             await this.testSteps.LogInfo(`Verifying "${moderationState}" "${linkType}" "${title}" is not visible in any section`);
-
-            for (const section of allSections)
-            {
-                await expect(this.getLinkLocator(section, title)).toBeHidden();
-            }
-
+            await expect(publishedLink).toBeHidden();
             return;
         }
         else
         {
-            await this.testSteps.LogInfo(`Verifying Published "${linkType}" "${title}" is visible in the ${expectedSection} section and not visible in the other sections`);
-
-            for (const section of allSections)
+            await this.testSteps.LogInfo(`Verifying Published "${linkType}" "${title}" is visible on the homepage`);
+            await expect(publishedLink).toBeVisible();
+            if (expectedSection)
             {
-                const locator = this.getLinkLocator(section, title);
-
-                if (section === expectedSection)
+                for (const section of allSections)
                 {
-                    await expect(locator).toBeVisible();
-                }
-                else
-                {
-                    await expect(locator).toBeHidden();
+                    const sectionLink = this.getLinkLocator(section, title);
+                    if (section === expectedSection)
+                    {
+                        await expect(sectionLink).toBeVisible();
+                    }
+                    else
+                    {
+                        await expect(sectionLink).toBeHidden();
+                    }
                 }
             }
         }

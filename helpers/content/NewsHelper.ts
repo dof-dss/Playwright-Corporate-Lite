@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { BasePage } from '@poms/base-pages/BasePage';
 import { NewsCreatePage } from '@poms/content-pages/News/NewsCreatePage';
 import { NewsEditPage } from '@poms/content-pages/News/NewsEditPage';
@@ -17,6 +17,7 @@ export interface SaveOptions
     preview: boolean;
     mandatoryFieldCheck: boolean;
     existingRemoteVideoName?: string;
+    duplicateTitle?: boolean;
 };
 
 export interface EditSaveOptions
@@ -91,10 +92,12 @@ export class NewsHelper
         // complete news form using isolated test data 
         await this.newsCreatePage.fillNewsForm({
             newsTitle: this.testData.News.title,
-            newsType: this.testData.News.newsType,
             revisionLogMessage: this.testData.News.revisionlog,
-            newsIntoParagraph: this.testData.News.introductoryParagraph,
+            topics: this.testData.News.topics,
+            newsType: this.testData.News.newsType,
+            pubDate: this.testData.News.publicationDate,
             newsteaser: this.testData.News.teaser,
+            newsIntoParagraph: this.testData.News.introductoryParagraph,
             newsBodyField: this.testData.News.body,
             newsNoteToEditor: this.testData.News.notesToEditor,
             existingRemoteVideoName: options.existingRemoteVideoName,
@@ -102,6 +105,16 @@ export class NewsHelper
 
         //Selecting the save as type
         await this.createPage.chooseSaveAsType();
+
+        const duplicateTitleError = this.page.locator('#edit-title-0-value--errormessage').filter({
+            hasText: 'already exists'
+        });
+        if (options.duplicateTitle)
+        {
+            await this.createPage.clickSaveButton();
+            await expect(duplicateTitleError).toBeVisible();
+            return;
+        }
 
         // if options.preview is set to true, perform preview news method actions
         if (options.preview)
@@ -133,6 +146,7 @@ export class NewsHelper
         await this.newsEditPage.editNewsForm({
             newsTitle: this.testData.News.titleEdited,
             newsType: this.testData.News.newsTypeEdited,
+            topics: this.testData.News.topicsEdited,
             revisionLogMessage: this.testData.News.revisionlogEdited,
             newsIntoParagraph: this.testData.News.introductoryParagraphEdited,
             pubDate: this.testData.News.publicationDateEdited,
@@ -185,33 +199,6 @@ export class NewsHelper
             await this.newsNodePage.newsNodeURLCheck();
         }
     }
-
-    // create News method
-    async createNewsWithGallery()
-    {
-        // navigate to create news
-        await this.navigateTocreateNews();
-
-        // complete news form using isolated test data 
-        await this.newsCreatePage.fillNewsFormWithGallery({
-            newsTitle: this.testData.News.title,
-            newsType: this.testData.News.newsType,
-            revisionLogMessage: this.testData.News.revisionlog,
-            newsIntoParagraph: this.testData.News.introductoryParagraph,
-            newsteaser: this.testData.News.teaser,
-            newsBodyField: this.testData.Gallery.title,
-            newsNoteToEditor: this.testData.News.notesToEditor
-        });
-
-        //Selecting the save as type
-        await this.createPage.chooseSaveAsType();
-
-        // Save and verify
-        await this.createPage.clickSaveButton();
-        await this.newsNodePage.newsNodeURLCheck();
-        await this.newsNodePage.verifyNewsWithGallery();
-    }
-
 }
 
 

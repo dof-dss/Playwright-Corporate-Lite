@@ -8,25 +8,19 @@ import { TestSetUpData, TestData } from '../../../test-data/TestDataObject';
 import { PreviewPage } from '@poms/base-pages/PreviewPage';
 import { PublicationNodePage } from './PublicationNodePage';
 import { UploadMediaHelper } from '@helpers/general/UploadMediaHelper';
+import type { PublicationSaveData } from './PublicationCreatePage';
 
-export interface PublicationEditSaveData
+export interface PublicationEditSaveData extends PublicationSaveData
 {
-  publicationTitle: string;
   publicationPublishedDate: string;
   publicationLastUpdatedDate: string;
   publicationLastUpdatedTime: string;
-  revisionLogMessage: string;
-  publicationSummary: string;
-  pubType: string;
-  publicationBodyField: string;
 }
 
 export interface EditPubExternalSaveData
 {
   publicationTitle: string;
   revisionLogMessage: string;
-  publicationLastUpdatedDate: string;
-  publicationLastUpdatedTime: string;
   publicationSummary: string;
   pubType: string;
   publicationBodyField: string;
@@ -58,6 +52,7 @@ export class PublicationEditPage
   private readonly publicationSummaryField: Locator;
   private readonly publicationExternalLinkField: Locator;
   private readonly publicationLinkTextField: Locator;
+  private readonly publicationSeriesField: Locator;
 
   // constructor
   constructor(
@@ -89,6 +84,7 @@ export class PublicationEditPage
     this.publicationSummaryField = page.locator('#edit-field-summary-0-value');
     this.publicationExternalLinkField = page.locator('#edit-field-external-publication-0-uri');
     this.publicationLinkTextField = page.locator('#edit-field-external-publication-0-title');
+    this.publicationSeriesField = page.locator('#edit-field-publication-series');
   }
 
   // ------------------------ asserts ------------------------
@@ -145,20 +141,6 @@ export class PublicationEditPage
     await this.publicationDatePubField.fill(publicationPubDate);
   }
 
-  // enter consultation consultation Start date
-  async editPubLastUpdatedDate(publicationStartDate: string)
-  {
-    await this.testSteps.LogInfo(`Entering "${publicationStartDate}" into the Last Updated Date field`);
-    await this.pubLastUpdatedDate.fill(publicationStartDate);
-  }
-
-  // enter consultation consultation Start time
-  async editPubLastUpdatedTime(publicationStartTime: string)
-  {
-    await this.testSteps.LogInfo(`Entering "${publicationStartTime}" into the Last Updated Time field`);
-    await this.pubLastUpdatedTime.fill(publicationStartTime);
-  }
-
   // edit publication summary 
   async editPublicationSummary(publicationSummary: string)
   {
@@ -173,6 +155,32 @@ export class PublicationEditPage
     await this.pubTypeField.click();
     await this.testSteps.LogInfo(`Selecting "${pubType}" into the Publication Type`);
     await this.page.locator(`//ul/li[contains(text(), "${pubType}")]`).click();
+  }
+
+  async selectPublicationSeries(publicationSeries: string)
+  {
+    await this.testSteps.LogInfo(`Selecting "${publicationSeries}" from the Publication Series dropdown`);
+    await this.publicationSeriesField.selectOption({ label: publicationSeries });
+  }
+
+  async selectPublicationStatistics(statistics: string[])
+  {
+    for (const [level, statistic] of statistics.entries())
+    {
+      const statisticField = this.page.locator(`#edit-field-site-topics-shs-0-${level}`);
+      await this.testSteps.LogInfo(`Selecting statistic "${statistic}" at Statistics level ${level + 1}`);
+      await statisticField.selectOption({ label: statistic });
+    }
+  }
+
+  async selectPublicationResearch(research: string[])
+  {
+    for (const [level, researchItem] of research.entries())
+    {
+      const researchField = this.page.locator(`#edit-field-research-support-shs-0-${level}`);
+      await this.testSteps.LogInfo(`Selecting research "${researchItem}" at Research level ${level + 1}`);
+      await researchField.selectOption({ label: researchItem });
+    }
   }
 
   // enter publication summary 
@@ -192,23 +200,42 @@ export class PublicationEditPage
   // ------------------------ actions related to edit publication  ------------------------
 
   // fill in publication form elements - title summary topics etc
-  async editPublicationForm(data: PublicationEditSaveData)
+  async editPublicationForm(data: PublicationEditSaveData, publicationStrategy: 'standard' | 'externalLink' = 'standard')
   {
     await this.editPublicationPageURLCheck();
     await this.editPublicationTitle(data.publicationTitle);
-    await this.editPubPublishedDate(data.publicationPublishedDate);
-    await this.editPubLastUpdatedDate(data.publicationLastUpdatedDate);
-    await this.editPubLastUpdatedTime(data.publicationLastUpdatedTime);
     await this.createPages.enterRevisionLogMessage(data.revisionLogMessage);
+    await this.selectPublicationSeries(data.publicationSeries);
+    await this.selectPublicationStatistics(data.publicationStatistics);
+    await this.selectPublicationResearch(data.publicationResearch);
     await this.editPubType(data.pubType);
+    await this.editPubPublishedDate(data.publicationPublishedDate);
     await this.editPublicationSummary(data.publicationSummary);
-    await expect(this.page.locator('//input[contains(@id,"edit-field-publication-files-selection-0-remove-button")]')).toBeEnabled();
-    await this.page.locator('//input[contains(@id,"edit-field-publication-files-selection-0-remove-button")]').click();
     await this.ckeditor.enterCKEditorBody(data.publicationBodyField);
-    await this.uploadMediaHelper.uploadAttachmentWorkflow({
-      original: false,
-      edited: true
-    });
+
+    const removeAttachmentButton = this.page.locator('//input[contains(@id,"edit-field-attachment-selection-0-remove-button")]');
+    if (await removeAttachmentButton.count() > 0)
+    {
+      await expect(removeAttachmentButton).toBeEnabled();
+      await removeAttachmentButton.click();
+    }
+
+    if (data.existingDocumentName)
+    {
+      await this.uploadMediaHelper.selectExistingAttachmentFromLibrary(data.existingDocumentName);
+    }
+    else if (publicationStrategy === 'externalLink')
+    {
+      await this.editPublicationExternalLink(data.publicationExteralLink!);
+      await this.editPublicationLinkText(data.publicationLinkText!);
+    }
+    else
+    {
+      await this.uploadMediaHelper.uploadAttachmentWorkflow({
+        original: false,
+        edited: true
+      });
+    }
   }
 
   // fill in publication form elements - title summary topics etc
@@ -216,10 +243,9 @@ export class PublicationEditPage
   {
     await this.editPublicationPageURLCheck();
     await this.editPublicationTitle(data.publicationTitle);
-    await this.editPubLastUpdatedDate(data.publicationLastUpdatedDate);
-    await this.editPubLastUpdatedTime(data.publicationLastUpdatedTime);
     await this.createPages.enterRevisionLogMessage(data.revisionLogMessage);
     await this.editPubType(data.pubType);
+    await this.page.waitForTimeout(1000);
     await this.editPublicationSummary(data.publicationSummary);
     await this.ckeditor.enterCKEditorBody(data.publicationBodyField);
     await this.editPublicationExternalLink(data.publicationExteralLink);

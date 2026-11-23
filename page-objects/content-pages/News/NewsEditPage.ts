@@ -14,6 +14,7 @@ export interface NewsEditSaveData
   newsTitle: string;
   revisionLogMessage: string;
   newsType: string;
+  topics: string[];
   newsIntoParagraph: string;
   pubDate: string;
   newsteaser: string;
@@ -109,6 +110,12 @@ export class NewsEditPage
     await this.newsTypeField.selectOption(newsType);
   }
 
+  // edit top-level news topics
+  async editNewsTopics(topics: string[])
+  {
+    await this.createPages.editTopics(topics);
+  }
+
   // enter news summary 
   async editNewsIntroParagraph(introParagraph: string)
   {
@@ -149,13 +156,11 @@ export class NewsEditPage
     await this.editNewsPageURLCheck();
     await this.editNewsTitle(data.newsTitle);
     await this.createPages.enterRevisionLogMessage(data.revisionLogMessage);
+    await this.editNewsTopics(data.topics);
     await this.editNewsType(data.newsType);
     await this.editNewsIntroParagraph(data.newsIntoParagraph);
     await this.editPublicationDate(data.pubDate);
     await this.editNewsTeaser(data.newsteaser);
-    await this.page.waitForTimeout(1000);
-    await expect(this.page.locator('//input[contains(@id,"edit-field-video-selection-0-remove-button")]')).toBeEnabled();
-    await this.page.locator('//input[contains(@id,"edit-field-video-selection-0-remove-button")]').click();
     await this.page.waitForTimeout(1000);
     await expect(this.page.locator('//input[contains(@id,"edit-field-photo-selection-0-remove-button")]')).toBeEnabled();
     await this.page.locator('//input[contains(@id,"edit-field-photo-selection-0-remove-button")]').click();
@@ -165,10 +170,6 @@ export class NewsEditPage
       edited: true
     });
     await this.page.waitForTimeout(1000);
-    await this.uploadMediaHelper.uploadRemoteVideo({
-      original: false,
-      edited: true
-    });
     await this.ckeditor.enterCKEditorBody(data.newsBodyField);
     await this.ckeditor.enterNoteToEditors(data.newsNoteToEditor);
   }

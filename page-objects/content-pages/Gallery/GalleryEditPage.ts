@@ -13,6 +13,8 @@ export interface GalleryEditSaveData
 {
   galleryTitle: string;
   revisionLogMessage: string;
+   areaOfExpertise: string;
+  areaOfExpertise2: string;
   gallerySummary: string;
   galleryBodyField: string;
 }

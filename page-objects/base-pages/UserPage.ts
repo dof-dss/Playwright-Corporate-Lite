@@ -27,8 +27,18 @@ export class UserPage
             `${this.testSetUpData.urlForTest.url}/users/${formattedusername}?check_logged_in=1`,
             `${this.testSetUpData.urlForTest.url}/users/${formattedusername}-0?check_logged_in=1`
         ];
-        await expect(this.page).toHaveURL(url => expectedURLs.includes(url.href));
+        await expect(this.page).toHaveURL(url =>
+            expectedURLs.includes(url.href) || this.isNumericUserProfileURL(url)
+        );
     }
 
+
+    private isNumericUserProfileURL(url: URL): boolean
+    {
+        const siteURL = new URL(this.testSetUpData.urlForTest.url);
+        return url.origin === siteURL.origin &&
+            /^\/user\/\d{2}$/.test(url.pathname) &&
+            url.search === '?check_logged_in=1';
+    }
 
 }

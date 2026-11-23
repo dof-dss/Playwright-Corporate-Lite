@@ -14,6 +14,7 @@ import { DeleteRevisionsPage } from '@poms/base-pages/DeleteRevisionsPage';
 import { RevertRevisionsPage } from '@poms/base-pages/RevertRevisionsPage';
 import { VerificationHelper } from './VerificationHelper';
 import { LinkComparePage } from '@poms/content-pages/Link/LinkComparePage';
+import { PageComparePage } from '@poms/content-pages/Page/PageComparePage';
 
 export interface DeleteRevisionsOptions
 {
@@ -43,6 +44,7 @@ export class RevisionHelper
     readonly newsComparePage: NewsComparePage;
     readonly publicationComparePage: PublicationComparePage;
     readonly profileComparePage: ProfileComparePage;
+    readonly pageComparePage: PageComparePage;
     readonly deleteRevisionsPage: DeleteRevisionsPage;
     readonly revertRevisionsPage: RevertRevisionsPage;
 
@@ -66,6 +68,7 @@ export class RevisionHelper
         this.newsComparePage = new NewsComparePage(page, this.testSetUpData, this.testdata);
         this.publicationComparePage = new PublicationComparePage(page, this.testSetUpData, this.testdata);
         this.profileComparePage = new ProfileComparePage(page, this.testSetUpData, this.testdata);
+        this.pageComparePage = new PageComparePage(page, this.testSetUpData, this.testdata);
         this.deleteRevisionsPage = new DeleteRevisionsPage(page);
         this.revertRevisionsPage = new RevertRevisionsPage(page);
     }
@@ -119,16 +122,68 @@ export class RevisionHelper
                 await this.profileComparePage.verifyCompareProfile();
                 break;
             }
+            case this.testSetUpData.validContentTypeList.page: {
+                await this.pageComparePage.verifyComparePage();
+                break;
+            }
         }
     }
 
-    async verifyThreeRevisionsDisplayed()
+    async verifyRevisionsDisplayed()
     {
         await this.moderationSideBar.openModerationSideBar();
         await this.moderationSideBar.clickShowRevisionsButton();
         await this.revisionPage.revisionPageURLCheck();
 
-        await expect(this.page.locator('table tbody tr')).toHaveCount(3);
+        const rows = await this.page.locator('table tbody tr').all();
+        console.log(`Total revision rows: ${rows.length}`);
+
+        await this.VerifyRevisionNumbering();
+    }
+
+    async VerifyRevisionNumbering()
+    {
+        const revisionRows = this.page.locator('table[data-drupal-selector="edit-node-revisions-table"] tbody tr');
+        const revisionsLabelPattern = /^Revisions\s*\(\s*(\d+)\s*\)$/;
+        const revisionsLabel = this.page.getByText(revisionsLabelPattern);
+        await expect(revisionsLabel).toBeVisible();
+
+        const labelText = (await revisionsLabel.innerText()).trim();
+        const countMatch = labelText.match(revisionsLabelPattern);
+        if (!countMatch)
+        {
+            throw new Error(`Could not read the revision count from "${labelText}"`);
+        }
+
+        const navRevisionCount = Number(countMatch[1]);
+        await expect(revisionRows, `Revision row count should match "${labelText}" in the navigation`).toHaveCount(navRevisionCount);
+        const rows = await revisionRows.all();
+        console.log(`Revision number in nav bar is (${navRevisionCount}) and rows is (${rows.length})`);
+
+        console.log("Revision row Verification");
+
+        let previousNumber: number | null = null;
+
+        // Process each row
+        for (let i = 0; i < rows.length; i++)
+        {
+            // Get the first td in this row which contains the revision number
+            const revisionNumberTd = await rows[i].locator('td').first();
+            const revisionText = await revisionNumberTd.textContent();
+            const currentNumber = parseInt(revisionText?.trim() || '0', 10);
+
+            const revisionNumber = rows.length - i;
+            console.log(`Revision number ${revisionNumber}`);
+            console.log(`${currentNumber}`);
+
+            // Verify that each row is 1 less than the previous row
+            if (previousNumber !== null)
+            {
+                expect(currentNumber).toBe(previousNumber - 1);
+            }
+
+            previousNumber = currentNumber;
+        }
     }
 
     // select Delete Revision from Revisons 
@@ -249,6 +304,10 @@ export class RevisionHelper
                     break;
                 case this.testSetUpData.validContentTypeList.profile: {
                     this.testSetUpData.contentTitleforTest.contentTitle = this.testdata.Profile.title;
+                }
+                    break;
+                case this.testSetUpData.validContentTypeList.page: {
+                    this.testSetUpData.contentTitleforTest.contentTitle = this.testdata.Page.title;
                 }
                     break;
             }

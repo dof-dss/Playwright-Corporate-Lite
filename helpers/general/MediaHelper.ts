@@ -401,37 +401,40 @@ export class MediaHelper
         }
     }
 
-    async deleteMediaLibraryBulkOptionMultiple(contentTitle: string, options: DeleteOptions)
+async deleteMediaLibraryBulkOptionMultiple(contentTitle: string, options: DeleteOptions)
     {
         const searchTitle = contentTitle.slice(0, -11).trimEnd();
-
+ 
         await this.mediaPage.clickTableView();
         await this.mediaPage.enterContentTitleInSearch(searchTitle);
         await this.mediaPage.clickSearchButton();
-
         await this.mediaPage.deleteMultipleMediaFromBulkOptions();
-        // // click edit content
-        // await this.mediaPage.clickGridView();
-        // await this.mediaPage.enterContentTitleInSearch(contentTitle);
-        // await this.mediaPage.clickSearchButton();
-
-        //await this.mediaPage.chooseDeleteMediaFromBulkOptions(contentTitle);
-
+ 
         if (options.delete === true)
         {
             await this.deleteMediaItemPage.clickDelete();
             await this.deleteMediaItemPage.deleteMediaItemConfirmationCheck();
-            //await this.contentPage.confirmContentDoesNotExist(this.testSetUpData.contentTitleforTest.contentTitle);
-            // test moderation state updated to deleted 
+ 
+            // test moderation state updated to deleted
             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.deleted;
-
-            await this.page.locator('form#views-form-media-library-default-page').getByText('No media available.', { exact: true }).waitFor({ state: 'visible' });
-
+ 
+            if (this.testSetUpData.userForTest.username === this.testSetUpData.validUserList.supervisor_username)
+            {
+                await this.page.locator('form#views-form-media-library-default-page').getByText('No media available.', { exact: true }).waitFor({ state: 'visible' });
+            }
+            else
+            {
+                const mediaLibraryForm = this.page.locator('form#views-form-media-library-default-page');
+                await mediaLibraryForm.getByText('No media available.', { exact: true })
+                    .or(mediaLibraryForm.getByRole('link', { name: 'Edit', exact: true }))
+                    .first()
+                    .waitFor({ state: 'hidden' });
+            }
+ 
         }
         else if (options.cancel === true)
         {
             await this.deleteMediaItemPage.clickCancel();
-            //await this.applicationNodePage.applicationNodeURLCheck();
         }
     }
 

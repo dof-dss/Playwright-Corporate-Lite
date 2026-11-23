@@ -44,15 +44,32 @@ export class NewsNodePage
     //verify news method
     async verifyNews(_: VerifyOptions)
     {
+        const publishedDate = new Date(`${this.testData.News.publicationDate}T00:00:00`).toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        });
+
         // verify title
         await this.testSteps.LogInfo(`Verifying title "${this.testData.News.title}" is visible`);
         await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.News.title);
+
+        // verify publication date
+        await this.testSteps.LogInfo(`Verifying Date published "${publishedDate}" is visible`);
+        await expect(this.page.locator('//span[contains(text(),"Date published: ")]//following-sibling::span/time'))
+            .toHaveText(publishedDate);
+
+        // verify selected topic
+        const selectedTopic = this.testData.News.topics[this.testData.News.topics.length - 1];
+        await this.testSteps.LogInfo(`Verifying topic "${selectedTopic}" is visible`);
+        await expect(this.page.getByText('Topics:', { exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: selectedTopic, exact: true })).toBeVisible();
 
         // verify intro paragraph
         await this.testSteps.LogInfo(`Verifying introductory Paragraph "${this.testData.News.introductoryParagraph}" is visible`);
         await expect(this.page.getByText(this.testData.News.introductoryParagraph)).toBeVisible();
 
-        // verify image is uploaded and displayed (does not verify if it is correct image just that it is on page)
+        //verify image is uploaded and displayed (does not verify if it is correct image just that it is on page)
         await this.testSteps.LogInfo('Verifying image is visible');
         await expect(this.page.locator('//figure/img')).toBeVisible();
 
@@ -65,30 +82,41 @@ export class NewsNodePage
         await expect(this.page.getByText(this.testData.News.notesToEditor)).toBeVisible();
     }
 
-    //verify news method
-    async verifyNewsWithGallery()
-    {
-        // verify title
-        await this.testSteps.LogInfo(`Verifying title "${this.testData.News.title}" is visible`);
-        await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.News.title);
-        // verify body field
-        await this.testSteps.LogInfo(`Verifying Body "${this.testData.Gallery.title}" is visible`);
-        await expect(this.page.getByText(this.testData.Gallery.title)).toBeVisible();
-    }
-
 
     //verify edited news method
     async verifyEditedNews(_: VerifyOptions)
     {
+        const publishedDate = new Date(`${this.testData.News.publicationDateEdited}T00:00:00`).toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        });
+
         // verify title
         await this.testSteps.LogInfo(`Verifying title "${this.testData.News.titleEdited}" is visible`);
         await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.News.titleEdited);
+
+        // verify publication date
+        await this.testSteps.LogInfo(`Verifying Date published "${publishedDate}" is visible`);
+        await expect(this.page.locator('//span[contains(text(),"Date published: ")]//following-sibling::span/time'))
+            .toHaveText(publishedDate);
+
+        //verify selected topics
+        await expect(this.page.getByText('Topics:', { exact: true })).toBeVisible();
+        const uniqueTopics = new Set(this.testData.News.topicsEdited);
+        for (const topic of uniqueTopics)
+        {
+            await this.testSteps.LogInfo(`Verifying topic "${topic}" is visible`);
+            const topicLink = this.page.getByRole('link', { name: topic, exact: true });
+            await expect(topicLink).toHaveCount(1);
+            await expect(topicLink).toBeVisible();
+        }
 
         await this.testSteps.LogInfo(`Verifying introductory Paragraph "${this.testData.News.introductoryParagraphEdited}" is visible`);
         await expect(this.page.getByText(this.testData.News.introductoryParagraphEdited)).toBeVisible();
 
         await this.testSteps.LogInfo('Verifying image is visible');
-        await expect(this.page.locator('//figure/img')).toBeVisible();
+        await expect(this.page.locator('//div/img')).toBeVisible();
 
         await this.testSteps.LogInfo(`Verifying Body "${this.testData.News.bodyEdited}" is visible`);
         await expect(this.page.getByText(this.testData.News.bodyEdited)).toBeVisible();

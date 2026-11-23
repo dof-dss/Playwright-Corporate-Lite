@@ -44,50 +44,114 @@ export class PublicationNodePage
     //verify publication method
     async verifyPublication(_: VerifyOptions)
     {
-        // verify title
-        await this.testSteps.LogInfo(`Verifying title "${this.testData.Publication.title}" is visible`);
-        await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.Publication.title);
+        const publication = this.testData.Publication;
+        const statistics = publication.statistics[publication.statistics.length - 1];
+        const research = publication.research[publication.research.length - 1];
+        const attachmentName = this.testData.Media.attachmentName;
 
-        // verify publication published date
-        await this.testSteps.LogInfo(`Verifying Date Published "${this.testData.Publication.verifyDatePublished}" is visible`);
-        await expect(this.page.locator(`//span[contains(text(),"Date published: ")]//following-sibling::span/time[contains(text(),"${this.testData.Publication.verifyDatePublished}")]`)).toBeVisible();
+        await this.testSteps.LogInfo(`Verifying title "${publication.title}"`);
+        await expect(this.page.getByRole('heading', {
+            level: 1, exact: true
+        })).toHaveText(publication.title);
 
-        // verify publication last updated text is not present
-        await this.testSteps.LogInfo(`Verifying Last updated "${this.testData.Publication.verifyLastUpdatedDate}" is NOT visible`);
-        await expect(this.page.locator(`//span[contains(text(),"Last updated: ")]//following-sibling::span/time[contains(text(),"${this.testData.Publication.verifyLastUpdatedDate}")]`)).toBeHidden();
+        await this.testSteps.LogInfo(`Verifying Date published "${publication.verifyDatePublished}"`);
+        const publishedDate = this.page.locator(
+            '//span[contains(text(),"Date published:")]//following-sibling::span/time'
+        );
+        await expect(publishedDate).toBeVisible();
+        await expect(publishedDate).toHaveText(publication.verifyDatePublished);
 
-        // verify summary
-        await this.testSteps.LogInfo(`Verifying Summary "${this.testData.Publication.summary}" is visible`);
-        await expect(this.page.getByText(this.testData.Publication.summary)).toBeVisible();
+        await this.testSteps.LogInfo('Verifying Last updated is not visible');
+        await expect(this.page.getByText('Last updated:', { exact: true })).toBeHidden();
 
-        // verify body field
-        await this.testSteps.LogInfo(`Verifying Body "${this.testData.Publication.body}" is visible`);
-        await expect(this.page.getByText(this.testData.Publication.body)).toBeVisible();
+        await this.testSteps.LogInfo(`Verifying Statistics "${statistics}"`);
+        await expect(this.page.getByText('Statistics:', { exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', {
+            name: statistics, exact: true
+        })).toBeVisible();
+
+        await this.testSteps.LogInfo(`Verifying Research and support "${research}"`);
+        await expect(this.page.getByText('Research and support:', { exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', {
+            name: research, exact: true
+        })).toBeVisible();
+
+        await this.testSteps.LogInfo(`Verifying Summary "${publication.summary}"`);
+        await expect(this.page.getByText(publication.summary, { exact: true })).toBeVisible();
+
+        await this.testSteps.LogInfo(`Verifying Body "${publication.body}"`);
+        await expect(this.page.getByText(publication.body, { exact: true })).toBeVisible();
+
+        await this.testSteps.LogInfo(`Verifying Documents and attachment "${attachmentName}"`);
+        await expect(this.page.getByRole('heading', {
+            name: 'Documents', exact: true
+        })).toBeVisible();
+        const attachmentLink = this.page.locator('a.file-link.file--ico__pdf')
+            .filter({ hasText: attachmentName });
+        await expect(attachmentLink).toBeVisible();
+
+        await this.testSteps.LogInfo('Verifying PDF format and file size');
+        const attachmentMetadata = attachmentLink.locator('span.meta');
+        await expect(attachmentMetadata).toBeVisible();
+        await expect(attachmentMetadata).toHaveText(/^Adobe PDF \(\d+(?:\.\d+)? KB\)$/);
+
+        await this.testSteps.LogInfo('Verifying Help viewing documents link');
+        await expect(this.page.getByRole('link', {
+            name: 'Help viewing documents', exact: true
+        })).toBeVisible();
     }
 
 
     //verify edited publication method
     async verifyEditedPublication(_: VerifyOptions)
     {
-        // verify title
-        await this.testSteps.LogInfo(`Verifying title "${this.testData.Publication.titleEdited}" is visible`);
-        await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.Publication.titleEdited);
+        const publication = this.testData.Publication;
+        const statistics = publication.statisticsEdited[publication.statisticsEdited.length - 1];
+        const research = publication.researchEdited[publication.researchEdited.length - 1];
+        const attachmentName = this.testData.Media.attachmentNameEdited;
+        const publishedDateText = new Date(`${publication.datePublished}T00:00:00`).toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        });
 
-        // verify publication published date
-        await this.testSteps.LogInfo('Verifying Date Published "31 December 2025" is visible');
-        await expect(this.page.locator('//span[contains(text(),"Date published")]//following-sibling::span/time[contains(text(),"31 December 2025")]')).toBeVisible();
+        await this.testSteps.LogInfo(`Verifying title "${publication.titleEdited}"`);
+        await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(publication.titleEdited);
 
-        // verify publication last updated date
-        await this.testSteps.LogInfo(`Verifying Last updated "${this.testData.Publication.verifyLastUpdatedDate}" is visible`);
-        await expect(this.page.locator(`//span[contains(text(),"Last updated: ")]//following-sibling::span/time[contains(text(),"${this.testData.Publication.verifyLastUpdatedDate}")]`)).toBeVisible();
+        await this.testSteps.LogInfo(`Verifying Date published "${publishedDateText}"`);
+        const publishedDate = this.page.locator(
+            '//span[contains(text(),"Date published:")]//following-sibling::span/time'
+        );
+        await expect(publishedDate).toBeVisible();
+        await expect(publishedDate).toHaveText(publishedDateText);
 
-        // verify summary
-        await this.testSteps.LogInfo(`Verifying Summary "${this.testData.Publication.summaryEdited}" is visible`);
-        await expect(this.page.getByText(this.testData.Publication.summaryEdited)).toBeVisible();
+        await this.testSteps.LogInfo(`Verifying Statistics "${statistics}"`);
+        await expect(this.page.getByText('Statistics:', { exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: statistics, exact: true })).toBeVisible();
 
-        // verify body field
-        await this.testSteps.LogInfo(`Verifying Body "${this.testData.Publication.bodyEdited}" is visible`);
-        await expect(this.page.getByText(this.testData.Publication.bodyEdited)).toBeVisible();
+        await this.testSteps.LogInfo(`Verifying Research and support "${research}"`);
+        await expect(this.page.getByText('Research and support:', { exact: true })).toBeVisible();
+        await expect(this.page.getByRole('link', { name: research, exact: true })).toBeVisible();
+
+        await this.testSteps.LogInfo(`Verifying Summary "${publication.summaryEdited}"`);
+        await expect(this.page.getByText(publication.summaryEdited, { exact: true })).toBeVisible();
+
+        await this.testSteps.LogInfo(`Verifying Body "${publication.bodyEdited}"`);
+        await expect(this.page.getByText(publication.bodyEdited, { exact: true })).toBeVisible();
+
+        await this.testSteps.LogInfo(`Verifying Documents and attachment "${attachmentName}"`);
+        await expect(this.page.getByRole('heading', { name: 'Documents', exact: true })).toBeVisible();
+        const attachmentLink = this.page.locator('a.file-link.file--ico__pdf')
+            .filter({ hasText: attachmentName });
+        await expect(attachmentLink).toBeVisible();
+
+        await this.testSteps.LogInfo('Verifying PDF format and file size');
+        const attachmentMetadata = attachmentLink.locator('span.meta');
+        await expect(attachmentMetadata).toBeVisible();
+        await expect(attachmentMetadata).toHaveText(/^Adobe PDF \(\d+(?:\.\d+)? KB\)$/);
+
+        await this.testSteps.LogInfo('Verifying Help viewing documents link');
+        await expect(this.page.getByRole('link', { name: 'Help viewing documents', exact: true })).toBeVisible();
     }
 
     //verify publication method

@@ -1,11 +1,14 @@
 import { Page, Locator } from '@playwright/test';
 import { TestSteps } from '@poms/base-pages/TestSteps';
 import { expect } from '@playwright/test';
-import { UserPage } from '../../base-pages/UserPage';
 import { CreatePages } from '../../base-pages/CreatePages';
 import { TestSetUpData, TestData } from '../../../test-data/TestDataObject';
-import { PreviewPage } from '@poms/base-pages/PreviewPage';
-import { LinkNodePage } from './LinkNodePage';
+
+export const LINK_TYPES = [
+  //'Corporate link',
+  'Data tools / Popular links',
+  'Popular statistics',
+] as const;
 
 export interface LinkSaveData
 {
@@ -13,7 +16,7 @@ export interface LinkSaveData
   revisionLogMessage: string;
   linkURL: string;
   linkType: string;
-  linkLanguage: string;
+  topics: string[];
 }
 
 export class LinkCreatePage
@@ -22,16 +25,12 @@ export class LinkCreatePage
   private readonly testSteps: TestSteps;
 
   // pages
-  private readonly userPage: UserPage;
   private readonly createPages: CreatePages;
-  private readonly previewPage: PreviewPage;
-  private readonly linkNodePage: LinkNodePage;
 
   // locators - using ARIA roles first, then unique IDs, then XPaths
   private readonly linkTitleField: Locator;
   private readonly linkURLField: Locator;
   private readonly linkTypeSelect: Locator;
-  private readonly linkLanguageSelect: Locator;
 
   // error messages
   private readonly titleFieldIsRequired: Locator;
@@ -50,20 +49,16 @@ export class LinkCreatePage
     this.testSteps = new TestSteps();
 
     // imported pages
-    this.userPage = new UserPage(page, this.testSetUpData);
     this.createPages = new CreatePages(page, this.testSetUpData, this.testData);
-    this.previewPage = new PreviewPage(page);
-    this.linkNodePage = new LinkNodePage(page, this.testSetUpData, this.testData);
 
     // locators - prioritizing ARIA roles, then unique IDs, then XPaths
     this.linkTitleField = page.locator('#edit-title-0-value');
     this.linkURLField = page.locator('#edit-field-link-url-0-uri');
     this.linkTypeSelect = page.locator('#edit-field-link-type');
-    this.linkLanguageSelect = page.locator('#edit-field-file-language');
 
     // Error messages
-    this.titleFieldIsRequired = page.getByText("Title field is required.");
-    this.linkURLFieldIsRequired = page.getByText("Link field is required.");
+    this.titleFieldIsRequired = page.getByText("Link text field is required.");
+    this.linkURLFieldIsRequired = page.getByText("Link URL field is required.");
     this.linkTypeFieldIsRequired = page.getByText("Link type field is required.");
   }
 
@@ -89,7 +84,7 @@ export class LinkCreatePage
   // enter link title 
   async enterLinkTitle(linkTitle: string)
   {
-    await this.testSteps.LogInfo(`Entering "${linkTitle}" into the Title field`);
+    await this.testSteps.LogInfo(`Entering "${linkTitle}" into the Link text field`);
     await this.linkTitleField.fill(linkTitle);
   }
 
@@ -98,8 +93,9 @@ export class LinkCreatePage
   {
     await this.testSteps.LogInfo(`Entering "${linkURL}" into the Link URL field and selecting matching item`);
     await this.linkURLField.pressSequentially(linkURL);
-    await expect(this.page.getByText(linkURL, { exact: false }).first()).toBeVisible();
-    await this.page.getByText(linkURL, { exact: false }).first().click();
+    const matchingSuggestion = this.page.getByText(linkURL, { exact: true });
+    await expect(matchingSuggestion).toBeVisible();
+    await matchingSuggestion.click();
   }
 
   // select link type
@@ -109,20 +105,13 @@ export class LinkCreatePage
     await this.linkTypeSelect.selectOption({ label: linkType });
   }
 
-  // select link language
-  async selectLinkLanguage(linkLanguage: string)
-  {
-    await this.testSteps.LogInfo(`Selecting "${linkLanguage}" from Link Language dropdown`);
-    await this.linkLanguageSelect.selectOption({ label: linkLanguage });
-  }
-
   // Mandatory Field Check link
   async mandatoryFieldCheck()
   {
     await this.testSteps.LogInfo('Performing mandatory field check');
     await this.testSteps.LogInfo('Clicking save button');
     await this.createPages.clickSaveButton();
-    await this.testSteps.LogInfo('Verifying Title field error message appears');
+    await this.testSteps.LogInfo('Verifying Link text field error message appears');
     await expect(this.titleFieldIsRequired).toBeVisible();
     await this.testSteps.LogInfo('Verifying Link URL field error message appears');
     await expect(this.linkURLFieldIsRequired).toBeVisible();
@@ -130,7 +119,7 @@ export class LinkCreatePage
     await expect(this.linkTypeFieldIsRequired).toBeVisible();
   }
 
-  // fill in link form elements - title URL type language etc
+  // fill in link form fields
   async fillLinkForm(data: LinkSaveData)
   {
     await this.createLinkPageURLCheck();
@@ -138,6 +127,6 @@ export class LinkCreatePage
     await this.createPages.enterRevisionLogMessage(data.revisionLogMessage);
     await this.enterLinkURL(data.linkURL);
     await this.selectLinkType(data.linkType);
-    await this.selectLinkLanguage(data.linkLanguage);
+    await this.createPages.selectTopics(data.topics);
   }
 }

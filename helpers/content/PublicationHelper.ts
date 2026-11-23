@@ -22,6 +22,7 @@ export interface SaveOptions
 export interface EditSaveOptions
 {
     preview: boolean;
+    existingDocumentName?: string;
 };
 
 export interface DeleteOptions
@@ -93,8 +94,11 @@ export class PublicationHelper
             publicationTitle: this.testData.Publication.title,
             revisionLogMessage: this.testData.Publication.revisionlog,
             pubType: this.testData.Publication.publicationType,
+            publicationSeries: this.testData.Publication.publicationSeries,
             publicationSummary: this.testData.Publication.summary,
             publicationBodyField: this.testData.Publication.body,
+            publicationStatistics: this.testData.Publication.statistics,
+            publicationResearch: this.testData.Publication.research,
             existingDocumentName: options.existingDocumentName,
         });
 
@@ -136,8 +140,12 @@ export class PublicationHelper
             publicationLastUpdatedDate: this.testData.Publication.lastUpdatedDateEdited,
             publicationLastUpdatedTime: this.testData.Publication.lastUpdatedTimeEdited,
             pubType: this.testData.Publication.publicationTypeEdited,
+            publicationSeries: this.testData.Publication.publicationSeriesEdited,
             publicationSummary: this.testData.Publication.summaryEdited,
             publicationBodyField: this.testData.Publication.bodyEdited,
+            publicationStatistics: this.testData.Publication.statisticsEdited,
+            publicationResearch: this.testData.Publication.researchEdited,
+            existingDocumentName: options.existingDocumentName,
         });
 
         // setting test set up data to new title
@@ -197,8 +205,11 @@ export class PublicationHelper
             publicationTitle: this.testData.Publication.title,
             revisionLogMessage: this.testData.Publication.revisionlog,
             pubType: this.testData.Publication.publicationType,
+            publicationSeries: this.testData.Publication.publicationSeries,
             publicationSummary: this.testData.Publication.summary,
             publicationBodyField: this.testData.Publication.body,
+            publicationStatistics: this.testData.Publication.statistics,
+            publicationResearch: this.testData.Publication.research,
             publicationExteralLink: this.testData.Publication.externalPublication,
             publicationLinkText: this.testData.Publication.linkTextPubllication
         });
@@ -227,8 +238,6 @@ export class PublicationHelper
         await this.publicationEditPage.editExternalLinkPublicationForm({
             publicationTitle: this.testData.Publication.titleEdited,
             revisionLogMessage: this.testData.Publication.revisionlog,
-            publicationLastUpdatedDate: this.testData.Publication.lastUpdatedDateEdited,
-            publicationLastUpdatedTime: this.testData.Publication.lastUpdatedTimeEdited,
             pubType: this.testData.Publication.publicationTypeEdited,
             publicationSummary: this.testData.Publication.summaryEdited,
             publicationBodyField: this.testData.Publication.bodyEdited,

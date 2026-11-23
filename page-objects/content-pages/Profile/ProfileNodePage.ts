@@ -33,9 +33,6 @@ export class ProfileNodePage
     await this.testSteps.LogInfo(`Verifying title "${this.testData.Profile.title}" is visible`);
     await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.Profile.title);
 
-    // await this.testSteps.LogInfo(`Verifying Department "${this.testData.Profile.department}" is visible`);
-    // await expect(this.page.getByText(this.testData.Profile.department)).toBeVisible();
-
     await this.testSteps.LogInfo(`Verifying Summary "${this.testData.Profile.summary}" is visible`);
     await expect(this.page.getByText(this.testData.Profile.summary)).toBeVisible();
 
@@ -51,9 +48,6 @@ export class ProfileNodePage
     await this.testSteps.LogInfo(`Verifying title "${this.testData.Profile.titleEdited}" is visible`);
     await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.Profile.titleEdited);
 
-    // await this.testSteps.LogInfo(`Verifying Department "${this.testData.Profile.departmentEdited}" is visible`);
-    // await expect(this.page.getByText(this.testData.Profile.departmentEdited)).toBeVisible();
-
     await this.testSteps.LogInfo(`Verifying Summary "${this.testData.Profile.summaryEdited}" is visible`);
     await expect(this.page.getByText(this.testData.Profile.summaryEdited)).toBeVisible();
 
@@ -61,7 +55,7 @@ export class ProfileNodePage
     await expect(this.page.getByText(this.testData.Profile.bodyEdited)).toBeVisible();
 
     await this.testSteps.LogInfo('Verifying profile image is visible');
-    await expect(this.page.locator(this.profileImageSelector)).toBeVisible();
+    await expect(this.page.locator(this.profileImageSelector).first()).toBeVisible();
 
   }
 }

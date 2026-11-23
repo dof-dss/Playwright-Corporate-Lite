@@ -13,6 +13,8 @@ export interface GallerySaveData
 {
   galleryTitle: string;
   revisionLogMessage: string;
+  areaOfExpertise: string;
+  areaOfExpertise2: string;
   gallerySummary: string;
   galleryBodyField: string;
   // when set, selects this already uploaded Media Library image instead of uploading new gallery images

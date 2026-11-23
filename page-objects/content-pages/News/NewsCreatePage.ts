@@ -14,6 +14,8 @@ export interface NewsSaveData
   newsTitle: string;
   revisionLogMessage: string;
   newsType: string;
+  topics: string[];
+  pubDate: string;
   newsIntoParagraph: string;
   newsteaser: string;
   newsBodyField: string;
@@ -37,6 +39,7 @@ export class NewsCreatePage
   // locators
   private readonly newsTitleField: Locator;
   private readonly newsTypeField: Locator;
+  private readonly newsPublicationDate: Locator;
   private readonly newsIntroParagraphField: Locator;
   private readonly newsTeaserField: Locator;
 
@@ -67,6 +70,7 @@ export class NewsCreatePage
     // locators
     this.newsTitleField = page.locator('#edit-title-0-value');
     this.newsTypeField = page.locator('#edit-field-news-type');
+    this.newsPublicationDate = page.locator('#edit-field-published-date-0-value-date');
     this.newsIntroParagraphField = page.locator('#edit-field-summary-0-value');
     this.newsTeaserField = page.locator('#edit-field-teaser-0-value');
 
@@ -109,6 +113,19 @@ export class NewsCreatePage
     await this.newsTypeField.selectOption(newsType);
   }
 
+  // select news topic
+  async selectNewsTopic(topics: string[])
+  {
+    await this.createPages.selectTopics(topics);
+  }
+
+  // enter publication date
+  async enterPublicationDate(pubDate: string)
+  {
+    await this.testSteps.LogInfo(`Entering "${pubDate}" into the Publication Date field`);
+    await this.newsPublicationDate.fill(pubDate);
+  }
+
   // enter news summary 
   async enterNewsIntroParagraph(introParagraph: string)
   {
@@ -145,43 +162,16 @@ export class NewsCreatePage
     await this.createNewsPageURLCheck();
     await this.enterNewsTitle(data.newsTitle);
     await this.createPages.enterRevisionLogMessage(data.revisionLogMessage);
+    await this.selectNewsTopic(data.topics);
     await this.selectNewsType(data.newsType);
-    await this.enterNewsIntroParagraph(data.newsIntoParagraph);
+    await this.enterPublicationDate(data.pubDate);
     await this.enterNewsTeaser(data.newsteaser);
+    await this.enterNewsIntroParagraph(data.newsIntoParagraph);
     await this.uploadMediaHelper.uploadImageWorkflow({
       original: true,
       edited: false
     });
-
-    if (data.existingRemoteVideoName)
-    {
-      await this.uploadMediaHelper.selectExistingRemoteVideoFromLibrary(data.existingRemoteVideoName);
-      // wait 2 seconds and refresh page
-      await this.page.waitForTimeout(2000);
-    }
-    else
-    {
-      await this.uploadMediaHelper.uploadRemoteVideo({
-        original: true,
-        edited: false
-      });
-    }
-
-    if (ckEditorStrategy === 'gallery')
-    {
-      await this.ckeditor.linkInternalNodeCKEditor(data.newsBodyField);
-    }
-    else
-    {
-      await this.ckeditor.enterCKEditorBody(data.newsBodyField);
-    }
-
+    await this.ckeditor.enterCKEditorBody(data.newsBodyField);
     await this.ckeditor.enterNoteToEditors(data.newsNoteToEditor);
-  }
-
-  // fill in news form elements - title summary topics etc with Gallery content using CK Editor
-  async fillNewsFormWithGallery(data: NewsSaveData)
-  {
-    await this.fillNewsForm(data, 'gallery');
   }
 }

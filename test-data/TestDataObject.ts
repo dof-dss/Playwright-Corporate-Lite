@@ -1,4 +1,5 @@
 import { GalleryImageValues } from "@poms/base-pages/UploadMedia";
+import { LINK_TYPES } from '@poms/content-pages/Link/LinkCreatePage';
 
 export const TestSetUpData = {
   // QA Accounts Managment
@@ -19,7 +20,7 @@ export const TestSetUpData = {
   // valid urls 
   validTestURLList: {
     afbi_url: process.env.AFBI_URL!,
-    etni_url: process.env.ETNI_URL!,
+    etini_url: process.env.ETINI_URL!,
     hse_url: process.env.HSE_URL!,
     nmsc_url: process.env.NMSC_URL!,
     nisra_url: process.env.NISRA_URL!
@@ -51,6 +52,7 @@ export const TestSetUpData = {
     application: 'Application',
     article: 'Article',
     articleCKEditorFull: 'Article CKEditor Full',
+    chart: 'Chart',
     consultation: 'Consultation',
     consultationFutureDate: 'Consultation Future Date',
     contact: 'Contact',
@@ -64,9 +66,10 @@ export const TestSetUpData = {
     profile: 'Profile',
     publication: 'Publication',
     publicationExternalLink: 'Publication External Link',
-    researcherProfile: 'Researcher Profile',
-    secureStats: 'Secure Stats',
-    secureMarket: 'Secure Market',
+    researcherProfile: 'Researcher profile',
+    secureStats: 'Secure statistics',
+    secureMarket: 'Secure - market sensitive statistics',
+    webform: 'Webform'
   },
 
   // valid save as option list
@@ -136,7 +139,7 @@ const formattedFutureStartDate = futureStartDate.toISOString().split('T')[0];
 
 const verifyStartDate = new Date();
 const verifyStartDateFormated = verifyStartDate.toLocaleDateString('en-GB', {
-  day: 'numeric',
+  day: '2-digit',
   month: 'long',
   year: 'numeric'
 });
@@ -144,7 +147,7 @@ const verifyStartDateFormated = verifyStartDate.toLocaleDateString('en-GB', {
 const verifyEndDate = new Date();
 verifyEndDate.setDate(verifyEndDate.getDate() + 7);
 const verifyEndDateFormated = verifyEndDate.toLocaleDateString('en-GB', {
-  day: 'numeric',
+  day: '2-digit',
   month: 'long',
   year: 'numeric'
 });
@@ -185,35 +188,35 @@ export const TestData = {
     galleryImageAltText: 'Gallery Image 1 alt text',
     galleryImageTitle: 'Gallery Image 1 Title',
     galleryImageCaption: 'This is Gallery Image 1 Caption',
-    galleryImageName: 'Automated gallery image 1 Testing New',
+    galleryImageName: 'Automated gallery image 1 Testing',
 
     // gallery image 2 values
     galleryImage2FileName: 'TestGallery2.jpg',
     galleryImage2AltText: 'Gallery Image 2 alt text',
     galleryImage2Title: 'Gallery Image 2 Title',
     galleryImage2Caption: 'This is Gallery Image 2 Caption',
-    galleryImage2Name: 'Automated gallery image 2  Testing New',
+    galleryImage2Name: 'Automated gallery image 2  Testing',
 
     // gallery image 3 values
     galleryImage3FileName: 'TestGallery3.jpg',
     galleryImage3AltText: 'Gallery Image 3 alt text',
     galleryImage3Title: 'Gallery Image 3 Title',
     galleryImage3Caption: 'This is Gallery Image 3 Caption',
-    galleryImage3Name: 'Automated gallery image 3  Testing New',
+    galleryImage3Name: 'Automated gallery image 3  Testing',
 
     // gallery image 4 values
     galleryImage4FileName: 'TestGallery4.jpg',
     galleryImage4AltText: 'Gallery Image 4 alt text',
     galleryImage4Title: 'Gallery Image 4 Title',
     galleryImage4Caption: 'This is Gallery Image 4 Caption',
-    galleryImage4Name: 'Automated gallery image 4 Testing New',
+    galleryImage4Name: 'Automated gallery image 4 Testing',
 
     // gallery image 5 values
     galleryImage5FileName: 'TestGallery5.jpg',
     galleryImage5AltText: 'Gallery Image 5 alt text',
     galleryImage5Title: 'Gallery Image 5 Title',
     galleryImage5Caption: 'This is Gallery Image 5 Caption',
-    galleryImage5Name: 'Automated gallery image 5 Testing New',
+    galleryImage5Name: 'Automated gallery image 5 Testing',
 
     // Gallery image edited name has no other values as this tests that the other fields are not mandatory
     galleryImage1FileNameEdited: 'TestingImageEdited.png',
@@ -257,8 +260,6 @@ export const TestData = {
 
     audioFile: 'AutomationAudio.wav',
     audioFileName: 'Automation Audio File Wav',
-
-    wordFile: 'ImportFromWord.docx',
   },
 
   HSE_SiteTopics: {
@@ -406,13 +407,15 @@ export const TestData = {
     mapLocationModalName: 'Stormount',
   },
 
-
-
   Gallery: {
     title: 'Automated Test - New sample Gallery title' + ' - ' + getTimestamp(),
     titleEdited: 'Automated Test - Edited sample Gallery title' + ' - ' + getTimestamp(),
     revisionlog: 'This is an automated revision log message',
     revisionlogEdited: 'This is an edited automated revision log message',
+    areaOfExpertise: 'Animal Health and Welfare',
+    areaOfExpertise2: 'Food Quality and Safety',
+    areaOfExpertiseEdited: '- None -',
+    areaOfExpertise2Edited: 'Environmental Protection',
     summary: 'This is a new Gallery summary',
     summaryEdited: 'This is a edited Gallery summary',
     body: 'This is a new Gallery body content',
@@ -420,17 +423,37 @@ export const TestData = {
     favourite: false,
   },
 
+  Feature: {
+    title: 'Automated Test - New sample Feature title' + ' - ' + getTimestamp(),
+    titleEdited: 'Automated Test - Edited sample Feature title' + ' - ' + getTimestamp(),
+    revisionlog: 'This is an automated revision log message',
+    revisionlogEdited: 'This is an edited automated revision log message',
+    linkURL: 'Latest News - Don’t let farming take your breath away',
+    linkURLEdited: 'https://www.nidirect.gov.uk',
+    teaser: 'This is a new Feature teaser content.',
+    teaserEdited: 'This is an edited Feature teaser content.',
+  },
+
   Link: {
     title: 'Automated Test - New Sample Link title' + ' - ' + getTimestamp(),
     titleEdited: 'Automated Test - Edited Sample Link title' + ' - ' + getTimestamp(),
     revisionlog: 'This is an automated revision log message',
     revisionlogEdited: 'This is an edited automated revision log message',
-    linkURL: 'Murphy welcomes Fiscal Commission report',
+    linkURL: 'Measuring tourism locally - minutes',
     linkURLEdited: 'https://www.nidirect.gov.uk',
-    linkType: 'Quick link',
-    linkTypeEdited: 'Corporate link',
-    linkLanguage: 'English',
-    linkLanguageEdited: 'Irish',
+    linkType: LINK_TYPES[0] as typeof LINK_TYPES[number],
+    linkTypeEdited: LINK_TYPES[1] as typeof LINK_TYPES[number],
+    topics: [
+      'Work, pay and benefits',
+      'NI Civil Service Human Resources',
+      'Statistics Charter',
+      'WSA Data Governance and Confidentiality Statement'
+    ],
+    topicsEdited: [
+      'Service Unavailable',
+      'Education and skills',
+      'Education and skills'
+    ],
   },
 
   News: {
@@ -438,8 +461,20 @@ export const TestData = {
     titleEdited: 'Automated Test - Edited sample News title' + ' - ' + getTimestamp(),
     revisionlog: 'This is an automated revision log message',
     revisionlogEdited: 'This is an edited automated revision log message',
-    newsType: 'news',
-    newsTypeEdited: 'pressrelease',
+    newsType: 'News story',
+    newsTypeEdited: 'Press release',
+    topics: [
+      'Work, pay and benefits',
+      'NI Civil Service Human Resources',
+      'Statistics Charter',
+      'WSA Data Governance and Confidentiality Statement'
+    ],
+    topicsEdited: [
+      'Service Unavailable',
+      'Education and skills',
+      'Education and skills'
+    ],
+    publicationDate: '2026-11-02',
     introductoryParagraph: 'This is a new introductory paragraph',
     introductoryParagraphEdited: 'This is a edited introductory paragraph',
     publicationDateEdited: '2025-12-31',
@@ -449,6 +484,15 @@ export const TestData = {
     bodyEdited: 'This is edited news body field',
     notesToEditor: 'This is a new notes to editor',
     notesToEditorEdited: 'This is a edited notes to editor'
+  },
+
+    Page: {
+    title: 'Automated Test - New sample Page title' + ' - ' + getTimestamp(),
+    titleEdited: 'Automated Test - Edited sample Page title' + ' - ' + getTimestamp(),
+    revisionlog: 'This is an automated revision log message',
+    revisionlogEdited: 'This is an edited automated revision log message',
+    body: 'This is a new page body content',
+    bodyEdited: 'This is an edited page body content',
   },
 
   Profile: {
@@ -462,8 +506,7 @@ export const TestData = {
     bodyEdited: 'This is a edited Profile body content',
     summary: 'This is a new Profile summary',
     summaryEdited: 'This is a edited Profile summary',
-
-  },
+   },
 
   Publication: {
     title: 'Automated Test - New sample Publication title' + ' - ' + getTimestamp(),
@@ -475,6 +518,8 @@ export const TestData = {
     lastUpdatedTimeEdited: '00:00:00',
     publicationType: 'Circulars',
     publicationTypeEdited: 'Agendas and minutes',
+    publicationSeries: '- None -',
+    publicationSeriesEdited: '- None -',
     summary: 'This is new Publication summary',
     summaryEdited: 'This is edited Publication summary',
     body: 'This is new news body field',
@@ -483,8 +528,35 @@ export const TestData = {
     linkTextPubllication: 'NI Direct',
     externalPublicationEdited: 'https://www.bbc.co.uk',
     linkTextPubllicationEdited: 'BBC News',
-    verifyDatePublished: verifyStartDateFormated,
+    verifyDatePublished: verifyStartDate.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    }),
     verifyLastUpdatedDate: verifyStartDateFormated,
+
+    series: "",
+    seriesEdited: "",
+
+    statistics: [
+      'People and communities',
+      'Census',
+      'Census 2031',
+      'Census 2031 outline strategy'
+    ],
+    statisticsEdited: [
+      'Health and social care'
+    ],
+
+    research: [
+      'Geography'
+    ],
+    researchEdited: [
+      'Research Support',
+      'Administrative Data Research Northern Ireland (ADR NI) themed datasets',
+      'Business Data for Research (BDR)'
+    ]
+
   },
 
   MediaLibrary: {
@@ -520,7 +592,7 @@ export const TestData = {
   },
 
   duplicated: {
-    title: 'Automated Test - New sample Duplication title',
+    title: 'Automated Test - New sample Duplication title' + ' - ' + Math.floor(100000 + Math.random() * 900000).toString(),
   }
 };
 

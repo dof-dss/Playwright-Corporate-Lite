@@ -1,6 +1,6 @@
 import { Page, expect } from '@playwright/test';
 import { BasePage } from '@poms/base-pages/BasePage';
-import { LinkCreatePage } from '@poms/content-pages/Link/LinkCreatePage';
+import { LINK_TYPES, LinkCreatePage } from '@poms/content-pages/Link/LinkCreatePage';
 import { LinkEditPage } from '@poms/content-pages/Link/LinkEditPage';
 import { ModerationSideBar } from '@poms/base-pages/ModerationSideBar';
 import { UserPage } from '@poms/base-pages/UserPage';
@@ -95,7 +95,7 @@ export class LinkHelper
             revisionLogMessage: this.testData.Link.revisionlog,
             linkURL: this.testData.Link.linkURL,
             linkType: this.testData.Link.linkType,
-            linkLanguage: this.testData.Link.linkLanguage,
+            topics: this.testData.Link.topics,
         });
 
         // updating global topic set
@@ -133,16 +133,23 @@ export class LinkHelper
         // click edit content
         await this.moderationSideBar.clickEditContentButton();
 
+        const alternativeLinkType = LINK_TYPES.find(linkType => linkType !== this.testData.Link.linkType);
+        if (!alternativeLinkType)
+        {
+            throw new Error(`No alternative link type is available for "${this.testData.Link.linkType}"`);
+        }
+        this.testData.Link.linkTypeEdited = alternativeLinkType;
+
         // complete link form using edit isolated test data 
         await this.linkEditPage.editLinkForm({
             linkTitle: this.testData.Link.titleEdited,
             revisionLogMessage: this.testData.Link.revisionlogEdited,
             linkURL: this.testData.Link.linkURLEdited,
             linkType: this.testData.Link.linkTypeEdited,
-            linkLanguage: this.testData.Link.linkLanguageEdited,
+            topics: this.testData.Link.topicsEdited,
         });
 
-
+        this.testSetUpData.contentTitleforTest.contentTitle = this.testData.Link.titleEdited;
 
         //Selecting the save as type
         await this.createPage.chooseSaveAsType();
@@ -192,17 +199,28 @@ export class LinkHelper
     }
 
     // create Link method
-    async reorderLink()
+    async reorderLink(edited: boolean)
     {
-        await this.page.getByRole('link', { name: 'Content', exact: true }).hover();
+        await this.page.getByRole('link', { name: 'Content', exact: true }).first().hover();
+        await expect(this.page.getByRole('link', { name: 'Links' })).toBeVisible();
         await this.page.getByRole('link', { name: 'Links' }).hover();
-        await this.page.getByRole('link', { name: 'Links - quick links' }).click();
 
-        const targetTitle = this.testSetUpData.contentTitleforTest.contentTitle || this.testData.Link.title;
+        // Determine the link section based on linkType
+        const linkTypeToSectionMap: Record<string, string> = {
+            'Data tools / Popular links': 'Links - data tools / popular links',
+            'Popular statistics': 'Links - popular statistics',
+        };
+
+        const linkSection = linkTypeToSectionMap[edited ? this.testData.Link.linkTypeEdited : this.testData.Link.linkType];
+        await this.page.getByRole('link', { name: linkSection }).click();
+
+        const targetTitle = [edited ? this.testData.Link.titleEdited : this.testSetUpData.contentTitleforTest.contentTitle || this.testData.Link.title];
         const sourceHandle = this.page.locator(
-            `//tr[contains(@class,'draggable')][.//td[@headers='view-title-table-column']//a[contains(normalize-space(.),"${targetTitle}")]]//a[contains(@class,'js-tabledrag-handle')]`
+            `//tr[contains(@class,'draggable')]//td[@headers='view-title-table-column']//div[normalize-space(.) = "${targetTitle}"]/a[@title="Change order"]`
         ).first();
-        const topHandle = this.page.locator("(//tr[contains(@class,'draggable')]//a[contains(@class,'js-tabledrag-handle')])[1]");
+        const topHandle = this.page.locator(`//tr[contains(@class,'draggable')]//a[@title="Change order"][1]`).first();
+
+
 
         await expect(sourceHandle).toBeVisible();
         await expect(topHandle).toBeVisible();
@@ -227,8 +245,8 @@ export class LinkHelper
         }
 
         const firstRowTitle = this.page.locator(
-            "(//tr[contains(@class,'draggable')]//td[@headers='view-title-table-column']//div[contains(@class,'tabledrag-cell-content__item')]/a)[1]"
-        );
+            "//tr[contains(@class,'draggable')]"
+        ).first();
         await expect(firstRowTitle).toContainText(targetTitle);
 
         const saveButton = this.page.getByRole('button', { name: 'Save' });
@@ -237,5 +255,61 @@ export class LinkHelper
             await saveButton.click();
         }
     }
+
+    async AddFeatureToHomePage(edited: boolean)
+    {
+        await this.page.getByRole('link', { name: 'Content', exact: true }).hover();
+        await this.page.getByRole('link', { name: 'Featured Content Campaigns' }).click();
+
+        // Determine the link section based on linkType
+        const linkTypeToSectionMap: Record<string, string> = {
+            'Data tools / Popular links': 'Links - data tools / popular links',
+            'Popular statistics': 'Links - popular statistics',
+        };
+
+
+        const targetTitle = [edited ? this.testData.Feature.titleEdited : this.testSetUpData.contentTitleforTest.contentTitle || this.testData.Feature.title];
+        const sourceHandle = this.page.locator(
+            `//tr[contains(@class,'draggable')]//td[@headers='view-title-table-column']//div[normalize-space(.) = "${targetTitle}"]/a[@title="Change order"]`
+        ).first();
+        const topHandle = this.page.locator(`//tr[contains(@class,'draggable')]//a[@title="Change order"][1]`).first();
+
+
+
+        await expect(sourceHandle).toBeVisible();
+        await expect(topHandle).toBeVisible();
+
+        // Drupal tabledrag can be flaky with HTML5 drag-and-drop, so keep a mouse fallback.
+        const dragSucceeded = await sourceHandle.dragTo(topHandle).then(() => true).catch(() => false);
+
+        if (!dragSucceeded)
+        {
+            const sourceBox = await sourceHandle.boundingBox();
+            const targetBox = await topHandle.boundingBox();
+
+            if (!sourceBox || !targetBox)
+            {
+                throw new Error('Unable to calculate drag coordinates for link reorder');
+            }
+
+            await this.page.mouse.move(sourceBox.x + sourceBox.width / 2, sourceBox.y + sourceBox.height / 2);
+            await this.page.mouse.down();
+            await this.page.mouse.move(targetBox.x + targetBox.width / 2, targetBox.y + 4, { steps: 20 });
+            await this.page.mouse.up();
+        }
+
+        const firstRowTitle = this.page.locator(
+            "//tr[contains(@class,'draggable')]"
+        ).first();
+        await expect(firstRowTitle).toContainText(targetTitle);
+
+        const saveButton = this.page.getByRole('button', { name: 'Save' });
+        if (await saveButton.isVisible())
+        {
+            await saveButton.click();
+        }
+    }
+
+    // here
 
 }

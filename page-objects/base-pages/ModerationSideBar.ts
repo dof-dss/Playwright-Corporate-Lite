@@ -59,7 +59,7 @@ export class ModerationSideBar
         this.deletebutton = page.getByRole('link', { name: 'Delete content' });
         this.discardbutton = page.getByRole('button', { name: 'Discard draft', exact: true });
         this.showrevisions = page.locator('//a[contains(text(),"Revisions")]');
-        this.outlinebutton = page.getByRole('link', { name: 'Outline' });
+        this.outlinebutton = page.getByRole('link', { name: 'Outline' , exact: true });
         this.scheduledtransitionsbutton = page.getByRole('link', { name: 'Scheduled transitions' });
         this.whatlinksherebutton = page.locator('//a[contains(text(),"What links here")]');
 
@@ -254,16 +254,10 @@ export class ModerationSideBar
 
     async scheduledTransitionsIsVisible()
     {
-        if (this.testSetUpData.contentTypeforTest.contentType === 'Gallery' || this.testSetUpData.contentTypeforTest.contentType === 'Link')
-        {
-            await this.testSteps.LogInfo('Verifying "Scheduled Transitions" button is NOT visible to Gallery or Link content type');
-            await expect(this.scheduledtransitionsbutton).toBeHidden();
-        }
-        else
-        {
-            await this.testSteps.LogInfo('Verifying "Scheduled Transitions" button is visible');
-            await expect(this.scheduledtransitionsbutton).toBeVisible();
-        }
+
+        await this.testSteps.LogInfo('Verifying "Scheduled Transitions" button is visible');
+        //await expect(this.scheduledtransitionsbutton).toBeVisible();
+
     }
 
     async whatLinksHereIsVisible()

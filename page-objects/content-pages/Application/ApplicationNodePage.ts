@@ -45,13 +45,13 @@ export class ApplicationNodePage
         await this.testSteps.LogInfo(`Verifying title "${this.testData.Application.title}" is visible`);
         await expect(this.page.getByRole('heading', { level: 1 })).toHaveText(this.testData.Application.title);
 
-        // Verify topics
-        // await this.testSteps.LogInfo('Verifying Topics label is visible');
-        // await expect(this.page.getByText('Topics:', { exact: true })).toBeVisible();
-        // await this.testSteps.LogInfo(`Verifying topic "${this.testData.HSE_SiteTopics.topic}" is visible`);
-        // await expect(this.page.getByText(this.testData.HSE_SiteTopics.topic)).toBeVisible();
-        // await this.testSteps.LogInfo(`Verifying topic2 "${this.testData.HSE_SiteTopics.topic2}" is visible`);
-        // await expect(this.page.getByText(this.testData.HSE_SiteTopics.topic2)).toBeVisible();
+        //Verify topics
+        await this.testSteps.LogInfo('Verifying Topics label is visible');
+        await expect(this.page.getByText('Site topics:', { exact: true })).toBeVisible();
+        await this.testSteps.LogInfo(`Verifying topic "${this.testData.HSE_SiteTopics.topic}" is visible`);
+        await expect(this.page.getByText(this.testData.HSE_SiteTopics.topic)).toBeVisible();
+        await this.testSteps.LogInfo(`Verifying topic2 "${this.testData.HSE_SiteTopics.topic2}" is visible`);
+        await expect(this.page.getByText(this.testData.HSE_SiteTopics.topic2)).toBeVisible();
 
         // verify summary
         await this.testSteps.LogInfo(`Verifying Summary "${this.testData.Application.summary}" is visible`);
@@ -64,8 +64,8 @@ export class ApplicationNodePage
         await expect(this.page.getByText(this.testData.Application.beforeyoustart)).toBeVisible();
 
         // verify Additional information H2
-        // await this.testSteps.LogInfo('Verifying Additional info heading is visible');
-        // await expect(this.page.getByRole('heading', { level: 2, name: 'Additional information' })).toBeVisible();
+        await this.testSteps.LogInfo('Verifying Additional info heading is visible');
+        await expect(this.page.getByRole('heading', { level: 2, name: 'Additional information' })).toBeVisible();
         await this.testSteps.LogInfo(`Verifying Additional Info "${this.testData.Application.additionalinfo}" is visible`);
         await expect(this.page.getByText(this.testData.Application.additionalinfo)).toBeVisible();
     }
@@ -78,14 +78,16 @@ export class ApplicationNodePage
         await this.testSteps.LogInfo(`Verifying title "${this.testSetUpData.contentTitleforTest.contentTitle}" is visible`);
         await expect(this.page.getByRole('heading', { level: 1, exact: true })).toHaveText(this.testData.Application.titleEdited);
 
-        // Verify topics
-        // await this.testSteps.LogInfo('Verifying Topics label is visible');
-        // await expect(this.page.getByText('Topics:', { exact: true })).toBeVisible();
+        //erify topics
+        await this.testSteps.LogInfo('Verifying Topics label is visible');
+        await expect(this.page.getByText('Site topics:', { exact: true })).toBeVisible();
 
-        // await this.testSteps.LogInfo(`Verifying Edited topic "${this.testData.HSE_SiteTopics.topicEdited}" is visible`);
-        // await expect(this.page.getByText(this.testData.HSE_SiteTopics.topicEdited)).toBeVisible();
-        // await this.testSteps.LogInfo(`Verifying Edited topic2 "${this.testData.HSE_SiteTopics.topic2Edited}" is NOT visible as it was set to '- None -'`);
-        // await expect(this.page.getByText(this.testData.HSE_SiteTopics.topic2Edited)).toBeHidden();
+        await this.testSteps.LogInfo(`Verifying Edited topic "${this.testData.HSE_SiteTopics.topicEdited}" is visible`);
+        await expect(this.page.getByText(this.testData.HSE_SiteTopics.topicEdited)).toBeVisible();
+        await this.testSteps.LogInfo(`Verifying topic "${this.testData.HSE_SiteTopics.topic}" is NOT visible`);
+        await expect(this.page.getByText(this.testData.HSE_SiteTopics.topic)).toBeHidden();
+        await this.testSteps.LogInfo(`Verifying Edited topic2 "${this.testData.HSE_SiteTopics.topic2Edited}" is NOT visible as it was set to '- None -'`);
+        await expect(this.page.getByText(this.testData.HSE_SiteTopics.topic2Edited)).toBeHidden();
 
         // verify summary
         await this.testSteps.LogInfo(`Verifying Edited Summary "${this.testData.Application.summaryEdited}" is visible`);
@@ -99,11 +101,9 @@ export class ApplicationNodePage
         await this.testSteps.LogInfo(`Verifying Edited Before you start "${this.testData.Application.beforeyoustartEdited}" is visible`);
         await expect(this.page.getByText(this.testData.Application.beforeyoustartEdited)).toBeVisible();
 
-        // // verify Additional information H2
-        // await this.testSteps.LogInfo('Verifying Additional information is visible');
-        // await expect(this.page.getByRole('heading', { level: 2, name: 'Additional information' })).toBeVisible();
-
-        // verify addtional info
+        // verify Additional information
+        await this.testSteps.LogInfo('Verifying Additional information is visible');
+        await expect(this.page.getByRole('heading', { level: 2, name: 'Additional information' })).toBeVisible();
         await this.testSteps.LogInfo(`Verifying Additional Information "${this.testData.Application.additionalinfoEdited}" is visible`);
         await expect(this.page.getByText(this.testData.Application.additionalinfoEdited)).toBeVisible();
     }

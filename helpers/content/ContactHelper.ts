@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { BasePage } from '@poms/base-pages/BasePage';
 import { ContactCreatePage } from '@poms/content-pages/Contact/ContactCreatePage';
 import { ContactEditPage } from '@poms/content-pages/Contact/ContactEditPage';
@@ -16,6 +16,7 @@ export interface SaveOptions
 {
     preview: boolean;
     mandatoryFieldCheck: boolean;
+    duplicateTitle?: boolean;
 };
 
 export interface EditSaveOptions
@@ -106,8 +107,17 @@ export class ContactHelper
             mapLongitude: this.testData.Contact.mapLongitude,
         });
 
-        //Selecting the save as type
+        const duplicateTitleError = this.page.locator('#edit-title-0-value--errormessage').filter({
+            hasText: 'already exists'
+        });
         await this.createPage.chooseSaveAsType();
+
+        if (options.duplicateTitle)
+        {
+            await this.createPage.clickSaveButton();
+            await expect(duplicateTitleError).toBeVisible();
+            return;
+        }
 
         // if options.preview is set to true, perform preview contact method actions
         if (options.preview)

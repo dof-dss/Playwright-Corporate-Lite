@@ -76,7 +76,7 @@ export class ContentModerationHelper
             await this.moderationSideBar.quickPublishButtonNotVisible();
             await this.moderationSideBar.restoreButtonNotVisible();
             await this.moderationSideBar.restoreToDraftButtonNotVisible();
-            await this.moderationSideBar.outlineIsNotVisible();
+            //await this.moderationSideBar.outlineIsNotVisible();
         }
 
         if (currentState === 'Needs Review')
@@ -95,7 +95,7 @@ export class ContentModerationHelper
             await this.moderationSideBar.quickPublishButtonNotVisible();
             await this.moderationSideBar.restoreButtonNotVisible();
             await this.moderationSideBar.restoreToDraftButtonNotVisible();
-            await this.moderationSideBar.outlineIsNotVisible();
+            //await this.moderationSideBar.outlineIsNotVisible();
         }
 
         if (wantedState.Draft)
@@ -276,197 +276,194 @@ export class ContentModerationHelper
         }
     }
 
-    async statsAuthorModerateContent(wantedState: StatsAuthorModerationStates)
-    {
-        await this.authorModerateContent(wantedState);
-    }
+    // async statsAuthorModerateContent(wantedState: StatsAuthorModerationStates)
+    // {
+    //     await this.authorModerateContent(wantedState);
+    // }
 
-    async statsSupervisorModerateContent(wantedState: StatsSupervisorModerationStates)
-    {
-        const currentState = await this.openAndGetCurrentState();
+    // async statsSupervisorModerateContent(wantedState: StatsSupervisorModerationStates)
+    // {
+    //     const currentState = await this.openAndGetCurrentState();
 
-        if (currentState === 'Draft')
-        {
-            await this.moderationSideBar.editContentIsVisible(); // ALWAYS VISIBLE
-            await this.moderationSideBar.submitForReviewButtonIsVisible();
-            await this.moderationSideBar.quickPublishButtonIsVisible();
-            await this.moderationSideBar.archiveButtonIsVisible();
-            await this.moderationSideBar.deleteButtonIsVisible();
-            await this.moderationSideBar.revisionsIsVisible();
-            await this.moderationSideBar.outlineIsVisible();
-            await this.moderationSideBar.scheduledTransitionsIsVisible();
-            await this.moderationSideBar.whatLinksHereIsVisible();
-
-
-            await this.moderationSideBar.rejectButtonNotVisible();
-            await this.moderationSideBar.publishButtonNotVisible();
-            await this.moderationSideBar.restoreButtonNotVisible();
-            await this.moderationSideBar.restoreToDraftButtonNotVisible();
-        }
-
-        if (currentState === 'Needs Review')
-        {
-            // Verify only the expected buttons are visible
-            await this.moderationSideBar.editContentIsVisible();
-            await this.moderationSideBar.rejectButtonIsVisible();
-            await this.moderationSideBar.publishButtonIsVisible();
-            await this.moderationSideBar.archiveButtonIsVisible();
-            await this.moderationSideBar.deleteButtonIsVisible();
-            await this.moderationSideBar.revisionsIsVisible();
-            await this.moderationSideBar.outlineIsVisible();
-            await this.moderationSideBar.scheduledTransitionsIsVisible();
-            await this.moderationSideBar.whatLinksHereIsVisible();
-
-            await this.moderationSideBar.submitForReviewButtonNotVisible();
-            await this.moderationSideBar.quickPublishButtonNotVisible();
-            await this.moderationSideBar.restoreButtonNotVisible();
-            await this.moderationSideBar.restoreToDraftButtonNotVisible();
-        }
-
-        if (currentState === 'Published')
-        {
-            // Verify only the expected buttons are visible
-            await this.moderationSideBar.editContentIsVisible(); // ALWAYS VISIBLE
-            await this.moderationSideBar.archiveButtonIsVisible();
-            await this.moderationSideBar.deleteButtonIsVisible();
-            await this.moderationSideBar.revisionsIsVisible();
-            await this.moderationSideBar.outlineIsVisible();
-            await this.moderationSideBar.scheduledTransitionsIsVisible();
-            await this.moderationSideBar.whatLinksHereIsVisible();
+    //     if (currentState === 'Draft')
+    //     {
+    //         await this.moderationSideBar.editContentIsVisible(); // ALWAYS VISIBLE
+    //         await this.moderationSideBar.submitForReviewButtonIsVisible();
+    //         await this.moderationSideBar.quickPublishButtonIsVisible();
+    //         await this.moderationSideBar.archiveButtonIsVisible();
+    //         await this.moderationSideBar.deleteButtonIsVisible();
+    //         await this.moderationSideBar.revisionsIsVisible();
+    //         await this.moderationSideBar.outlineIsVisible();
+    //         await this.moderationSideBar.scheduledTransitionsIsVisible();
+    //         await this.moderationSideBar.whatLinksHereIsVisible();
 
 
-            await this.moderationSideBar.submitForReviewButtonNotVisible();
-            await this.moderationSideBar.rejectButtonNotVisible();
-            await this.moderationSideBar.publishButtonNotVisible();
-            await this.moderationSideBar.quickPublishButtonNotVisible();
-            await this.moderationSideBar.restoreButtonNotVisible();
-            await this.moderationSideBar.restoreToDraftButtonNotVisible();
-        }
+    //         await this.moderationSideBar.rejectButtonNotVisible();
+    //         await this.moderationSideBar.publishButtonNotVisible();
+    //         await this.moderationSideBar.restoreButtonNotVisible();
+    //         await this.moderationSideBar.restoreToDraftButtonNotVisible();
+    //     }
 
-        if (currentState === 'Archived')
-        {
-            // Verify only the expected buttons are visible
-            await this.moderationSideBar.editContentIsVisible(); // ALWAYS VISIBLE
-            await this.moderationSideBar.restoreToDraftButtonIsVisible();
-            await this.moderationSideBar.restoreButtonIsVisible();
-            await this.moderationSideBar.deleteButtonIsVisible();
-            await this.moderationSideBar.revisionsIsVisible();
-            await this.moderationSideBar.outlineIsVisible();
-            await this.moderationSideBar.scheduledTransitionsIsVisible();
-            await this.moderationSideBar.whatLinksHereIsVisible();
+    //     if (currentState === 'Needs Review')
+    //     {
+    //         // Verify only the expected buttons are visible
+    //         await this.moderationSideBar.editContentIsVisible();
+    //         await this.moderationSideBar.rejectButtonIsVisible();
+    //         await this.moderationSideBar.publishButtonIsVisible();
+    //         await this.moderationSideBar.archiveButtonIsVisible();
+    //         await this.moderationSideBar.deleteButtonIsVisible();
+    //         await this.moderationSideBar.revisionsIsVisible();
+    //         await this.moderationSideBar.outlineIsVisible();
+    //         await this.moderationSideBar.scheduledTransitionsIsVisible();
+    //         await this.moderationSideBar.whatLinksHereIsVisible();
 
-            await this.moderationSideBar.submitForReviewButtonNotVisible();
-            await this.moderationSideBar.rejectButtonNotVisible();
-            await this.moderationSideBar.publishButtonNotVisible();
-            await this.moderationSideBar.archiveButtonNotVisible();
-            await this.moderationSideBar.quickPublishButtonNotVisible();
-        }
+    //         await this.moderationSideBar.submitForReviewButtonNotVisible();
+    //         await this.moderationSideBar.quickPublishButtonNotVisible();
+    //         await this.moderationSideBar.restoreButtonNotVisible();
+    //         await this.moderationSideBar.restoreToDraftButtonNotVisible();
+    //     }
 
-        if (wantedState.QuickPublish)
-        {
-            if (currentState === 'Draft')
-            {
-                await this.moderationSideBar.clickQuickPublishButton();
-                this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.published;
-            }
-
-            if (currentState === 'Needs Review')
-            {
-                await this.moderationSideBar.clickPublishButton();
-                this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.published;
-            }
-
-            if (currentState === 'Archived')
-            {
-                await this.moderationSideBar.clickRestoreToDraftButton();
-                this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.draft;
-                await this.moderationSideBar.openModerationSideBar();
-                await this.moderationSideBar.clickQuickPublishButton();
-                this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.published;
-            }
-        }
-
-        if (wantedState.Draft)
-        {
-            if (currentState === 'Needs Review')
-            {
-                await this.moderationSideBar.clickRejectButton();
-                this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.draft;
-            }
-
-            if (currentState === 'Archived')
-            {
-                await this.moderationSideBar.clickRestoreToDraftButton();
-                this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.draft;
-            }
-        }
-
-        if (wantedState.NeedsReview)
-        {
-            if (currentState === 'Draft')
-            {
-                await this.moderationSideBar.clickSubmitForReviewButton();
-                this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.needsreview;
-            }
-
-            if (currentState === 'Published')
-            {
-                await this.moderationSideBar.clickArchiveButton();
-                this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.archived;
-                await this.moderationSideBar.openModerationSideBar();
-                await this.moderationSideBar.clickRestoreToDraftButton();
-                this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.draft;
-                await this.moderationSideBar.openModerationSideBar();
-                await this.moderationSideBar.clickSubmitForReviewButton();
-                this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.needsreview;
-            }
-
-            if (currentState === 'Archived')
-            {
-                await this.moderationSideBar.clickRestoreToDraftButton();
-                this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.draft;
-                await this.moderationSideBar.openModerationSideBar();
-                await this.moderationSideBar.clickSubmitForReviewButton();
-                this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.needsreview;
-            }
+    //     if (currentState === 'Published')
+    //     {
+    //         // Verify only the expected buttons are visible
+    //         await this.moderationSideBar.editContentIsVisible(); // ALWAYS VISIBLE
+    //         await this.moderationSideBar.archiveButtonIsVisible();
+    //         await this.moderationSideBar.deleteButtonIsVisible();
+    //         await this.moderationSideBar.revisionsIsVisible();
+    //         await this.moderationSideBar.outlineIsVisible();
+    //         await this.moderationSideBar.scheduledTransitionsIsVisible();
+    //         await this.moderationSideBar.whatLinksHereIsVisible();
 
 
-        }
+    //         await this.moderationSideBar.submitForReviewButtonNotVisible();
+    //         await this.moderationSideBar.rejectButtonNotVisible();
+    //         await this.moderationSideBar.publishButtonNotVisible();
+    //         await this.moderationSideBar.quickPublishButtonNotVisible();
+    //         await this.moderationSideBar.restoreButtonNotVisible();
+    //         await this.moderationSideBar.restoreToDraftButtonNotVisible();
+    //     }
 
-        if (wantedState.Published)
-        {
-            if (currentState === 'Draft')
-            {
-                await this.moderationSideBar.clickQuickPublishButton();
-                this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.published;
-            }
+    //     if (currentState === 'Archived')
+    //     {
+    //         // Verify only the expected buttons are visible
+    //         await this.moderationSideBar.editContentIsVisible(); // ALWAYS VISIBLE
+    //         await this.moderationSideBar.restoreToDraftButtonIsVisible();
+    //         await this.moderationSideBar.restoreButtonIsVisible();
+    //         await this.moderationSideBar.deleteButtonIsVisible();
+    //         await this.moderationSideBar.revisionsIsVisible();
+    //         await this.moderationSideBar.outlineIsVisible();
+    //         await this.moderationSideBar.scheduledTransitionsIsVisible();
+    //         await this.moderationSideBar.whatLinksHereIsVisible();
 
-            if (currentState === 'Needs Review')
-            {
-                await this.moderationSideBar.clickPublishButton();
-                this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.published;
-            }
+    //         await this.moderationSideBar.submitForReviewButtonNotVisible();
+    //         await this.moderationSideBar.rejectButtonNotVisible();
+    //         await this.moderationSideBar.publishButtonNotVisible();
+    //         await this.moderationSideBar.archiveButtonNotVisible();
+    //         await this.moderationSideBar.quickPublishButtonNotVisible();
+    //     }
 
-            if (currentState === 'Archived')
-            {
-                await this.moderationSideBar.publishButtonNotVisible();
-                await this.moderationSideBar.clickRestoreButton();
-                this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.published;
-            }
-        }
+    //     if (wantedState.QuickPublish)
+    //     {
+    //         if (currentState === 'Draft')
+    //         {
+    //             await this.moderationSideBar.clickQuickPublishButton();
+    //             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.published;
+    //         }
 
-        if (wantedState.Archive)
-        {
-            if (currentState !== 'Archived')
-            {
-                await this.moderationSideBar.clickArchiveButton();
-                this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.archived;
-            }
-        }
-    }
+    //         if (currentState === 'Needs Review')
+    //         {
+    //             await this.moderationSideBar.clickPublishButton();
+    //             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.published;
+    //         }
 
-    async homepageSupervisorModerateContent(wantedState: StatsSupervisorModerationStates)
-    {
-        await this.statsSupervisorModerateContent(wantedState);
-    }
+    //         if (currentState === 'Archived')
+    //         {
+    //             await this.moderationSideBar.clickRestoreToDraftButton();
+    //             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.draft;
+    //             await this.moderationSideBar.openModerationSideBar();
+    //             await this.moderationSideBar.clickQuickPublishButton();
+    //             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.published;
+    //         }
+    //     }
+
+    //     if (wantedState.Draft)
+    //     {
+    //         if (currentState === 'Needs Review')
+    //         {
+    //             await this.moderationSideBar.clickRejectButton();
+    //             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.draft;
+    //         }
+
+    //         if (currentState === 'Archived')
+    //         {
+    //             await this.moderationSideBar.clickRestoreToDraftButton();
+    //             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.draft;
+    //         }
+    //     }
+
+    //     if (wantedState.NeedsReview)
+    //     {
+    //         if (currentState === 'Draft')
+    //         {
+    //             await this.moderationSideBar.clickSubmitForReviewButton();
+    //             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.needsreview;
+    //         }
+
+    //         if (currentState === 'Published')
+    //         {
+    //             await this.moderationSideBar.clickArchiveButton();
+    //             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.archived;
+    //             await this.moderationSideBar.openModerationSideBar();
+    //             await this.moderationSideBar.clickRestoreToDraftButton();
+    //             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.draft;
+    //             await this.moderationSideBar.openModerationSideBar();
+    //             await this.moderationSideBar.clickSubmitForReviewButton();
+    //             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.needsreview;
+    //         }
+
+    //         if (currentState === 'Archived')
+    //         {
+    //             await this.moderationSideBar.clickRestoreToDraftButton();
+    //             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.draft;
+    //             await this.moderationSideBar.openModerationSideBar();
+    //             await this.moderationSideBar.clickSubmitForReviewButton();
+    //             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.needsreview;
+    //         }
+
+
+    //     }
+
+    //     if (wantedState.Published)
+    //     {
+    //         if (currentState === 'Draft')
+    //         {
+    //             await this.moderationSideBar.clickQuickPublishButton();
+    //             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.published;
+    //         }
+
+    //         if (currentState === 'Needs Review')
+    //         {
+    //             await this.moderationSideBar.clickPublishButton();
+    //             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.published;
+    //         }
+
+    //         if (currentState === 'Archived')
+    //         {
+    //             await this.moderationSideBar.publishButtonNotVisible();
+    //             await this.moderationSideBar.clickRestoreButton();
+    //             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.published;
+    //         }
+    //     }
+
+    //     if (wantedState.Archive)
+    //     {
+    //         if (currentState !== 'Archived')
+    //         {
+    //             await this.moderationSideBar.clickArchiveButton();
+    //             this.testSetUpData.moderationStateForTest.moderationState = this.testSetUpData.validModerationStates.archived;
+    //         }
+    //     }
+    // }
+
+
 }

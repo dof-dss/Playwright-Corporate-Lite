@@ -16,6 +16,9 @@ export interface PublicationSaveData
   publicationSummary: string;
   pubType: string;
   publicationBodyField: string;
+  publicationSeries: string;
+  publicationStatistics: string[];
+  publicationResearch: string[];
   publicationExteralLink?: string;
   publicationLinkText?: string;
   existingDocumentName?: string;
@@ -44,6 +47,8 @@ export class PublicationCreatePage
   private readonly publicationSummaryField: Locator;
   private readonly publicationExternalLinkField: Locator;
   private readonly publicationLinkTextField: Locator;
+  private readonly publicationTopicField: Locator;
+  private readonly publicationSeriesField: Locator;
 
 
   // error messages
@@ -79,6 +84,8 @@ export class PublicationCreatePage
     this.publicationSummaryField = page.locator('#edit-field-summary-0-value');
     this.publicationExternalLinkField = page.locator('#edit-field-external-publication-0-uri');
     this.publicationLinkTextField = page.locator('#edit-field-external-publication-0-title');
+    this.publicationTopicField = page.locator('#edit-field-site-topics-shs-0-0');
+    this.publicationSeriesField = page.locator('#edit-field-publication-series');
 
     // Error messages
     this.titleFieldIsRequired = page.getByText('Title field is required.');
@@ -150,6 +157,39 @@ export class PublicationCreatePage
     await this.page.locator(`//ul/li[contains(text(), "${pubType}")]`).click();
   }
 
+  // select publication series
+  async selectPublicationSeries(publicationSeries: string)
+  {
+    await this.testSteps.LogInfo(`Selecting "${publicationSeries}" from the Publication Series dropdown`);
+    await this.publicationSeriesField.selectOption({ label: publicationSeries });
+  }
+
+  // select publication stastics 
+  async selectPublicationStatistics(statistics: string[])
+  {
+    for (const [level, stat] of statistics.entries())
+    {
+      const statisticField = level === 0
+        ? this.page.locator('#edit-field-site-topics-shs-0-0')
+        : this.page.locator(`#edit-field-site-topics-shs-0-${level}`);
+      await this.testSteps.LogInfo(`Selecting statistic "${stat}" at Statistics level ${level + 1}`);
+      await statisticField.selectOption({ label: stat });
+    }
+  }
+
+  // select publication research 
+  async selectPublicationResearch(research: string[])
+  {
+    for (const [level, researchItem] of research.entries())
+    {
+      const researchField = level === 0
+        ? this.page.locator('#edit-field-research-support-shs-0-0')
+        : this.page.locator(`#edit-field-research-support-shs-0-${level}`);
+      await this.testSteps.LogInfo(`Selecting research "${researchItem}" at Research level ${level + 1}`);
+      await researchField.selectOption({ label: researchItem });
+    }
+  }
+
   // enter publication summary 
   async enterPublicationExternalLink(publicationExteralLink: string)
   {
@@ -187,8 +227,11 @@ export class PublicationCreatePage
     await this.enterPublicationTitle(data.publicationTitle);
     await this.createPages.enterRevisionLogMessage(data.revisionLogMessage);
     await this.selectPubType(data.pubType);
+    await this.selectPublicationSeries(data.publicationSeries);
     await this.enterPublicationSummary(data.publicationSummary);
     await this.ckeditor.enterCKEditorBody(data.publicationBodyField);
+    await this.selectPublicationStatistics(data.publicationStatistics);
+    await this.selectPublicationResearch(data.publicationResearch);
 
     if (data.existingDocumentName)
     {
@@ -198,8 +241,15 @@ export class PublicationCreatePage
     {
       if (publicationStrategy === 'externalLink')
       {
-        await this.enterPublicationExternalLink(data.publicationExteralLink!);
-        await this.enterPublicationLinkText(data.publicationLinkText!);
+        const externalLink = data.publicationExteralLink;
+        const linkText = data.publicationLinkText;
+        if (externalLink === undefined || linkText === undefined)
+        {
+          throw new Error('External link strategy requires a publication URL and link text.');
+        }
+
+        await this.enterPublicationExternalLink(externalLink);
+        await this.enterPublicationLinkText(linkText);
       }
       else
       {
