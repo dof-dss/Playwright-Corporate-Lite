@@ -229,7 +229,7 @@ test.describe('Alert Author Tests', { tag: ['@regression', '@alert', '@author'] 
     });
   });
 
-  test('APP-Auth-TC09 - Workbench -  Create Alert content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ alertHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
+  test('APP-Auth-TC08 - Workbench -  Create Alert content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ alertHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
   {
     // creating Alert as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -592,7 +592,7 @@ test.describe('Alert Supervisor Tests', { tag: ['@regression', '@alert', '@super
     });
   });
 
-  test('APP-Super-TC09 - Workbench -  Create Alert content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ alertHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
+  test('APP-Super-TC08 - Workbench -  Create Alert content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ alertHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
   {
     // creating Alert as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');

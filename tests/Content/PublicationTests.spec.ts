@@ -230,7 +230,7 @@ test.describe('Publication Author Tests', { tag: ['@regression', '@publication',
     });
   });
 
-  test('Publication-Auth-TC09 - Workbench -  Create Publication content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ publicationHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
+  test('Publication-Auth-TC08 - Workbench -  Create Publication content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ publicationHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
   {
 
     // creating publication as a draft and performing mandatory field check
@@ -296,7 +296,7 @@ test.describe('Publication Author Tests', { tag: ['@regression', '@publication',
     });
   });
 
-  test('Publication-Auth-TC10 - Create - Create Publication content as an "Author", to test external publications', { tag: '@create' }, async ({ publicationHelper, anonymousHelper }) =>
+  test('Publication-Auth-TC09 - Create - Create Publication content as an "Author", to test external publications', { tag: '@create' }, async ({ publicationHelper, anonymousHelper }) =>
   {
 
     // create pub with external link
@@ -307,7 +307,7 @@ test.describe('Publication Author Tests', { tag: ['@regression', '@publication',
 
   });
 
-  test('Publication-Auth-TC11 - Edit - Edit Publication as an "Author" and ensure external publication can be edited', { tag: '@edit' }, async ({ publicationHelper, anonymousHelper }) =>
+  test('Publication-Auth-TC10 - Edit - Edit Publication as an "Author" and ensure external publication can be edited', { tag: '@edit' }, async ({ publicationHelper, anonymousHelper }) =>
   {
 
     // create publication
@@ -621,7 +621,7 @@ test.describe('Publication Supervisor Tests', { tag: ['@regression', '@publicati
     });
   });
 
-  test('Publication-Super-TC09 - Workbench -  Create Publication content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ publicationHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
+  test('Publication-Super-TC08 - Workbench -  Create Publication content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ publicationHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
   {
 
 
@@ -667,7 +667,7 @@ test.describe('Publication Supervisor Tests', { tag: ['@regression', '@publicati
 
   });
 
-  test('Publication-Super-TC10 - Create - Create Publication content as an "Super", to test external publications', { tag: '@create' }, async ({ publicationHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData }) =>
+  test('Publication-Super-TC09 - Create - Create Publication content as an "Super", to test external publications', { tag: '@create' }, async ({ publicationHelper, anonymousHelper, loginHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData }) =>
   {
 
     await publicationHelper.createExternalLinkPublication();
@@ -687,7 +687,7 @@ test.describe('Publication Supervisor Tests', { tag: ['@regression', '@publicati
 
   });
 
-  test('Publication-Super-TC11 - Edit - Edit Publication as an "Super" and ensure external publication can be edited', { tag: '@edit' }, async ({ publicationHelper, anonymousHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData }) =>
+  test('Publication-Super-TC10 - Edit - Edit Publication as an "Super" and ensure external publication can be edited', { tag: '@edit' }, async ({ publicationHelper, anonymousHelper, contentModerationHelper, navigateToCreatedContentHelper, testSetUpData }) =>
   {
 
     await publicationHelper.createExternalLinkPublication();

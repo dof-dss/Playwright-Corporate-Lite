@@ -231,7 +231,7 @@ test.describe('News Author Tests', { tag: ['@regression', '@news', '@author'] },
     });
   });
 
-  test('News-Auth-TC09 - Workbench -  Create News content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ newsHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
+  test('News-Auth-TC08 - Workbench -  Create News content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ newsHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
   {
     // creating news as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -594,7 +594,7 @@ test.describe('News Supervisor Tests', { tag: ['@regression', '@news', '@supervi
     });
   });
 
-  test('News-Super-TC09 - Workbench -  Create News content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ newsHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
+  test('News-Super-TC08 - Workbench -  Create News content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ newsHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
   {
     // creating news as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');

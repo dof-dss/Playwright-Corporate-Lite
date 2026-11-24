@@ -230,7 +230,7 @@ test.describe('Consultation Author Tests', { tag: ['@regression', '@consultation
     });
   });
 
-  test('Consultation-Auth-TC09 - Workbench -  Create Consultation content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ consultationHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
+  test('Consultation-Auth-TC08 - Workbench -  Create Consultation content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ consultationHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
   {
     // creating consultation as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -295,7 +295,7 @@ test.describe('Consultation Author Tests', { tag: ['@regression', '@consultation
     });
   });
 
-  test('Consultation-Auth-TC10 - Create - Create Consultation as an "Author" and ensure Future Start date is displayed', { tag: '@create' }, async ({ consultationHelper, anonymousHelper }) =>
+  test('Consultation-Auth-TC09 - Create - Create Consultation as an "Author" and ensure Future Start date is displayed', { tag: '@create' }, async ({ consultationHelper, anonymousHelper }) =>
   {
     await consultationHelper.createFutureConsultation({
       preview: true,
@@ -601,7 +601,7 @@ test.describe('Consultation Supervisor Tests', { tag: ['@regression', '@consulta
     });
   });
 
-  test('Consultation-Super-TC09 - Workbench -  Create Consultation content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ consultationHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
+  test('Consultation-Super-TC08 - Workbench -  Create Consultation content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ consultationHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
   {
     // creating consultation as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -644,7 +644,7 @@ test.describe('Consultation Supervisor Tests', { tag: ['@regression', '@consulta
     });
   });
 
-  test('Consultation-Super-TC10 - Create - Create Consultation as an "Supervisor" and ensure Future Start date is displayed', { tag: '@create' }, async ({ consultationHelper, anonymousHelper, contentModerationHelper, testSetUpData }) =>
+  test('Consultation-Super-TC09 - Create - Create Consultation as an "Supervisor" and ensure Future Start date is displayed', { tag: '@create' }, async ({ consultationHelper, anonymousHelper, contentModerationHelper, testSetUpData }) =>
   {
     await consultationHelper.createFutureConsultation({
       preview: false,

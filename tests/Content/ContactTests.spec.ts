@@ -228,7 +228,7 @@ test.describe('Contact Author Tests', { tag: ['@regression', '@contact', '@autho
     });
   });
 
-  test('CON-Auth-TC09 - Workbench -  Create Contact content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ contactHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
+  test('CON-Auth-TC08 - Workbench -  Create Contact content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ contactHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
   {
     // creating contact as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -591,7 +591,7 @@ test.describe('Contact Supervisor Tests', { tag: ['@regression', '@contact', '@s
     });
   });
 
-  test('CON-Super-TC09 - Workbench -  Create Contact content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ contactHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
+  test('CON-Super-TC08 - Workbench -  Create Contact content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ contactHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
   {
     // creating contact as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');

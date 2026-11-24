@@ -216,7 +216,7 @@ test.describe('Gallery Author Tests', { tag: ['@regression', '@gallery', '@autho
     });
   });
 
-  test('Gallery-Auth-TC09 - Workbench -  Create Gallery content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ galleryHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
+  test('Gallery-Auth-TC08 - Workbench -  Create Gallery content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ galleryHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
   {
     // creating gallery as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -563,7 +563,7 @@ test.describe('Gallery Supervisor Tests', { tag: ['@regression', '@gallery', '@s
     });
   });
 
-  test('Gallery-Super-TC09 - Workbench -  Create Gallery content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ galleryHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
+  test('Gallery-Super-TC08 - Workbench -  Create Gallery content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ galleryHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
   {
     // creating gallery as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');

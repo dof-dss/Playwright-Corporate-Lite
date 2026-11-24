@@ -228,7 +228,7 @@ test.describe('Application Author Tests', { tag: ['@regression', '@application',
     });
   });
 
-  test('APP-Auth-TC09 - Workbench -  Create Application content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ applicationHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
+  test('APP-Auth-TC08 - Workbench -  Create Application content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ applicationHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
   {
     // creating application as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -587,7 +587,7 @@ test.describe('Application Supervisor Tests', { tag: ['@regression', '@applicati
     });
   });
 
-  test('APP-Super-TC09 - Workbench -  Create Application content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ applicationHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
+  test('APP-Super-TC08 - Workbench -  Create Application content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ applicationHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
   {
     // creating application as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
