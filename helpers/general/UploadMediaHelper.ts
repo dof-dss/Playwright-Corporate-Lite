@@ -104,7 +104,7 @@ export class UploadMediaHelper
         {
             await this.uploadMedia.clickAddMediaImageButton();
             await this.uploadMedia.uploadImageProcess(this.testdata.Media.imageFileName);
-            await this.uploadMedia.enterImageValues(this.testdata.Media.imageAltText, this.testdata.Media.imageTitle, this.testdata.Media.imageCaption, this.testdata.Media.imageName);
+            await this.uploadMedia.enterImageValues(this.testdata.Media.imageAltText,this.testdata.Media.imageCaption, this.testdata.Media.imageName);
         }
 
         if (options.edited)
@@ -132,7 +132,6 @@ export class UploadMediaHelper
             await this.uploadMedia.uploadImageProcess(this.testdata.Media.BannerImageFileName);
             await this.uploadMedia.enterImageValues(
                 this.testdata.Media.bannerImageAltText,
-                this.testdata.Media.bannerImageTitle,
                 this.testdata.Media.bannerImageCaption,
                 this.testdata.Media.bannerName
             );
@@ -148,7 +147,6 @@ export class UploadMediaHelper
             await this.uploadMedia.uploadImageProcess(this.testdata.Media.BannerImageFileNameEdited);
             await this.uploadMedia.enterImageValues(
                 this.testdata.Media.bannerImageAltTextEdited,
-                this.testdata.Media.bannerImageTitleEdited,
                 this.testdata.Media.bannerImageCaptionEdited,
                 this.testdata.Media.bannerNameEdited
             );
@@ -163,7 +161,6 @@ export class UploadMediaHelper
             await this.uploadMedia.uploadImageProcess(this.testdata.Media.BannerOverlayImageFileName);
             await this.uploadMedia.enterImageValues(
                 this.testdata.Media.bannerOverlayImageAltText,
-                this.testdata.Media.bannerOverlayImageTitle,
                 this.testdata.Media.bannerOverlayImageCaption,
                 this.testdata.Media.bannerOverlayName
             );
@@ -178,7 +175,6 @@ export class UploadMediaHelper
             await this.uploadMedia.uploadImageProcess(this.testdata.Media.BannerImageThinFileName);
             await this.uploadMedia.enterImageValues(
                 this.testdata.Media.bannerThinImageAltText,
-                this.testdata.Media.bannerThinImageTitle,
                 this.testdata.Media.bannerThinImageCaption,
                 this.testdata.Media.bannerThinName
             );

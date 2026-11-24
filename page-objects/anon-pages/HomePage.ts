@@ -83,12 +83,17 @@ export class HomePage
         await this.testSteps.LogInfo('Clicking site search button');
         await this.siteSearchButton.click();
     }
-
-    // click consultation nav bar link
+    
     async clickConsultationNavLink()
     {
         await this.testSteps.LogInfo('Clicking Consultation nav bar link');
         await this.conultationNavBarLink.click();
+    }
+    // click Safety alerts link in Additional links section
+    async clickSafetyAlertsNavLink()
+    {
+        await this.testSteps.LogInfo('Clicking Safety alerts link in Additional links section');
+        await this.page.getByRole('link', { name: 'Safety alerts', exact: true }).click();
     }
 
     // click more news link 

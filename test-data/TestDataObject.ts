@@ -175,6 +175,7 @@ export const TestData = {
     // image 1 values 
     imageFileName: 'TestingImage.jpg',
     imageAltText: 'Testing Image Alt text',
+    imageCaptionEdited: 'Testing Image Caption Edited',
     imageTitle: 'Testing Image Title',
     imageCaption: 'Testing Image Caption',
     imageName: 'Automated image Testing New',
@@ -274,12 +275,20 @@ export const TestData = {
     titleEdited: 'Automated Test - Edited sample Alert title' + ' - ' + getTimestamp(),
     revisionlog: 'This is an automated revision log message',
     revisionlogEdited: 'This is an edited automated revision log message',
-    summary: 'This is new alert summary',
-    publishedDateEdited: 'This is an edited alert note',
+    publishedDate: formattedStartDate,
+    publishedDateEdited: formattedStarDateEdited,
     body: 'This is a new alert body content',
     bodyEdited: 'This is an edited alert body content',
     teaser: 'This is a new alert teaser',
     teaserEdited: 'This is an edited alert teaser',
+    imageCaption: 'Testing Image Caption',
+    imageCaptionEdited: 'Testing Image Caption Edited',
+    verifyPublishedDate: verifyStartDateFormated,
+    verifyPublishedDateEdited: new Date(startDateEdited).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    }),
   },
 
   Application: {

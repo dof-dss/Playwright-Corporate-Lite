@@ -45,7 +45,7 @@ test.describe('Link Author Tests', { tag: ['@regression', '@link', '@author'] },
 
 
         // searching as anon to ensure content is not viewable as draft
-        await anonymousHelper.verifyContentwithLink({
+        await anonymousHelper.verifyLinkAsAnon({
           edited: false,
         });
 
@@ -63,7 +63,7 @@ test.describe('Link Author Tests', { tag: ['@regression', '@link', '@author'] },
           NeedsReview: true,
         });
 
-        await anonymousHelper.verifyContentwithLink({ edited: false });
+        await anonymousHelper.verifyLinkAsAnon({ edited: false });
       });
   });
 
@@ -89,7 +89,7 @@ test.describe('Link Author Tests', { tag: ['@regression', '@link', '@author'] },
         await linkHelper.reorderLink(false);
 
         // Verify the published edit as an anonymous user.
-        await anonymousHelper.verifyContentwithLink({
+        await anonymousHelper.verifyLinkAsAnon({
           edited: false,
         });
 
@@ -108,7 +108,7 @@ test.describe('Link Author Tests', { tag: ['@regression', '@link', '@author'] },
           preview: true
         });
 
-        await anonymousHelper.verifyContentwithLink({ edited: true });
+        await anonymousHelper.verifyLinkAsAnon({ edited: true });
       });
   });
 
@@ -135,7 +135,7 @@ test.describe('Link Author Tests', { tag: ['@regression', '@link', '@author'] },
 
 
         // searching as anon to ensure content is not viewable as draft
-        await anonymousHelper.verifyContentwithLink({
+        await anonymousHelper.verifyLinkAsAnon({
           edited: false,
         });
 
@@ -208,7 +208,7 @@ test.describe('Link Author Tests', { tag: ['@regression', '@link', '@author'] },
 
 
         // searching as anon to ensure content is not viewable as draft
-        await anonymousHelper.verifyContentwithLink({
+        await anonymousHelper.verifyLinkAsAnon({
           edited: false,
         });
 
@@ -224,7 +224,7 @@ test.describe('Link Author Tests', { tag: ['@regression', '@link', '@author'] },
         await permissionCheck.openModerationSideBar();
         await permissionCheck.deleteButtonNotVisible();
 
-        await anonymousHelper.verifyContentwithLink({ edited: false });
+        await anonymousHelper.verifyLinkAsAnon({ edited: false });
       });
   });
 
@@ -420,7 +420,7 @@ test.describe('Link Supervisor Tests', { tag: ['@regression', '@link', '@supervi
 
 
         // searching as anon to ensure content is not viewable as draft
-        await anonymousHelper.verifyContentwithLink({
+        await anonymousHelper.verifyLinkAsAnon({
           edited: false,
         });
 
@@ -443,7 +443,7 @@ test.describe('Link Supervisor Tests', { tag: ['@regression', '@link', '@supervi
         });
 
         // searching as anon to ensure content is not viewable as Needs Review
-        await anonymousHelper.verifyContentwithLink({
+        await anonymousHelper.verifyLinkAsAnon({
           edited: false,
         });
 
@@ -463,7 +463,7 @@ test.describe('Link Supervisor Tests', { tag: ['@regression', '@link', '@supervi
         });
 
         // searching as anon to ensure content is viewable as it is published
-        await anonymousHelper.verifyContentwithLink({
+        await anonymousHelper.verifyLinkAsAnon({
           edited: false,
         });
 
@@ -483,7 +483,7 @@ test.describe('Link Supervisor Tests', { tag: ['@regression', '@link', '@supervi
         });
 
         // searching as anon to ensure content is not viewable when archived
-        await anonymousHelper.verifyContentwithLink({
+        await anonymousHelper.verifyLinkAsAnon({
           edited: false,
         });
       });
@@ -523,7 +523,7 @@ test.describe('Link Supervisor Tests', { tag: ['@regression', '@link', '@supervi
         await linkHelper.reorderLink(false);
 
         // Verify the published edit as an anonymous user.
-        await anonymousHelper.verifyContentwithLink({
+        await anonymousHelper.verifyLinkAsAnon({
           edited: false,
         });
 
@@ -563,7 +563,7 @@ test.describe('Link Supervisor Tests', { tag: ['@regression', '@link', '@supervi
 
 
         // Verify the published edit as an anonymous user.
-        await anonymousHelper.verifyContentwithLink({
+        await anonymousHelper.verifyLinkAsAnon({
           edited: true,
         });
       });
@@ -599,7 +599,7 @@ test.describe('Link Supervisor Tests', { tag: ['@regression', '@link', '@supervi
 
 
         // searching as anon to ensure content is not viewable as draft
-        await anonymousHelper.verifyContentwithLink({
+        await anonymousHelper.verifyLinkAsAnon({
           edited: false,
         });
 
@@ -620,7 +620,7 @@ test.describe('Link Supervisor Tests', { tag: ['@regression', '@link', '@supervi
           cancel: true
         });
 
-        await anonymousHelper.verifyContentwithLink({
+        await anonymousHelper.verifyLinkAsAnon({
           edited: false,
         });
 
@@ -644,7 +644,7 @@ test.describe('Link Supervisor Tests', { tag: ['@regression', '@link', '@supervi
           deleted: true
         });
 
-        await anonymousHelper.verifyContentwithLink({
+        await anonymousHelper.verifyLinkAsAnon({
           edited: false,
         });
       });
@@ -812,7 +812,7 @@ test.describe('Link Supervisor Tests', { tag: ['@regression', '@link', '@supervi
         await linkHelper.reorderLink(false);
 
         // Verify the published edit as an anonymous user.
-        await anonymousHelper.verifyContentwithLink({
+        await anonymousHelper.verifyLinkAsAnon({
           edited: false,
         });
         
