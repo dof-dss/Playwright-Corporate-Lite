@@ -2,6 +2,7 @@ import { test as base } from '@playwright/test';
 import { TestSetUpData, TestData } from '@tdata/TestDataObject';
 import { LoginHelper } from '@helpers/general/LoginHelper';
 import { ApplicationHelper } from '@helpers/content/ApplicationHelper';
+import { AlertHelper } from '@helpers/content/AlertHelper';
 import { PageHelper } from '@helpers/content/PageHelper';
 import { ArticleHelper } from '@helpers/content/ArticleHelper';
 import { ConsultationHelper } from '@helpers/content/ConsultationHelper';
@@ -29,6 +30,7 @@ type MyFixtures = {
     testData: typeof TestData;
     loginHelper: LoginHelper;
     applicationHelper: ApplicationHelper;
+    alertHelper: AlertHelper;
     pageHelper: PageHelper;
     articleHelper: ArticleHelper;
     consultationHelper: ConsultationHelper;
@@ -85,6 +87,8 @@ export const test = base.extend<MyFixtures>({
         // inject the unique ID into the title
         freshDataForContent.Application.title = freshDataForContent.Application.title + ' - ' + uniqueId;
         freshDataForContent.Application.titleEdited = freshDataForContent.Application.titleEdited + ' - ' + uniqueId;
+        freshDataForContent.Alert.title = freshDataForContent.Alert.title + ' - ' + uniqueId;
+        freshDataForContent.Alert.titleEdited = freshDataForContent.Alert.titleEdited + ' - ' + uniqueId;
         freshDataForContent.Page.title = freshDataForContent.Page.title + ' - ' + uniqueId;
         freshDataForContent.Page.titleEdited = freshDataForContent.Page.titleEdited + ' - ' + uniqueId;
         freshDataForContent.Article.title = freshDataForContent.Article.title + ' - ' + uniqueId;
@@ -115,6 +119,10 @@ export const test = base.extend<MyFixtures>({
     applicationHelper: async ({ page, testSetUpData, testData }, use) =>
     {
         await use(new ApplicationHelper(page, testSetUpData, testData));
+    },
+    alertHelper: async ({ page, testSetUpData, testData }, use) =>
+    {
+        await use(new AlertHelper(page, testSetUpData, testData));
     },
     pageHelper: async ({ page, testSetUpData, testData }, use) =>
     {

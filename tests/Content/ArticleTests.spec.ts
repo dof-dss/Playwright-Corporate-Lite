@@ -238,7 +238,7 @@ test.describe('Article Author Tests', { tag: ['@regression', '@article', '@autho
       });
     });
 
-  test('ART-Auth-TC09 - Workbench -  Create Article content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' },
+  test('ART-Auth-TC08 - Workbench -  Create Article content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' },
     async ({ articleHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
     {
       // creating article as a draft and performing mandatory field check
@@ -305,7 +305,7 @@ test.describe('Article Author Tests', { tag: ['@regression', '@article', '@autho
 
     });
 
-  test('ART-Auth-TC10 - Revision - Confirm revision number increase', { tag: '@revision' },
+  test('ART-Auth-TC09 - Revision - Confirm revision number increase', { tag: '@revision' },
     async ({ articleHelper, anonymousHelper, contentModerationHelper, revisionHelper }) =>
     {
       await articleHelper.createArticle({
@@ -635,7 +635,7 @@ test.describe('Article Supervisor Tests', { tag: ['@regression', '@article', '@s
     });
   });
 
-  test('ART-Super-TC09 - Workbench -  Create Article content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ articleHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
+  test('ART-Super-TC08 - Workbench -  Create Article content as an "Supervisor", and use Workbench to complete all moderation states', { tag: '@workbench' }, async ({ articleHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
   {
     // creating article as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -679,7 +679,7 @@ test.describe('Article Supervisor Tests', { tag: ['@regression', '@article', '@s
 
   });
 
-  test('ART-Super-TC10 - Revision - Confirm revision number increase', { tag: '@revision' },
+  test('ART-Super-TC09 - Revision - Confirm revision number increase', { tag: '@revision' },
     async ({ articleHelper, anonymousHelper, contentModerationHelper, revisionHelper }) =>
     {
       await articleHelper.createArticle({

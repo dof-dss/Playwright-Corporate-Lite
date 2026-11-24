@@ -377,7 +377,7 @@ export class UploadMedia
     // ---------------------- FIELD NAMES ---------------------------
 
     // Add alt text, title, caption and name 
-    async enterImageValues(addMediaAltText: string, addMediaTitle: string, addMediaCaption: string, addMediaName: string)
+    async enterImageValues(addMediaAltText: string,addMediaCaption: string, addMediaName: string)
     {
         // alt text
         await this.testSteps.LogInfo(`Entering media Alt text "${addMediaAltText}"`);

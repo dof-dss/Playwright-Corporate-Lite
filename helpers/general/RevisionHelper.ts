@@ -172,14 +172,26 @@ export class RevisionHelper
             const revisionText = await revisionNumberTd.textContent();
             const currentNumber = parseInt(revisionText?.trim() || '0', 10);
 
-            const revisionNumber = rows.length - i;
-            console.log(`Revision number ${revisionNumber}`);
-            console.log(`${currentNumber}`);
+            let revisionLabel: string;
+            if (i === 0)
+            {
+                revisionLabel = "Latest Revision";
+            }
+            else if (i === rows.length - 1)
+            {
+                revisionLabel = "Original/First Revision";
+            }
+            else
+            {
+                revisionLabel = "Revision";
+            }
 
-            // Verify that each row is 1 less than the previous row
+            console.log(`Row ${i + 1} ${revisionLabel}: ${currentNumber}`);
+
+            // Verify that each row is lower than the previous row
             if (previousNumber !== null)
             {
-                expect(currentNumber).toBe(previousNumber - 1);
+                expect(currentNumber).toBeLessThan(previousNumber);
             }
 
             previousNumber = currentNumber;

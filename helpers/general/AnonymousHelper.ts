@@ -9,6 +9,7 @@ import { ConsultationFacetPage } from '@poms/anon-pages/ConsultationFacetPage';
 import { PublicationFacetPage } from '@poms/anon-pages/PublicationFacetPage';
 import { SearchPage } from '@poms/anon-pages/SearchPage';
 import { VerificationHelper } from './VerificationHelper';
+import { AlertFacetPage } from '@poms/anon-pages/AlertFacetPage';
 
 export interface ContentEdited
 {
@@ -28,6 +29,7 @@ export class AnonymousHelper
     private readonly publicationFacetPage: PublicationFacetPage;
     private readonly searchPage: SearchPage;
     private readonly verificationHelper: VerificationHelper;
+    private readonly alertFacetPage: AlertFacetPage;
 
     constructor(
         private page: Page,
@@ -47,6 +49,7 @@ export class AnonymousHelper
         this.publicationFacetPage = new PublicationFacetPage(this.page, this.testSetUpData, this.testData);
         this.searchPage = new SearchPage(this.page, this.testSetUpData);
         this.verificationHelper = new VerificationHelper(this.page, this.testSetUpData, this.testData);
+        this.alertFacetPage = new AlertFacetPage(this.page, this.testSetUpData, this.testData);
     }
 
     //  dynamic search resltu locator 
@@ -154,6 +157,11 @@ export class AnonymousHelper
         }
 
 
+        if (this.testSetUpData.contentTypeforTest.contentType === this.testSetUpData.validContentTypeList.alert)
+        {
+            await this.VerifyAlertAsAnon({ edited });
+        }
+
         if (this.testSetUpData.contentTypeforTest.contentType === this.testSetUpData.validContentTypeList.article)
         {
             await this.VerifyArticleAsAnon({ edited });
@@ -231,22 +239,90 @@ export class AnonymousHelper
         }
     }
 
-
-    async verifyContentwithLink({ edited }: ContentEdited)
+    // Unique Article verification for anonymous users
+    async VerifyAlertAsAnon({ edited }: ContentEdited)
     {
-
-        await this.basePage.logOut();
+        // nav back to homepage
+        await this.page.locator('#nav-main-menu').getByRole('link', { name: 'Home', exact: true }).click();
         await this.homePage.homePageURLCheck();
+        // clicking Safety alerts on Additioanl links section
+        await this.homePage.clickSafetyAlertsNavLink();
+        await this.alertFacetPage.alertPageURLCheck();
 
-        await this.homePage.verifyLink({ edited });
+        if (!edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
+        {
+            await this.alertFacetPage.enterContentTitleInSearch(this.testData.Alert.title);
+            await this.alertFacetPage.clickalertFacetSearchButton();
 
+            try
+            {
+                await this.testSteps.LogInfo('Published content has appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
+                await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Alert.title}")]`)).toBeVisible();
+            }
+            catch
+            {
+                await this.testSteps.LogInfo('Published content has NOT appeared in search results when it SHOULD - "' + this.testSetUpData.contentTitleforTest.contentTitle + '"');
+                // wait 5 seconds and refresh page
+                await this.testSteps.LogInfo('Wating 5 seconds');
+                await this.page.waitForTimeout(5000);
+                await this.testSteps.LogInfo('Reloading page');
+                await this.page.reload();
 
-        // const escapeRegex = (value: string) => value.trim().replace(/\s*-\s*/g, '-').replace(/\s+/g, '-').toLowerCase();
-        // // navigate directly to the application node page that contains the created link
-        // const nodeURL = `${this.testSetUpData.urlForTest.url}/services/${escapeRegex(this.testData.Application.title)}`;
-        // await this.testSteps.LogInfo(`Navigating directly to "${nodeURL}"`);
-        // await this.page.goto(nodeURL);
-        // await this.verificationHelper.verifyChosenContent({ edited });
+                // remove last char from title
+                const updatedTitle = this.testData.Alert.title.slice(0, -1);
+                // seatch again with new title
+                await this.testSteps.LogInfo('Performing second search having removed final character from title to refresh solar cache - "' + updatedTitle + '"');
+                await this.alertFacetPage.enterContentTitleInSearch(updatedTitle);
+                await this.alertFacetPage.clickalertFacetSearchButton();
+            }
+
+            // verify
+            await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Alert.title}")]`)).toBeVisible();
+
+            await this.alertFacetPage.clickFacetFilteralertPublishedDateSpan();
+            await this.alertFacetPage.clickFacetFilterPubDateFilter();
+
+            await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Alert.title}")]`)).toBeVisible();
+            await this.verifyContent(edited);
+
+        }
+
+        if (!edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
+        {
+            await this.alertFacetPage.enterContentTitleInSearch(this.testData.Alert.title);
+            await this.alertFacetPage.clickalertFacetSearchButton();
+            // add filters
+            await this.alertFacetPage.clickFacetFilteralertPublishedDateSpan();
+            await this.alertFacetPage.clickFacetFilterPubDateFilter();
+
+            // verify            
+            await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Alert.title}")]`)).toBeHidden();
+        }
+
+        if (edited && this.testSetUpData.moderationStateForTest.moderationState === this.testSetUpData.validModerationStates.published)
+        {
+            await this.alertFacetPage.enterContentTitleInSearch(this.testData.Alert.titleEdited);
+            await this.alertFacetPage.clickalertFacetSearchButton();
+            // add filters
+            await this.alertFacetPage.clickFacetFilteralertPublishedDateSpan();
+            await this.alertFacetPage.clickFacetFilterPubDateEditedFilter();
+            // verify            
+            await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Alert.titleEdited}")]`)).toBeVisible();
+            // full verification of content edited param is passed along through methods steming from test itself
+            await this.verifyContent(edited);
+        }
+
+        if (edited && this.testSetUpData.moderationStateForTest.moderationState !== this.testSetUpData.validModerationStates.published)
+        {
+            await this.alertFacetPage.enterContentTitleInSearch(this.testData.Alert.titleEdited);
+            await this.alertFacetPage.clickalertFacetSearchButton();
+            // add filters
+            await this.alertFacetPage.clickFacetFilteralertPublishedDateSpan();
+            await this.alertFacetPage.clickFacetFilterPubDateFilter();
+
+            // verify            
+            await expect(this.page.locator(`//a/h3/span[contains(text(), "${this.testData.Alert.titleEdited}")]`)).toBeHidden();
+        }
     }
 
     // Unique Article verification for anonymous users
@@ -373,7 +449,6 @@ export class AnonymousHelper
             await expect(this.page.getByRole('heading', { name: 'Services', level: 1, exact: true })).toBeVisible();
         }
     }
-
     async VerifyArticleCorrectDisplays()
     {
         const areaOfExpertiseLinks = [
@@ -714,6 +789,15 @@ export class AnonymousHelper
         await expect(researchAndSupport2Link).toBeVisible();
         await researchAndSupport2Link.click();
         await verifyContactTopicListing();
+    }
+
+    // Unique Link verification for anonymous users
+    async verifyLinkAsAnon({ edited }: ContentEdited)
+    {
+        await this.basePage.logOut();
+        await this.homePage.homePageURLCheck();
+
+        await this.homePage.verifyLink({ edited });
     }
 
     // Unique Publication verification for anonymous users

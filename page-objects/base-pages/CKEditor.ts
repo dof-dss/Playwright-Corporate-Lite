@@ -603,7 +603,7 @@ export class CKEditor
 
         // uploading image
         await this.uploadMedia.uploadImageProcess(TestData.Media.imageFileName);
-        await this.uploadMedia.enterImageValues(TestData.Media.imageAltText, TestData.Media.imageTitle, TestData.Media.imageCaption, TestData.Media.imageName);
+        await this.uploadMedia.enterImageValues(TestData.Media.imageAltText, TestData.Media.imageCaption, TestData.Media.imageName);
 
         await this.uploadMedia.clickMediaSave();
         await this.uploadMedia.clickInsertSelectedButton();

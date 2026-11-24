@@ -261,7 +261,7 @@ test.describe('Feature Author Tests', { tag: ['@regression', '@feature', '@autho
     });
   });
 
-  test('FEAT-Auth-TC09 - Workbench -  Create Feature content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ featureHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
+  test('FEAT-Auth-TC08 - Workbench -  Create Feature content as an "Author", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ featureHelper, contentModerationHelper, workBenchHelper, navigateToCreatedContentHelper, basePage, loginHelper, testSetUpData }) =>
   {
     // creating feature as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
@@ -699,7 +699,7 @@ test.describe('Feature Supervisor Tests', { tag: ['@regression', '@feature', '@s
     });
   });
 
-  test('FEAT-Super-TC09 - Workbench - Create Feature content as a "Supervisor", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ featureHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
+  test('FEAT-Super-TC08 - Workbench - Create Feature content as a "Supervisor", and use Workbench to complete all moderation states available', { tag: '@workbench' }, async ({ featureHelper, contentModerationHelper, workBenchHelper, testSetUpData }) =>
   {
     // creating feature as a draft and performing mandatory field check
     console.log(testSetUpData.contentTitleforTest.contentTitle + ' - creating content with this title');
