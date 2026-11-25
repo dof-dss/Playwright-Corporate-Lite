@@ -198,7 +198,9 @@ export class ConsultationEditPage
     await this.editConsultationTitle(data.consultationTitle);
     await this.createPages.enterRevisionLogMessage(data.revisionLogMessage);
     await this.selectConsultationSiteTopic(data.consultationSiteTopic);
+    await this.page.waitForTimeout(500);
     await this.selectConsultationSiteTopic2(data.consultationSiteTopic2);
+    await this.page.waitForTimeout(500);
     await this.editPubPublishedDate(data.consultationPublishedDate);
     await this.editConsultationStartDate(data.consultationStartDate);
     await this.editConsultationStartTime(data.consultationStartTime);

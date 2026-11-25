@@ -107,6 +107,9 @@ export const resetMediaLibraryNames = () =>
 const startDate = new Date();
 // Format to YYYY-MM-DD
 const formattedStartDate = startDate.toISOString().split('T')[0];
+const startDate18MonthsEarlier = new Date(startDate);
+startDate18MonthsEarlier.setUTCMonth(startDate18MonthsEarlier.getUTCMonth() - 18);
+const formattedStartDate18MonthsEarlier = startDate18MonthsEarlier.toISOString().split('T')[0];
 
 const startDateEdited = new Date();
 // adding 7 days to todays date
@@ -116,9 +119,12 @@ const formattedStarDateEdited = startDateEdited.toISOString().split('T')[0];
 
 const endDate = new Date();
 // adding 7 days to todays date
-endDate.setDate(endDate.getDate() + 7);
+endDate.setDate(endDate.getDate() + 31);
 // Format to YYYY-MM-DD
 const formattedEndDate = endDate.toISOString().split('T')[0];
+const endDate18MonthsEarlier = new Date();
+endDate18MonthsEarlier.setUTCMonth(endDate18MonthsEarlier.getUTCMonth() - 18);
+const formattedEndDate18MonthsEarlier = endDate18MonthsEarlier.toISOString().split('T')[0];
 
 const endDateEdited = new Date();
 // adding 7 days to todays date
@@ -137,16 +143,17 @@ const formattedFutureStartDate = futureStartDate.toISOString().split('T')[0];
 
 // verification date times 
 
-const verifyStartDate = new Date();
-const verifyStartDateFormated = verifyStartDate.toLocaleDateString('en-GB', {
+const formatConsultationDate = (date: string) => new Date(`${date}T00:00:00Z`).toLocaleDateString('en-GB', {
   day: '2-digit',
   month: 'long',
-  year: 'numeric'
+  year: 'numeric',
+  timeZone: 'UTC'
 });
+const verifyConsultationStartDate = formatConsultationDate(formattedStartDate);
+const verifyConsultationEndDate = formatConsultationDate(formattedEndDate);
 
-const verifyEndDate = new Date();
-verifyEndDate.setDate(verifyEndDate.getDate() + 7);
-const verifyEndDateFormated = verifyEndDate.toLocaleDateString('en-GB', {
+const verifyStartDate = new Date();
+const verifyStartDateFormated = verifyStartDate.toLocaleDateString('en-GB', {
   day: '2-digit',
   month: 'long',
   year: 'numeric'
@@ -362,11 +369,11 @@ export const TestData = {
     summary: 'This is new consultation summary',
     summaryEdited: 'This is edited consultation summary',
     startDate: formattedStartDate,
-    startDateEdited: '2025-12-31',
+    startDateEdited: formattedStartDate18MonthsEarlier,
     startTime: '00:00:00',
     startTimeEdited: '10:00:00',
     endDate: formattedEndDate,
-    endDateEdited: '2025-12-31',
+    endDateEdited: formattedEndDate18MonthsEarlier,
     endTime: '23:59:59',
     endTimeEdited: '17:00:00',
     body: 'This is new consultation body field',
@@ -377,12 +384,12 @@ export const TestData = {
     emailAddressEdited: 'automated@test.com',
     postalAddress: 'Stormont Estate Upper Newtownards Road Belfast BT4 3SH',
     postalAddressEdited: 'NICS Library Service Craigantlet Buildings Stoney LE3 3SX',
-    verifyStartDateAndTime: verifyStartDateFormated + ', ' + '12.00 am',
-    verifyEndDateAndTime: verifyEndDateFormated + ', ' + '11.59 pm',
-    verifyEditedStartDateAndTime: '31 December 2025, 10.00 am',
-    verifyEditedEndDateAndTime: '31 December 2025, 5.00 pm',
-    verifyStartDate: verifyStartDateFormated,
-    verifyEndDate: verifyEndDateFormated,
+    verifyStartDateAndTime: verifyConsultationStartDate + ', 12.00 am',
+    verifyEndDateAndTime: verifyConsultationEndDate + ', 11.59 pm',
+    verifyEditedStartDateAndTime: formatConsultationDate(formattedStartDate18MonthsEarlier) + ', 10.00 am',
+    verifyEditedEndDateAndTime: formatConsultationDate(formattedEndDate18MonthsEarlier) + ', 5.00 pm',
+    verifyStartDate: verifyConsultationStartDate,
+    verifyEndDate: verifyConsultationEndDate,
     futureStartDate: formattedFutureStartDate,
     verifyFutureStartDate: verifyFutureStartDateFormated + ', ' + '12.00 am',
   },
@@ -495,7 +502,7 @@ export const TestData = {
     notesToEditorEdited: 'This is a edited notes to editor'
   },
 
-    Page: {
+  Page: {
     title: 'Automated Test - New sample Page title' + ' - ' + getTimestamp(),
     titleEdited: 'Automated Test - Edited sample Page title' + ' - ' + getTimestamp(),
     revisionlog: 'This is an automated revision log message',
@@ -515,7 +522,7 @@ export const TestData = {
     bodyEdited: 'This is a edited Profile body content',
     summary: 'This is a new Profile summary',
     summaryEdited: 'This is a edited Profile summary',
-   },
+  },
 
   Publication: {
     title: 'Automated Test - New sample Publication title' + ' - ' + getTimestamp(),
